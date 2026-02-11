@@ -51,7 +51,10 @@
 - 한국초저온용기(주), 대표 이희란, 성남 중원구
 - 현재: ASP 기반 구식 사이트, http만, 모바일 미지원, 가비아 호스팅
 - 제품: 초저온장비, 바이오장비, 헬스케어(산소호흡기), 엔지니어링
-- 해외거래선: Taylor-Wharton, Luxfer, TOMCO2, Cryofab, PureAire
+- 해외거래선: Taylor-Wharton, Luxfer, TOMCO2, Cryofab, PureAire, Turbines Inc., Thunderbird Cylinders
+- **Liquid Controls/IDEX 더이상 취급 안 함** (2026-02-11 Chris 확인) → **Turbines, Inc.**로 교체
+- Turbines Inc.: TMC 극저온 유량계 + CDS1000 모니터 세트 공급 (1975년 설립)
+- 이미지 배경 제거: 메탈 제품은 api4ai AI 서비스 사용 (Pillow 불가)
 - 프로토타입 제작 진행 중 (2026-02-10)
 - **GitHub Pages 배포 완료**: https://jpark0926-ux.github.io/kcryo-preview/
 - 가스엔지니어링 상세페이지 대폭 업그레이드 완료 + 현장사진 삽입 진행 중
