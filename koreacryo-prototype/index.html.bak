@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국초저온용기(주) | Korea Cryogenics Co., Ltd</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cryo: {
+          950: '#060d1b',
+          900: '#0a1628',
+          800: '#0f2240',
+          700: '#143060',
+          600: '#1a4080',
+          500: '#00d4ff',
+          400: '#00e5ff',
+          300: '#80f0ff',
+          200: '#b3f5ff',
+          100: '#d9faff',
+          50: '#f0fdff',
+        },
+        ice: {
+          500: '#00BFFF',
+          400: '#33ccff',
+          300: '#66d9ff',
+          glow: 'rgba(0, 212, 255, 0.6)',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+body { font-family: 'Noto Sans KR', sans-serif; background: #060d1b; }
+body.loading { overflow: hidden; }
+
+/* ===== SCROLL PROGRESS BAR ===== */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #00d4ff, #00e5ff, #00BFFF);
+  z-index: 9999;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.6), 0 0 16px rgba(0, 212, 255, 0.3);
+  transition: width 0.05s linear;
+}
+
+/* ===== LOADING INTRO ===== */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #060d1b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+#loading-overlay.slide-up {
+  transform: translateY(-100%);
+}
+#loading-overlay .kc-intro-logo {
+  width: 120px;
+  height: auto;
+  animation: frost-crystallize 1.5s ease-out forwards;
+  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.8));
+}
+@keyframes frost-crystallize {
+  0% { opacity: 0; transform: scale(0.5) rotate(-5deg); filter: blur(20px) drop-shadow(0 0 0px rgba(0,212,255,0)); }
+  30% { opacity: 0.5; transform: scale(0.8) rotate(2deg); filter: blur(8px) drop-shadow(0 0 15px rgba(0,212,255,0.5)); }
+  60% { opacity: 0.9; transform: scale(1.05) rotate(-1deg); filter: blur(2px) drop-shadow(0 0 25px rgba(0,212,255,0.7)); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0) drop-shadow(0 0 30px rgba(0,212,255,0.8)); }
+}
+#loading-temp {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-top: 24px;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #00e5ff, #00BFFF, #0080ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 10px rgba(0,212,255,0.5));
+}
+#loading-frost-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.loading-frost-p {
+  position: absolute;
+  color: rgba(0, 229, 255, 0.3);
+  animation: loading-frost-float 2s ease-out forwards;
+}
+@keyframes loading-frost-float {
+  0% { opacity: 0; transform: translate(0, 0) scale(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
+}
+
+/* ===== CUSTOM CURSOR ===== */
+#custom-cursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.8);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.3);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, background 0.3s, box-shadow 0.3s;
+  mix-blend-mode: screen;
+  display: none;
+}
+#custom-cursor.hovering {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 212, 255, 0.15);
+  border: 2px solid rgba(0, 212, 255, 0.6);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 212, 255, 0.2);
+}
+#cursor-trail {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.15);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  transition: left 0.15s ease-out, top 0.15s ease-out;
+  mix-blend-mode: screen;
+  display: none;
+}
+@media (hover: none), (pointer: coarse) {
+  #custom-cursor, #cursor-trail { display: none !important; }
+}
+
+/* ===== PRODUCT MODAL ===== */
+#product-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(6, 13, 27, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#product-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+#product-modal {
+  background: linear-gradient(135deg, rgba(15, 34, 64, 0.9), rgba(6, 13, 27, 0.95));
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.85);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 60px rgba(0, 212, 255, 0.15), 0 25px 80px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+#product-modal-overlay.active #product-modal {
+  transform: scale(1);
+}
+#modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.1);
+  color: #80f0ff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#modal-close:hover {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.5);
+}
+
+/* ===== MOBILE MENU ANIMATION ===== */
+#menu-btn .hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+#menu-btn.active .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+#menu-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+#menu-btn.active .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+#mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+  opacity: 0;
+}
+#mobile-menu.open {
+  max-height: 400px;
+  opacity: 1;
+}
+#mobile-menu .mobile-link {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+#mobile-menu.open .mobile-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+#mobile-menu.open .mobile-link:nth-child(1) { transition-delay: 0.05s; }
+#mobile-menu.open .mobile-link:nth-child(2) { transition-delay: 0.1s; }
+#mobile-menu.open .mobile-link:nth-child(3) { transition-delay: 0.15s; }
+#mobile-menu.open .mobile-link:nth-child(4) { transition-delay: 0.2s; }
+#mobile-menu.open .mobile-link:nth-child(5) { transition-delay: 0.25s; }
+#mobile-menu.open .mobile-link:nth-child(6) { transition-delay: 0.3s; }
+#mobile-menu.open .mobile-link:nth-child(7) { transition-delay: 0.35s; }
+
+/* ===== PARTICLES ===== */
+.particle {
+  position: absolute;
+  background: rgba(0, 212, 255, 0.4);
+  border-radius: 50%;
+  animation: float linear infinite;
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.3);
+}
+@keyframes float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+
+/* ===== ICE CRYSTALS ===== */
+.ice-crystal {
+  position: absolute;
+  color: rgba(0, 229, 255, 0.15);
+  font-size: 18px;
+  animation: crystal-fall linear infinite;
+  pointer-events: none;
+}
+@keyframes crystal-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* ===== FROST LINES ===== */
+@keyframes frost-sweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+.frost-line {
+  position: absolute;
+  height: 2px;
+  width: 300px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.8), rgba(0,229,255,0.4), transparent);
+  animation: frost-sweep 3s linear infinite;
+  filter: blur(0.5px);
+  box-shadow: 0 0 8px rgba(0,212,255,0.3);
+}
+
+/* ===== GLITCH TEXT ===== */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.glitch::before {
+  color: #00e5ff;
+  animation: glitch-1 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+.glitch::after {
+  color: #0080ff;
+  animation: glitch-2 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+@keyframes glitch-1 {
+  0%, 95% { transform: none; opacity: 0; }
+  96% { transform: translate(2px, -2px); opacity: 0.8; }
+  97% { transform: translate(-2px, 2px); opacity: 0; }
+  98% { transform: translate(2px, 1px); opacity: 0.8; }
+  99% { transform: translate(-1px, -1px); opacity: 0; }
+  100% { transform: none; opacity: 0; }
+}
+@keyframes glitch-2 {
+  0%, 93% { transform: none; opacity: 0; }
+  94% { transform: translate(-2px, 2px); opacity: 0.8; }
+  95% { transform: translate(2px, -1px); opacity: 0; }
+  96% { transform: translate(-1px, 2px); opacity: 0.8; }
+  97% { transform: translate(1px, -2px); opacity: 0; }
+  100% { transform: none; opacity: 0; }
+}
+
+/* ===== GRADIENT TEXT ===== */
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff, #00BFFF, #0080ff, #00e5ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== CARD HOVER WITH GLOW ===== */
+.product-card {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, transparent, rgba(0,212,255,0.1), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.product-card:hover::before { opacity: 1; }
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.15), 0 20px 60px rgba(0, 191, 255, 0.1);
+  border-color: rgba(0, 212, 255, 0.4);
+}
+
+/* ===== NAV BLUR ===== */
+.nav-blur {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ===== HERO ENTRANCE ===== */
+@keyframes hero-in {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.hero-anim { animation: hero-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.hero-anim-d1 { animation-delay: 0.2s; opacity: 0; }
+.hero-anim-d2 { animation-delay: 0.5s; opacity: 0; }
+.hero-anim-d3 { animation-delay: 0.8s; opacity: 0; }
+
+/* ===== MARQUEE ===== */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 20s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ===== PULSE RING ===== */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ===== TEMPERATURE GAUGE ===== */
+.temp-gauge {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.temp-milestones {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+.temp-milestone {
+  white-space: nowrap;
+  background: rgba(6, 13, 27, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #b3f5ff;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+.temp-milestone.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+@media (max-width: 768px) {
+  .temp-milestones { display: none; }
+  .temp-gauge { right: 10px; }
+}
+.temp-bar {
+  width: 4px;
+  height: 140px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.temp-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #00e5ff, #0050ff);
+  border-radius: 2px;
+  transition: height 0.1s;
+  box-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+.temp-value {
+  font-size: 14px;
+  font-weight: 900;
+  color: #00e5ff;
+  text-align: center;
+  margin-top: 6px;
+  text-shadow: 0 0 10px rgba(0,212,255,0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== PARALLAX HELPERS ===== */
+.parallax-slow { transition: transform 0.1s linear; }
+
+/* ===== SCANLINE OVERLAY ===== */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 212, 255, 0.015) 2px,
+    rgba(0, 212, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== LOGO IMAGE ===== */
+.kc-logo { height: 40px; width: auto; }
+.kc-logo-sm { height: 32px; width: auto; }
+.kc-logo-footer { height: 44px; width: auto; }
+
+/* ===== TIMELINE ===== */
+.timeline-container { position: relative; }
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(0,212,255,0.4), rgba(0,212,255,0.4), transparent);
+  transform: translateX(-50%);
+}
+@media (max-width: 768px) {
+  .timeline-line { left: 20px; }
+}
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #00d4ff;
+  box-shadow: 0 0 20px rgba(0,212,255,0.6), 0 0 40px rgba(0,212,255,0.3);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .timeline-dot { left: 20px; }
+}
+.timeline-item {
+  position: relative;
+  width: 50%;
+  padding: 0 40px 40px;
+}
+.timeline-item:nth-child(odd) {
+  left: 0;
+  text-align: right;
+}
+.timeline-item:nth-child(even) {
+  left: 50%;
+  text-align: left;
+}
+@media (max-width: 768px) {
+  .timeline-item,
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    width: 100%;
+    left: 0;
+    text-align: left;
+    padding-left: 50px;
+    padding-right: 16px;
+  }
+}
+.timeline-year {
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #00e5ff, #00BFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.timeline-text {
+  color: rgba(128, 240, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.timeline-highlight {
+  color: #00e5ff;
+  font-weight: 700;
+}
+
+/* ===== H2 GLOW ===== */
+@keyframes h2-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(0,212,255,0.3)); }
+  50% { filter: drop-shadow(0 0 20px rgba(0,212,255,0.5)); }
+}
+
+/* ===== LANG TOGGLE ===== */
+#lang-toggle {
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.3s;
+  user-select: none;
+}
+#lang-toggle:hover { transform: scale(1.15); }
+</style>
+</head>
+<body class="bg-cryo-950 text-white overflow-x-hidden loading">
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <div id="loading-frost-particles"></div>
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAJ9CAYAAABq/99mAAAA6GlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8zQAETA4MDLl5JUVB7k4KEZFRCgxIIDG5uIABN2BkYPh2DUQyMFzWDSxhY8KjFhvgLAJaCKQ/ALFIOpjNyAJiJ0HYEiB2eUlBCZCtA2InFxSB2EAXM/AUhQQ5A9k+QLZCOhI7CYmdklqcDGTnANnxCL/lz2dgsPjCwMA8ESGWNI2BYXs7A4PEHYSYykIGBv5WBoZtlxFin/3B/mUUO1SSWlECEvHTd2QoSCxKBEszgwI0LY2B4dNyBgbeSAYG4QsMDFzREHeAAWsxMKBJDCdCAABhOTZ48inaDwAA59NJREFUeJzs/Ve3Xced33v+ZlphB2SAAEgwJ4kqZYlVKlmyXQ5VZfvYdTyq7T51fNo3Pre+8oVfRL8A352LHj3a7bY9XEFWScVSqlImRUkUKQYQOQN7Y6cVZnieHv/nmXPvDQgkQQIkgIXvR16404pzzQ0DP/5D4r0XAAAAAAAAgNmU3uknAAAAAAAAAODDQwAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzLL/TTwAAAADv7gfrY7++PtbD/Z16ZneWcLwAAADwfhAAAgAA3MX+ZkX+L46fVaJGf3C40DNavNNPCXfIGdW+Vq5HpOSc5BtJrr349mKS9pK1l8PxSwAAcB8jAAQAALfNaclbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgBwH/npT3/qv/vd72px8YNXkflESrJCjS+ldKoyzfX25bF+54/+RBfn92vNpRqUzme+Vp25kOSlLv6VwydOTdpomlvNUqq8HvjUJ3KJkxKnzNv1UynNNbBI4spF/4UH9+hLu/L7LqB4cVX+P5+UvnlsSaerRR0a7lY6tNgGsxb0LUs676RzU+lKLb345kktl15Lk1qjMlHlczVKVTWJmtorT6yuT3JJ/H1skjR8lOpQDZglPSXeK/NjJdqQ/bql3n6/7KPXIE8038u0b2Feh3Yu6uFduT+ySzo8J+2VtFMKVYZ3+tgAAIDbhwAQAID7xNmzZ/2f//mf6z/9p/+k5WWLHD4gn6sqLXBwSvqV3MKilO7QD8Y7tPHEpzWe26XFxFJCpypr5JJUWVNsBYBZpSatQnNir5pX4jLVWSMltTJLL5Sqdpl255l2jZbVL+b0pV0Lup/8YEP+hQtjvXCp0dvZUNlwv8omVTmtpV48lrh3nLWwz0lVKp1ppLfPbejNc+f19tJVnRtPddXnWs966u05qA2XaexS1VkuJT2lSU/eJ/KNU5LG5l8L/fy2IHCTa8IPErltwZ9TEr4n5fY76aRixalYuaLhiUZDVVrwUy00I33puWf0QC/xD83lOjyfa29PejQhEAQA4F5GAAgAwH3i8OHDyXg89ufPn1diAd0HlHmvoXbLe6/pZC0OIOsNNC4e0PqOR7Q2v0eX1tZCVd8kq0N1UqhIool8BUYV8mYB9eof6cJV09R+v/b6rE3KJx2+l5CkW6YO2ehbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgAA3MaBatWXXzpxUOurs9qfWt0WcB0BHwAAeDNoAQYAAIA7lgn41tZWuOrqemj0ttZ8XNnY0FNPPaXhcPhOPgUAAIAZQgUgAAAAbqt2A/GFCxd05coVTadTVVWlOI7luR+WKAAAXK9JREFUvn17dMsJIe6z++67b/MxAAAAvE0EgAAAALitzp49S/gHAACATiEABAAA6LAoivToo48qiiKdPHlS0+n0Tj8lAACAOw4BIAAAwH3EKgnf7HUBAACAxvshAAQAALiNptOpnn766ZsCwOklH9NLQdrrAACA+wUBIAAAQEdkWaYHHnhACwsLN1X8TQeA+A28y/8a3AAAAABJRU5ErkJggg==" alt="KC" class="kc-intro-logo">
+  <div id="loading-temp">25°C</div>
+  <div style="margin-top:12px; font-size:12px; color:rgba(0,212,255,0.5); letter-spacing:4px; text-transform:uppercase;">COOLING DOWN</div>
+</div>
+
+<!-- Custom Cursor -->
+<div id="cursor-trail"></div>
+<div id="custom-cursor"></div>
+
+<!-- Product Modal -->
+<div id="product-modal-overlay">
+  <div id="product-modal">
+    <div id="modal-close">✕</div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- Temperature Gauge -->
+<div id="temp-gauge" class="temp-gauge" style="opacity:0;">
+  <div class="temp-bar">
+    <div id="temp-fill" class="temp-fill" style="height:0%"></div>
+  </div>
+  <div id="temp-value" class="temp-value">25°C</div>
+  <div id="temp-milestones" class="temp-milestones"></div>
+</div>
+
+<!-- Navigation -->
+<nav id="nav" class="fixed top-0 w-full z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      <a href="#" class="flex items-center gap-2 sm:gap-3">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAJ9CAYAAABq/99mAAAA6GlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8zQAETA4MDLl5JUVB7k4KEZFRCgxIIDG5uIABN2BkYPh2DUQyMFzWDSxhY8KjFhvgLAJaCKQ/ALFIOpjNyAJiJ0HYEiB2eUlBCZCtA2InFxSB2EAXM/AUhQQ5A9k+QLZCOhI7CYmdklqcDGTnANnxCL/lz2dgsPjCwMA8ESGWNI2BYXs7A4PEHYSYykIGBv5WBoZtlxFin/3B/mUUO1SSWlECEvHTd2QoSCxKBEszgwI0LY2B4dNyBgbeSAYG4QsMDFzREHeAAWsxMKBJDCdCAABhOTZ48inaDwAA59NJREFUeJzs/Ve3Xced33v+ZlphB2SAAEgwJ4kqZYlVKlmyXQ5VZfvYdTyq7T51fNo3Pre+8oVfRL8A352LHj3a7bY9XEFWScVSqlImRUkUKQYQOQN7Y6cVZnieHv/nmXPvDQgkQQIkgIXvR16404pzzQ0DP/5D4r0XAAAAAAAAgNmU3uknAAAAAAAAAODDQwAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzLL/TTwAAAADv7gfrY7++PtbD/Z16ZneWcLwAAADwfhAAAgAA3MX+ZkX+L46fVaJGf3C40DNavNNPCXfIGdW+Vq5HpOSc5BtJrr349mKS9pK1l8PxSwAAcB8jAAQAALfNaclbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgBwH/npT3/qv/vd72px8YNXkflESrJCjS+ldKoyzfX25bF+54/+RBfn92vNpRqUzme+Vp25kOSlLv6VwydOTdpomlvNUqq8HvjUJ3KJkxKnzNv1UynNNbBI4spF/4UH9+hLu/L7LqB4cVX+P5+UvnlsSaerRR0a7lY6tNgGsxb0LUs676RzU+lKLb345kktl15Lk1qjMlHlczVKVTWJmtorT6yuT3JJ/H1skjR8lOpQDZglPSXeK/NjJdqQ/bql3n6/7KPXIE8038u0b2Feh3Yu6uFduT+ySzo8J+2VtFMKVYZ3+tgAAIDbhwAQAID7xNmzZ/2f//mf6z/9p/+k5WWLHD4gn6sqLXBwSvqV3MKilO7QD8Y7tPHEpzWe26XFxFJCpypr5JJUWVNsBYBZpSatQnNir5pX4jLVWSMltTJLL5Sqdpl255l2jZbVL+b0pV0Lup/8YEP+hQtjvXCp0dvZUNlwv8omVTmtpV48lrh3nLWwz0lVKp1ppLfPbejNc+f19tJVnRtPddXnWs966u05qA2XaexS1VkuJT2lSU/eJ/KNU5LG5l8L/fy2IHCTa8IPErltwZ9TEr4n5fY76aRixalYuaLhiUZDVVrwUy00I33puWf0QC/xD83lOjyfa29PejQhEAQA4F5GAAgAwH3i8OHDyXg89ufPn1diAd0HlHmvoXbLe6/pZC0OIOsNNC4e0PqOR7Q2v0eX1tZCVd8kq0N1UqhIool8BUYV8mYB9eof6cJV09R+v/b6rE3KJx2+l5CkW6YO2ehbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgAA3MaBatWXXzpxUOurs9qfWt0WcB0BHwAAeDNoAQYAAIA7lgn41tZWuOrqemj0ttZ8XNnY0FNPPaXhcPhOPgUAAIAZQgUgAAAAbqt2A/GFCxd05coVTadTVVWlOI7luR+WKAAAXK9JREFUvn17dMsJIe6z++67b/MxAAAAvE0EgAAAALitzp49S/gHAACATiEABAAA6LAoivToo48qiiKdPHlS0+n0Tj8lAACAOw4BIAAAwH3EKgnf7HUBAACAxvshAAQAALiNptOpnn766ZsCwOklH9NLQdrrAACA+wUBIAAAQEdkWaYHHnhACwsLN1X8TQeA+A28y/8a3AAAAABJRU5ErkJggg==" alt="KC Logo" class="kc-logo hidden sm:block">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAJ9CAYAAABq/99mAAAA6GlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8zQAETA4MDLl5JUVB7k4KEZFRCgxIIDG5uIABN2BkYPh2DUQyMFzWDSxhY8KjFhvgLAJaCKQ/ALFIOpjNyAJiJ0HYEiB2eUlBCZCtA2InFxSB2EAXM/AUhQQ5A9k+QLZCOhI7CYmdklqcDGTnANnxCL/lz2dgsPjCwMA8ESGWNI2BYXs7A4PEHYSYykIGBv5WBoZtlxFin/3B/mUUO1SSWlECEvHTd2QoSCxKBEszgwI0LY2B4dNyBgbeSAYG4QsMDFzREHeAAWsxMKBJDCdCAABhOTZ48inaDwAA59NJREFUeJzs/Ve3Xced33v+ZlphB2SAAEgwJ4kqZYlVKlmyXQ5VZfvYdTyq7T51fNo3Pre+8oVfRL8A352LHj3a7bY9XEFWScVSqlImRUkUKQYQOQN7Y6cVZnieHv/nmXPvDQgkQQIkgIXvR16404pzzQ0DP/5D4r0XAAAAAAAAgNmU3uknAAAAAAAAAODDQwAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzLL/TTwAAAADv7gfrY7++PtbD/Z16ZneWcLwAAADwfhAAAgAA3MX+ZkX+L46fVaJGf3C40DNavNNPCXfIGdW+Vq5HpOSc5BtJrr349mKS9pK1l8PxSwAAcB8jAAQAALfNaclbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgBwH/npT3/qv/vd72px8YNXkflESrJCjS+ldKoyzfX25bF+54/+RBfn92vNpRqUzme+Vp25kOSlLv6VwydOTdpomlvNUqq8HvjUJ3KJkxKnzNv1UynNNbBI4spF/4UH9+hLu/L7LqB4cVX+P5+UvnlsSaerRR0a7lY6tNgGsxb0LUs676RzU+lKLb345kktl15Lk1qjMlHlczVKVTWJmtorT6yuT3JJ/H1skjR8lOpQDZglPSXeK/NjJdqQ/bql3n6/7KPXIE8038u0b2Feh3Yu6uFduT+ySzo8J+2VtFMKVYZ3+tgAAIDbhwAQAID7xNmzZ/2f//mf6z/9p/+k5WWLHD4gn6sqLXBwSvqV3MKilO7QD8Y7tPHEpzWe26XFxFJCpypr5JJUWVNsBYBZpSatQnNir5pX4jLVWSMltTJLL5Sqdpl255l2jZbVL+b0pV0Lup/8YEP+hQtjvXCp0dvZUNlwv8omVTmtpV48lrh3nLWwz0lVKp1ppLfPbejNc+f19tJVnRtPddXnWs966u05qA2XaexS1VkuJT2lSU/eJ/KNU5LG5l8L/fy2IHCTa8IPErltwZ9TEr4n5fY76aRixalYuaLhiUZDVVrwUy00I33puWf0QC/xD83lOjyfa29PejQhEAQA4F5GAAgAwH3i8OHDyXg89ufPn1diAd0HlHmvoXbLe6/pZC0OIOsNNC4e0PqOR7Q2v0eX1tZCVd8kq0N1UqhIool8BUYV8mYB9eof6cJV09R+v/b6rE3KJx2+l5CkW6YO2ehbCHHkPQIHCy/s46F3uN6Z9ucP3ufBxU9H8t863eivjy3poX1D/f0e01vuFyckP5K0LulqI12dSGvTSuOy1Pqq91UpjcupplWp0jVKslRpkSvLEk02RuoVueb7Ay3MDbVrOPRzQ2m+L/UT6chQ6rX/EOjfxO8rAAC49xEAAgAA3MaBatWXXzpxUOurs9qfWt0WcB0BHwAAeDNoAQYAAIA7lgn41tZWuOrqemj0ttZ8XNnY0FNPPaXhcPhOPgUAAIAZQgUgAAAAbqt2A/GFCxd05coVTadTVVWlOI7luR+WKAAAXK9JREFUvn17dMsJIe6z++67b/MxAAAAvE0EgAAAALitzp49S/gHAACATiEABAAA6LAoivToo48qiiKdPHlS0+n0Tj8lAACAOw4BIAAAwH3EKgnf7HUBAACAxvshAAQAALiNptOpnn766ZsCwOklH9NLQdrrAACA+wUBIAAAQEdkWaYHHnhACwsLN1X8TQeA+A28y/8a3AAAAABJRU5ErkJggg==" alt="KC Logo" class="kc-logo-sm sm:hidden">
+        <div class="leading-tight">
+          <div class="font-bold text-sm sm:text-base" data-ko="한국초저온용기" data-en="Korea Cryogenics">한국초저온용기</div>
+          <div class="text-[10px] sm:text-xs text-cryo-300 tracking-wider">KOREA CRYOGENICS</div>
+        </div>
+      </a>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="#products" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="제품" data-en="Products">제품</a>
+        <a href="#about" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="회사소개" data-en="About Us">회사소개</a>
+        <a href="#history" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="연혁" data-en="History">연혁</a>
+        <a href="#engineering" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="엔지니어링" data-en="Engineering">엔지니어링</a>
+        <a href="#partners" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="거래선" data-en="Partners">거래선</a>
+        <a href="#rental" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="렌탈·리스" data-en="Rental·Lease">렌탈·리스</a>
+        <span id="lang-toggle" title="Switch Language">🇰🇷</span>
+        <a href="#contact" class="px-5 py-2 bg-gradient-to-r from-cryo-500 to-ice-500 hover:from-cryo-400 hover:to-ice-400 rounded-full text-sm font-medium transition text-cryo-950" data-ko="견적 문의" data-en="Get a Quote">견적 문의</a>
+      </div>
+      <div class="flex items-center gap-3 lg:hidden">
+        <span id="lang-toggle-mobile" style="cursor:pointer;font-size:18px;user-select:none;" title="Switch Language">🇰🇷</span>
+        <button id="menu-btn" class="p-2 flex flex-col gap-[6px]">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobile-menu" class="lg:hidden nav-blur bg-cryo-950/95 border-t border-cryo-700/30">
+    <div class="px-4 py-4 space-y-3">
+      <a href="#products" class="mobile-link block text-cryo-200 hover:text-white" data-ko="제품" data-en="Products">제품</a>
+      <a href="#about" class="mobile-link block text-cryo-200 hover:text-white" data-ko="회사소개" data-en="About Us">회사소개</a>
+      <a href="#history" class="mobile-link block text-cryo-200 hover:text-white" data-ko="연혁" data-en="History">연혁</a>
+      <a href="#partners" class="mobile-link block text-cryo-200 hover:text-white" data-ko="거래선" data-en="Partners">거래선</a>
+      <a href="#rental" class="mobile-link block text-cryo-200 hover:text-white" data-ko="렌탈·리스" data-en="Rental·Lease">렌탈·리스</a>
+      <a href="#contact" class="mobile-link block px-5 py-2 bg-gradient-to-r from-cryo-500 to-ice-500 rounded-full text-center font-medium text-cryo-950" data-ko="견적 문의" data-en="Get a Quote">견적 문의</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#080e22] to-[#060d1b]"></div>
+  <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(0,212,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,1) 1px, transparent 1px); background-size: 80px 80px;"></div>
+  <div class="scanlines"></div>
+  <div id="parallax-orb-1" class="parallax-slow absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cryo-500/8 rounded-full blur-[150px]"></div>
+  <div id="parallax-orb-2" class="parallax-slow absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-ice-500/6 rounded-full blur-[120px]"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#0040ff]/5 rounded-full blur-[100px]"></div>
+  <div class="frost-line top-[20%]" style="animation-delay:0s;"></div>
+  <div class="frost-line top-[40%]" style="animation-delay:1s;"></div>
+  <div class="frost-line top-[60%]" style="animation-delay:2s;"></div>
+  <div class="frost-line top-[80%]" style="animation-delay:0.5s;"></div>
+  <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+  <div id="crystals" class="absolute inset-0 pointer-events-none"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
+    <div class="hero-anim hero-anim-d1 inline-block mb-4 sm:mb-6 px-4 py-1.5 border border-cryo-500/30 rounded-full text-cryo-300 text-xs sm:text-sm tracking-wider" data-ko="SINCE 1990 · 초저온 솔루션 전문기업" data-en="SINCE 1990 · Cryogenic Solutions Expert">
+      SINCE 1990 · 초저온 솔루션 전문기업
+    </div>
+    <h1 class="hero-anim hero-anim-d2 text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-4 sm:mb-6">
+      <span class="glitch" data-text="극한의 온도," data-ko="극한의 온도," data-en="Extreme Temperature,">극한의 온도,</span><br>
+      <span class="gradient-text" data-ko="무한한 가능성" data-en="Infinite Possibilities">무한한 가능성</span>
+    </h1>
+    <p class="hero-anim hero-anim-d3 text-base sm:text-lg md:text-xl text-cryo-300 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed px-4" data-ko="초저온 용기, 바이오 장비, 헬스케어까지<br class='hidden sm:block'>한국초저온용기가 산업의 미래를 냉각합니다" data-en="From cryogenic vessels to bio equipment and healthcare<br class='hidden sm:block'>Korea Cryogenics cools the future of industry">
+      초저온 용기, 바이오 장비, 헬스케어까지<br class="hidden sm:block">
+      한국초저온용기가 산업의 미래를 냉각합니다
+    </p>
+    <div class="hero-anim hero-anim-d3 flex flex-col sm:flex-row gap-4 justify-center px-4">
+      <a href="#products" class="px-8 py-3.5 bg-gradient-to-r from-cryo-500 to-ice-500 hover:from-cryo-400 hover:to-ice-400 rounded-full font-semibold transition transform hover:scale-105 shadow-lg shadow-cryo-500/30 text-cryo-950" data-ko="제품 둘러보기 →" data-en="View Products →">
+        제품 둘러보기 →
+      </a>
+      <a href="#contact" class="px-8 py-3.5 border border-cryo-500/40 hover:border-cryo-400 rounded-full font-semibold transition hover:bg-cryo-500/10 hover:shadow-lg hover:shadow-cryo-500/10" data-ko="견적 문의" data-en="Get a Quote">
+        견적 문의
+      </a>
+    </div>
+    <div class="hero-anim hero-anim-d3 mt-12 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 max-w-3xl mx-auto px-4">
+      <div>
+        <div class="text-2xl sm:text-3xl font-black gradient-text counter" data-target="35">0</div>
+        <div class="text-xs sm:text-sm text-cryo-400 mt-1" data-ko="년+ 업력" data-en="Years+">년+ 업력</div>
+      </div>
+      <div>
+        <div class="text-2xl sm:text-3xl font-black gradient-text counter" data-target="50000" data-display="5만+">0</div>
+        <div class="text-xs sm:text-sm text-cryo-400 mt-1" data-ko="용기 판매" data-en="Vessels Sold">용기 판매</div>
+      </div>
+      <div>
+        <div class="text-2xl sm:text-3xl font-black gradient-text counter" data-target="15">0</div>
+        <div class="text-xs sm:text-sm text-cryo-400 mt-1" data-ko="기 액화수소 벌크탱크" data-en="LH₂ Bulk Tanks">기 액화수소 벌크탱크</div>
+      </div>
+      <div>
+        <div class="text-2xl sm:text-3xl font-black gradient-text counter" data-target="500">0</div>
+        <div class="text-xs sm:text-sm text-cryo-400 mt-1" data-ko="+ 고객사" data-en="+ Clients">+ 고객사</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+    <span class="text-xs text-cryo-400 tracking-widest">SCROLL</span>
+    <svg class="w-5 h-5 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="py-20 sm:py-32 relative">
+  <div class="absolute inset-0 bg-gradient-to-b from-cryo-950 via-[#080e22] to-cryo-950"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12 sm:mb-16 reveal">
+      <span class="text-cryo-400 text-sm tracking-widest uppercase">Products</span>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-4" data-ko="제품 라인업" data-en="Product Lineup">제품 라인업</h2>
+      <p class="text-cryo-300 max-w-xl mx-auto" data-ko="초저온에서 헬스케어까지, 신뢰할 수 있는 솔루션" data-en="Reliable solutions from cryogenics to healthcare">초저온에서 헬스케어까지, 신뢰할 수 있는 솔루션</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Card 1: 초저온 장비 -->
+      <div class="product-card reveal bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-cryo-700/20 rounded-2xl p-6 sm:p-8 group cursor-pointer" data-modal="cryo">
+        <div class="w-14 h-14 rounded-xl bg-cryo-500/10 border border-cryo-500/20 flex items-center justify-center mb-5 group-hover:bg-cryo-500/20 group-hover:shadow-lg group-hover:shadow-cryo-500/20 transition-all">
+          <svg class="w-7 h-7 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525"/></svg>
+        </div>
+        <div class="text-cryo-400 text-xs font-medium tracking-wider mb-2">XL SERIES</div>
+        <h3 class="text-xl font-bold mb-3" data-ko="초저온 장비" data-en="Cryogenic Equipment">초저온 장비</h3>
+        <p class="text-sm text-cryo-300 leading-relaxed mb-4" data-ko="초저온 용기, 벌크탱크, 렌탈/리스 프로그램까지 산업 현장을 위한 완벽한 솔루션" data-en="Complete solutions for industrial sites: cryogenic vessels, bulk tanks, and rental/lease programs">초저온 용기, 벌크탱크, 렌탈/리스 프로그램까지 산업 현장을 위한 완벽한 솔루션</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">벌크탱크</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">렌탈</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">리스</span>
+        </div>
+      </div>
+      <!-- Card 2: 바이오 장비 -->
+      <div class="product-card reveal bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-cryo-700/20 rounded-2xl p-6 sm:p-8 group cursor-pointer" data-modal="bio" style="transition-delay: 0.1s;">
+        <div class="w-14 h-14 rounded-xl bg-cryo-500/10 border border-cryo-500/20 flex items-center justify-center mb-5 group-hover:bg-cryo-500/20 group-hover:shadow-lg group-hover:shadow-cryo-500/20 transition-all">
+          <svg class="w-7 h-7 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+        </div>
+        <div class="text-cryo-400 text-xs font-medium tracking-wider mb-2">LABS SERIES</div>
+        <h3 class="text-xl font-bold mb-3" data-ko="바이오 장비" data-en="Bio Equipment">바이오 장비</h3>
+        <p class="text-sm text-cryo-300 leading-relaxed mb-4" data-ko="액체질소·헬륨 용기와 진공 배관으로 연구 현장의 극저온 환경을 지원합니다" data-en="Supporting ultra-low temperature research environments with LN₂/LHe vessels and vacuum piping">액체질소·헬륨 용기와 진공 배관으로 연구 현장의 극저온 환경을 지원합니다</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">액체질소</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">액체헬륨</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">진공배관</span>
+        </div>
+      </div>
+      <!-- Card 3: 특수가스 실린더 -->
+      <div class="product-card reveal bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-cryo-700/20 rounded-2xl p-6 sm:p-8 group cursor-pointer relative overflow-hidden" data-modal="gas" style="transition-delay: 0.2s;">
+        <div class="absolute top-3 right-3 bg-gradient-to-r from-cryo-500 to-ice-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full text-cryo-950">NEW</div>
+        <div class="w-14 h-14 rounded-xl bg-cryo-500/10 border border-cryo-500/20 flex items-center justify-center mb-5 group-hover:bg-cryo-500/20 group-hover:shadow-lg group-hover:shadow-cryo-500/20 transition-all">
+          <svg class="w-7 h-7 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z"/></svg>
+        </div>
+        <div class="text-cryo-400 text-xs font-medium tracking-wider mb-2">SPECIALTY GAS</div>
+        <h3 class="text-xl font-bold mb-3" data-ko="특수가스 실린더" data-en="Specialty Gas Cylinders">특수가스 실린더</h3>
+        <p class="text-sm text-cryo-300 leading-relaxed mb-4" data-ko="영국 Luxfer사 알루미늄 실린더 한국 독점 공급. L6X®, SGS® 시리즈로 반도체 초고순도 가스 저장" data-en="Exclusive Korea distributor for Luxfer aluminum cylinders. L6X®, SGS® series for ultra-pure semiconductor gas storage">영국 Luxfer사 알루미늄 실린더 한국 독점 공급. L6X®, SGS® 시리즈로 반도체 초고순도 가스 저장</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">반도체</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">Luxfer</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">초고순도</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">삼성전자</span>
+        </div>
+      </div>
+    </div>
+    <!-- Row 2: 2 cards centered -->
+    <div class="grid sm:grid-cols-2 gap-6 mt-6 max-w-4xl mx-auto">
+      <!-- Card 4: 헬스케어 -->
+      <div class="product-card reveal bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-cryo-700/20 rounded-2xl p-6 sm:p-8 group cursor-pointer" data-modal="health" style="transition-delay: 0.3s;">
+        <div class="w-14 h-14 rounded-xl bg-cryo-500/10 border border-cryo-500/20 flex items-center justify-center mb-5 group-hover:bg-cryo-500/20 group-hover:shadow-lg group-hover:shadow-cryo-500/20 transition-all">
+          <svg class="w-7 h-7 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+        </div>
+        <div class="text-cryo-400 text-xs font-medium tracking-wider mb-2">HEALTHCARE</div>
+        <h3 class="text-xl font-bold mb-3" data-ko="헬스케어 장비" data-en="Healthcare Equipment">헬스케어 장비</h3>
+        <p class="text-sm text-cryo-300 leading-relaxed mb-4" data-ko="개인용 산소발생기부터 의료 장비까지, 건강한 삶을 위한 호흡 솔루션" data-en="Respiratory solutions from personal oxygen generators to medical equipment">개인용 산소발생기부터 의료 장비까지, 건강한 삶을 위한 호흡 솔루션</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">Home Care</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">Medical</span>
+        </div>
+      </div>
+      <!-- Card 5: 가스 엔지니어링 -->
+      <div class="product-card reveal bg-gradient-to-b from-cryo-500/10 to-cryo-950/80 border border-cryo-500/30 rounded-2xl p-6 sm:p-8 group cursor-pointer relative overflow-hidden" data-modal="eng" style="transition-delay: 0.4s;">
+        <div class="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full text-white">핵심사업</div>
+        <div class="w-14 h-14 rounded-xl bg-cryo-500/10 border border-cryo-500/20 flex items-center justify-center mb-5 group-hover:bg-cryo-500/20 group-hover:shadow-lg group-hover:shadow-cryo-500/20 transition-all">
+          <svg class="w-7 h-7 text-cryo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><circle cx="12" cy="12" r="3" stroke-width="1.5"/></svg>
+        </div>
+        <div class="text-cryo-400 text-xs font-medium tracking-wider mb-2">GAS ENGINEERING</div>
+        <h3 class="text-xl font-bold mb-3" data-ko="가스 엔지니어링" data-en="Gas Engineering">가스 엔지니어링</h3>
+        <p class="text-sm text-cryo-300 leading-relaxed mb-4" data-ko="반도체 팹 CO₂ 공급 시스템 설계·시공·관리. 삼성전자 평택 P1~P4 + 미국 테일러 프로젝트 연속 수주" data-en="Semiconductor fab CO₂ supply system design/construction. Samsung P1~P4 + US Taylor project">반도체 팹 CO₂ 공급 시스템 설계·시공·관리. 삼성전자 평택 P1~P4 + 미국 테일러 프로젝트 연속 수주</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">CO₂ Supply</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">삼성전자</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">반도체 팹</span>
+          <span class="text-xs px-2 py-1 bg-cryo-500/10 border border-cryo-500/20 rounded-full text-cryo-300">해외진출</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liquid Hydrogen Highlight -->
+    <div class="mt-16 reveal">
+      <div class="relative bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-cryo-500/30 rounded-2xl p-8 sm:p-12 overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-cryo-500/10 rounded-full blur-[80px]"></div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">⚡</span>
+            <span class="text-cryo-400 text-sm tracking-widest uppercase font-bold">Liquid Hydrogen Infrastructure</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black mb-4" data-ko="한국 최초 <span class='gradient-text'>액화수소 벌크탱크</span> 도입" data-en="Korea's First <span class='gradient-text'>LH₂ Bulk Tank</span> Introduction">한국 최초 <span class="gradient-text">액화수소 벌크탱크</span> 도입</h3>
+          <p class="text-cryo-300 leading-relaxed mb-6 max-w-3xl" data-ko="KC는 한국 최초로 액화수소 벌크탱크를 도입·설치한 기업입니다. 2025년 기준 <span class='text-cryo-400 font-bold'>15기 설치 완료</span>로, 한국 수소경제의 핵심 인프라 파트너로 자리잡았습니다." data-en="KC is the first company in Korea to introduce and install liquid hydrogen bulk tanks. As of 2025, <span class='text-cryo-400 font-bold'>15 units installed</span>, establishing KC as a key hydrogen infrastructure partner.">
+            KC는 한국 최초로 액화수소 벌크탱크를 도입·설치한 기업입니다. 2025년 기준 <span class="text-cryo-400 font-bold">15기 설치 완료</span>로, 한국 수소경제의 핵심 인프라 파트너로 자리잡았습니다.
+          </p>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">15기</div>
+              <div class="text-xs text-cryo-400" data-ko="액화수소 벌크탱크 설치 완료" data-en="LH₂ Bulk Tanks Installed">액화수소 벌크탱크 설치 완료</div>
+            </div>
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">450기</div>
+              <div class="text-xs text-cryo-400" data-ko="정부 목표 수소충전소 (2025)" data-en="Gov. Target H₂ Stations (2025)">정부 목표 수소충전소 (2025)</div>
+            </div>
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">3만톤</div>
+              <div class="text-xs text-cryo-400" data-ko="SK E&S 인천 플랜트 연간 생산량" data-en="SK E&S Incheon Annual Output">SK E&S 인천 플랜트 연간 생산량</div>
+            </div>
+          </div>
+          <p class="text-cryo-500 text-sm mt-4">SK E&S, Nikkiso 등 주요 파트너와 협력 · 정부 목표 2030년 수소충전소 660기</p>
+        </div>
+      </div>
+    </div>
+    <!-- Specialty Gas Cylinders Detail -->
+    <div class="mt-16 reveal">
+      <div class="relative bg-gradient-to-r from-cryo-800/40 via-cryo-500/10 to-cryo-800/40 border border-cryo-500/30 rounded-2xl p-8 sm:p-12 overflow-hidden">
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-cryo-500/8 rounded-full blur-[80px]"></div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">🔬</span>
+            <span class="text-cryo-400 text-sm tracking-widest uppercase font-bold">Luxfer Specialty Gas Cylinders</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black mb-4">반도체 초고순도 <span class="gradient-text">특수가스 실린더</span></h3>
+          <p class="text-cryo-300 leading-relaxed mb-6 max-w-3xl">
+            영국 <span class="text-cryo-400 font-bold">Luxfer Gas Cylinders</span> 한국 독점 공급. 내부 부식 없는 알루미늄 소재 L6X®, SGS® 시리즈로 CVD(증착), 에칭(식각), 도핑 등 반도체 공정에 사용되는 <span class="text-cryo-400 font-bold">200여 종 특수가스</span>의 순도를 완벽히 유지합니다.
+          </p>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">200+</div>
+              <div class="text-xs text-cryo-400">반도체 공정용 특수가스 종류</div>
+            </div>
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">L6X® / SGS®</div>
+              <div class="text-xs text-cryo-400">알루미늄 고순도 실린더 시리즈</div>
+            </div>
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-4">
+              <div class="text-2xl font-black gradient-text mb-1">삼성전자</div>
+              <div class="text-xs text-cryo-400">반도체 팹 납품 실적</div>
+            </div>
+          </div>
+          <p class="text-cryo-500 text-sm mt-4">독성·가연성·부식성 가스를 안전하게 보관 · CVD, 에칭, 도핑, 이온주입 등 전 공정 대응</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gas Engineering Showcase -->
+    <div id="engineering" class="mt-16 reveal">
+      <div class="relative bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-amber-500/20 rounded-2xl p-8 sm:p-12 overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-cryo-500/8 rounded-full blur-[100px]"></div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-3xl">🏭</span>
+            <span class="text-amber-400 text-sm tracking-widest uppercase font-bold">Samsung Semiconductor Fab Projects</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black mb-2">반도체 팹 <span class="gradient-text">가스 엔지니어링</span></h3>
+          <p class="text-cryo-300 leading-relaxed mb-8 max-w-3xl">
+            반도체 팹 가스라인 설계·시공·관리 전문. 특히 <span class="text-cryo-400 font-bold">CO₂ 공급 시스템</span>은 초순수(UPW) pH 조절, CMP 공정 세정, 웨이퍼 세척에 핵심적인 역할을 합니다. 삼성전자 평택 캠퍼스 P1부터 P4, 해외까지 연속 수주 — <span class="text-amber-400 font-bold">기술력과 신뢰의 증거</span>입니다.
+          </p>
+          <div class="mb-8">
+            <h4 class="text-lg font-bold text-cryo-200 mb-4">📋 주요 프로젝트 실적</h4>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="group bg-cryo-950/60 border border-cryo-700/30 rounded-xl p-4 hover:border-amber-500/40 transition-all hover:shadow-lg hover:shadow-amber-500/10">
+                <div class="text-amber-400 text-xs font-bold tracking-wider mb-1">SAMSUNG P1</div>
+                <div class="text-white font-bold text-sm mb-1">평택 P1 CO₂ Supply</div>
+                <div class="text-cryo-500 text-xs">삼성전자 평택캠퍼스</div>
+                <div class="mt-2 w-full h-1 bg-cryo-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full" style="width:100%"></div></div>
+                <div class="text-[10px] text-green-400 mt-1">✓ 완료</div>
+              </div>
+              <div class="group bg-cryo-950/60 border border-cryo-700/30 rounded-xl p-4 hover:border-amber-500/40 transition-all hover:shadow-lg hover:shadow-amber-500/10">
+                <div class="text-amber-400 text-xs font-bold tracking-wider mb-1">SAMSUNG P2</div>
+                <div class="text-white font-bold text-sm mb-1">평택 P2 CO₂ Supply</div>
+                <div class="text-cryo-500 text-xs">삼성전자 평택캠퍼스</div>
+                <div class="mt-2 w-full h-1 bg-cryo-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full" style="width:100%"></div></div>
+                <div class="text-[10px] text-green-400 mt-1">✓ 완료</div>
+              </div>
+              <div class="group bg-cryo-950/60 border border-cryo-700/30 rounded-xl p-4 hover:border-amber-500/40 transition-all hover:shadow-lg hover:shadow-amber-500/10">
+                <div class="text-amber-400 text-xs font-bold tracking-wider mb-1">SAMSUNG P3</div>
+                <div class="text-white font-bold text-sm mb-1">평택 P3 CO₂ Supply</div>
+                <div class="text-cryo-500 text-xs">삼성전자 평택캠퍼스</div>
+                <div class="mt-2 w-full h-1 bg-cryo-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full" style="width:100%"></div></div>
+                <div class="text-[10px] text-green-400 mt-1">✓ 완료</div>
+              </div>
+              <div class="group bg-cryo-950/60 border border-amber-500/30 rounded-xl p-4 hover:border-amber-500/50 transition-all hover:shadow-lg hover:shadow-amber-500/10 relative">
+                <div class="absolute top-2 right-2 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+                <div class="text-amber-400 text-xs font-bold tracking-wider mb-1">SAMSUNG P4</div>
+                <div class="text-white font-bold text-sm mb-1">평택 P4 CO₂ Supply</div>
+                <div class="text-cryo-500 text-xs">삼성전자 평택캠퍼스</div>
+                <div class="mt-2 w-full h-1 bg-cryo-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full animate-pulse" style="width:65%"></div></div>
+                <div class="text-[10px] text-amber-400 mt-1">⟳ 진행중</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-8">
+            <div class="group bg-gradient-to-b from-cryo-800/40 to-cryo-950/80 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400/50 transition-all hover:shadow-lg hover:shadow-blue-500/10">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-lg">🇺🇸</span>
+                <span class="text-blue-400 text-xs font-bold tracking-wider">GLOBAL EXPANSION</span>
+              </div>
+              <div class="text-white font-bold mb-1">삼성전자 미국 T-Project</div>
+              <div class="text-cryo-400 text-sm">Taylor, TX — BSGS CO₂ Supply System</div>
+              <div class="mt-2 w-full h-1 bg-cryo-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full" style="width:100%"></div></div>
+              <div class="text-[10px] text-green-400 mt-1">✓ 완료</div>
+            </div>
+            <div class="bg-cryo-950/60 border border-cryo-700/20 rounded-xl p-5">
+              <div class="text-cryo-400 text-xs font-bold tracking-wider mb-3">기타 주요 실적</div>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center gap-2 text-cryo-300">
+                  <span class="text-green-400 text-xs">✓</span>
+                  <span>포항가속기연구소 PLS-II LIN Supply</span>
+                </div>
+                <div class="flex items-center gap-2 text-cryo-300">
+                  <span class="text-green-400 text-xs">✓</span>
+                  <span>삼성디스플레이 천안 6L CO₂ Supply</span>
+                </div>
+                <div class="flex items-center gap-2 text-cryo-300">
+                  <span class="text-green-400 text-xs">✓</span>
+                  <span>SK하이닉스 M10A O₂ Yard Vaporizer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-2 text-sm">
+            <span class="px-3 py-1 bg-cryo-950/80 border border-amber-500/30 rounded-full text-amber-400 font-bold text-xs">P1</span>
+            <span class="text-cryo-600">→</span>
+            <span class="px-3 py-1 bg-cryo-950/80 border border-amber-500/30 rounded-full text-amber-400 font-bold text-xs">P2</span>
+            <span class="text-cryo-600">→</span>
+            <span class="px-3 py-1 bg-cryo-950/80 border border-amber-500/30 rounded-full text-amber-400 font-bold text-xs">P3</span>
+            <span class="text-cryo-600">→</span>
+            <span class="px-3 py-1 bg-cryo-950/80 border border-amber-500/40 rounded-full text-amber-300 font-bold text-xs animate-pulse">P4</span>
+            <span class="text-cryo-600">→</span>
+            <span class="px-3 py-1 bg-cryo-950/80 border border-blue-500/30 rounded-full text-blue-400 font-bold text-xs">🇺🇸 USA</span>
+          </div>
+          <p class="text-center text-cryo-500 text-xs mt-3">연속 수주가 증명하는 기술력과 파트너 신뢰</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20 sm:py-32 relative">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div class="reveal">
+        <span class="text-cryo-400 text-sm tracking-widest uppercase">About KCC</span>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-6" data-ko="신뢰와 기술의<br><span class='gradient-text'>35년</span>" data-en="35 Years of<br><span class='gradient-text'>Trust & Technology</span>">
+          신뢰와 기술의<br><span class="gradient-text">35년</span>
+        </h2>
+        <p class="text-cryo-300 leading-relaxed mb-4" data-ko="1990년 설립 이래, 한국초저온용기(주)는 초저온 산업 장비 분야에서 대한민국을 대표하는 전문기업으로 성장해 왔습니다. 극저온 보존 시스템(Cryopreservation Systems), 극저온 듀어·냉동고(Cryogenic Dewars &amp; Refrigerators), 벌크탱크(Bulk Tanks), 진공 자켓 배관 시스템(Vacuum Jacket Pipeline Systems)을 전문으로 공급합니다." data-en="Since its founding in 1990, Korea Cryogenics Co., Ltd has grown into Korea's leading specialist in cryogenic industrial equipment. We supply Cryopreservation Systems, Cryogenic Dewars &amp; Refrigerators, Bulk Tanks, and Vacuum Jacket Pipeline Systems.">
+          1990년 설립 이래, 한국초저온용기(주)는 초저온 산업 장비 분야에서 대한민국을 대표하는 전문기업으로 성장해 왔습니다. 극저온 보존 시스템(Cryopreservation Systems), 극저온 듀어·냉동고(Cryogenic Dewars &amp; Refrigerators), 벌크탱크(Bulk Tanks), 진공 자켓 배관 시스템(Vacuum Jacket Pipeline Systems)을 전문으로 공급합니다.
+        </p>
+        <p class="text-cryo-300 leading-relaxed mb-6">
+          가스 제조사, 병원, 연구소, 대학교, 국가기관 등 <span class="text-cryo-200 font-semibold">500+</span> 고객사에게 최적화된 솔루션을 제공하며, 연 매출 약 <span class="text-cryo-200 font-semibold">200억원</span> 규모의 전문 인력 <span class="text-cryo-200 font-semibold">30명</span>이 충북 음성 서비스 공장을 기반으로 Taylor-Wharton, Luxfer 등 세계 최고의 파트너사와 함께 산업, 바이오, 의료 분야를 지원합니다.
+        </p>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-cryo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3.5 h-3.5 text-cryo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-cryo-200" data-ko="글로벌 파트너십 기반의 최고 품질 장비" data-en="Highest quality equipment through global partnerships">글로벌 파트너십 기반의 최고 품질 장비</span>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-cryo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3.5 h-3.5 text-cryo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-cryo-200" data-ko="렌탈·리스 프로그램으로 유연한 도입" data-en="Flexible adoption via rental & lease programs">렌탈·리스 프로그램으로 유연한 도입</span>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-cryo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3.5 h-3.5 text-cryo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-cryo-200" data-ko="전문 엔지니어링 & A/S 지원 (음성 서비스 공장)" data-en="Expert engineering & A/S support (Eumseong factory)">전문 엔지니어링 & A/S 지원 (음성 서비스 공장)</span>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-cryo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3.5 h-3.5 text-cryo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-cryo-200" data-ko="한국 최초 액화수소 벌크탱크 도입·설치 기업" data-en="First in Korea to install LH₂ bulk tanks">한국 최초 액화수소 벌크탱크 도입·설치 기업</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-cryo-400">
+          <span data-ko="자회사" data-en="Subsidiary">자회사</span>
+          <a href="https://roturn.com" target="_blank" class="px-4 py-1.5 border border-cryo-500/30 rounded-full hover:bg-cryo-500/10 transition hover:shadow-lg hover:shadow-cryo-500/10">
+            ROTURN →
+          </a>
+        </div>
+      </div>
+      <div class="reveal relative">
+        <div class="aspect-square max-w-md mx-auto relative flex items-center justify-center">
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-cryo-500/15 blur-[80px]"></div>
+          </div>

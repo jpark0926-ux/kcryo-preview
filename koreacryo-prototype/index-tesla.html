@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한국초저온용기(주) | Korea Cryogenics Co., Ltd</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:'Noto Sans KR',sans-serif;background:#000;color:#fff;overflow-x:hidden;}
+
+/* Full-viewport sections */
+.ts-section{
+  min-height:100vh;height:100vh;
+  scroll-snap-align:start;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+
+/* Animated gradient backgrounds */
+.ts-section .bg-layer{
+  position:absolute;inset:0;z-index:0;
+  transition:opacity 1s;
+}
+
+/* Nav */
+#ts-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:background 0.3s;
+}
+#ts-nav.scrolled{background:rgba(0,0,0,0.8);}
+
+/* Side dots */
+#side-dots{
+  position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:99;
+  display:flex;flex-direction:column;gap:12px;
+}
+#side-dots .dot{
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.3);
+  background:transparent;
+  cursor:pointer;transition:all 0.3s;
+}
+#side-dots .dot.active{
+  background:#fff;border-color:#fff;
+  box-shadow:0 0 12px rgba(255,255,255,0.5);
+}
+@media(max-width:768px){
+  #side-dots{right:12px;gap:8px;}
+  #side-dots .dot{width:8px;height:8px;}
+}
+
+/* Hero slogan animation */
+.hero-line{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1);}
+.hero-line.show{opacity:1;transform:translateY(0);}
+
+/* Section content */
+.ts-content{
+  position:relative;z-index:10;
+  text-align:center;
+  max-width:900px;padding:0 24px;
+}
+.ts-content h2{
+  font-size:clamp(2.5rem,6vw,5rem);
+  font-weight:900;line-height:1.1;
+  margin-bottom:16px;
+}
+.ts-content p{
+  font-size:clamp(0.9rem,1.8vw,1.25rem);
+  color:rgba(255,255,255,0.6);
+  max-width:600px;margin:0 auto 32px;
+  line-height:1.7;
+}
+.ts-content .subtitle{
+  font-size:clamp(0.7rem,1.2vw,0.85rem);
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);margin-bottom:12px;
+}
+
+/* Buttons */
+.btn-primary{
+  display:inline-block;padding:12px 40px;
+  background:#fff;color:#000;
+  border-radius:4px;font-weight:600;font-size:0.9rem;
+  transition:all 0.3s;text-decoration:none;
+}
+.btn-primary:hover{background:rgba(255,255,255,0.85);transform:scale(1.03);}
+.btn-outline{
+  display:inline-block;padding:12px 40px;
+  border:2px solid rgba(255,255,255,0.5);color:#fff;
+  border-radius:4px;font-weight:600;font-size:0.9rem;
+  transition:all 0.3s;text-decoration:none;
+}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,0.08);}
+
+/* Stats counter */
+.stat-num{
+  font-size:clamp(3rem,8vw,6rem);
+  font-weight:900;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:3px;
+  animation:bounce-hint 2s infinite;
+}
+@keyframes bounce-hint{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* Animated glow orb */
+.glow-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);opacity:0.4;
+  animation:orb-float 8s ease-in-out infinite alternate;
+}
+@keyframes orb-float{0%{transform:translate(0,0);}100%{transform:translate(30px,-30px);}}
+
+/* Timeline */
+.tl-item{opacity:0;transform:translateY(20px);transition:all 0.6s;}
+.tl-item.visible{opacity:1;transform:translateY(0);}
+
+/* Mobile menu */
+#mobile-menu{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:32px;
+}
+#mobile-menu.open{display:flex;}
+#mobile-menu a{font-size:1.5rem;font-weight:600;color:#fff;text-decoration:none;}
+
+/* Language toggle hidden items */
+[data-lang-hide]{display:none;}
+
+/* Slogans rotation */
+#slogan-container{min-height:200px;display:flex;align-items:center;justify-content:center;}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="ts-nav">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:between;height:56px;">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAJ9CAYAAABq/99mAAAA6GlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8zQAETA4MDLl5JUVB7k4KEZFRCgxIIDG5uIABN2BkYPh2DUQyMFzWDSxhY8KjFhvgLAJaCKQ/ALFIOpjNyAJiJ0HYEiB2eUlBCZCtA2InFxSB2EAXM/AUhQQ5A9k+QLZCOhI7CYmdklqcDGTnANnxCL/lz2dgsPjCwMA8ESGWNI2BYXs7A4PEHYSYykIGBv5WBoZtlxFin/3B/mUUO1SSWlECEvHTd2QoSCxKBEszgwI0LY2B4dNyBgbeSAYG4QsMDFzREHeAAWsxMKBJDCdCAABhOTZ48inaDwAA59NJREFUeJzs/Ve3Xced33v+ZlphB2SAAEgwJ4kqZYlVKlmyXQ5VZfvYdTyq7T51fNo3Pre+8oVfRL8A352LHj3a7bY9XEFWScVSqlImRUkUKQYQOQN7Y6cVZnieHv/nmXPvDQgkQQIkgIXvR16604pzzQ0DP/5D4r0XAAAAAAAAgNmU3uknAAAAAAAAAODDQwAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAAAAAAAJhhBIAAAAAAAADADCMABAAAAAAAAGYYASAAAAAAAAAwwwgAAQAAAAAAgBlGAAgAAAAAAADMMAJAAAAAAAAAYIYRAAIAAAAAAAAzjAAQAAAAAAAAmGEEgAAAAAAAAMAMIwAEAAAAAAAAZhgBIAAAAAAAADDDCAABAAAAAACAGUYACAAAAAAAAMwwAkAAAAAAAABghhEAAgAAAAAAADOMABAAAAAAAACYYQSAAAAAAAAAwAwjAAQAAAAAAABmGAEgAAAAAAAAMMMIAAEAAAAAAIAZRgAIAAAAAAAAzDACQAAAAAAAAGCGEQACAAAAAAAAM4wAEAAA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" alt="KC" style="height:28px;width:auto;">
+    </div>
+    <div style="display:flex;align-items:center;gap:28px;" class="hidden lg:flex">
+      <a href="#hero" style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;text-decoration:none;" data-ko="브랜드" data-en="Brand">브랜드</a>
+      <a href="#sec-cryo" style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;text-decoration:none;" data-ko="제품" data-en="Products">제품</a>
+      <a href="#sec-bio" style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;text-decoration:none;" data-ko="솔루션" data-en="Solutions">솔루션</a>
+      <a href="#sec-about" style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;text-decoration:none;" data-ko="회사소개" data-en="About">회사소개</a>
+      <a href="#sec-history" style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;text-decoration:none;" data-ko="연혁" data-en="History">연혁</a>
+      <span id="lang-toggle" style="cursor:pointer;font-size:16px;user-select:none;" title="Switch Language">🇰🇷</span>
+      <a href="#sec-contact" class="btn-primary" style="padding:8px 24px;font-size:12px;border-radius:3px;" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+    </div>
+    <button id="hamburger" class="lg:hidden" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <button id="mobile-close" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
+  <a href="#hero" class="mm-link" data-ko="브랜드" data-en="Brand">브랜드</a>
+  <a href="#sec-cryo" class="mm-link" data-ko="제품" data-en="Products">제품</a>
+  <a href="#sec-bio" class="mm-link" data-ko="솔루션" data-en="Solutions">솔루션</a>
+  <a href="#sec-about" class="mm-link" data-ko="회사소개" data-en="About">회사소개</a>
+  <a href="#sec-history" class="mm-link" data-ko="연혁" data-en="History">연혁</a>
+  <a href="#sec-contact" class="mm-link" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+  <span id="lang-toggle-m" style="cursor:pointer;font-size:24px;user-select:none;margin-top:16px;">🇰🇷</span>
+</div>
+
+<!-- Side Dot Navigation -->
+<div id="side-dots"></div>
+
+<!-- ====== SECTION 1: HERO ====== -->
+<section id="hero" class="ts-section" data-dot-label="Home">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 80%, rgba(0,40,80,0.4) 0%, rgba(0,10,20,0.8) 50%, #000 100%);"></div>
+  <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,100,180,0.15);top:20%;left:30%;"></div>
+  <div class="glow-orb" style="width:400px;height:400px;background:rgba(0,180,220,0.1);bottom:10%;right:20%;animation-delay:-3s;"></div>
+  <div class="ts-content">
+    <div style="margin-bottom:24px;">
+      <img src="data:image/png;base64,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" alt="KC Logo" style="height:60px;width:auto;opacity:0.9;">
+    </div>
+    <div class="subtitle" data-ko="SINCE 1990 · 초저온 솔루션 전문기업" data-en="SINCE 1990 · CRYOGENIC SOLUTIONS EXPERT">SINCE 1990 · 초저온 솔루션 전문기업</div>
+    <div id="slogan-container">
+      <h2 id="hero-slogan" style="transition:opacity 0.6s;">
+        <span id="hero-line1" class="hero-line" style="display:block;">극한의 온도</span>
+        <span id="hero-line2" class="hero-line" style="display:block;color:rgba(255,255,255,0.5);">무한한 가능성</span>
+      </h2>
+    </div>
+    <p id="hero-sub" data-ko="초저온 용기 · 바이오뱅킹 · 헬스케어까지<br>한국초저온용기가 산업의 미래를 냉각합니다" data-en="From cryogenic vessels to biobanking and healthcare<br>Korea Cryogenics cools the future of industry">초저온 용기 · 바이오뱅킹 · 헬스케어까지<br>한국초저온용기가 산업의 미래를 냉각합니다</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#sec-cryo" class="btn-primary" data-ko="제품 둘러보기" data-en="Explore Products">제품 둘러보기</a>
+      <a href="#sec-contact" class="btn-outline" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- ====== SECTION 2: STATS ====== -->
+<section id="sec-stats" class="ts-section" data-dot-label="Stats">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 50%, rgba(0,30,60,0.5) 0%, #000 80%);"></div>
+  <div class="ts-content" style="max-width:1000px;">
+    <div class="subtitle" data-ko="실적으로 증명합니다" data-en="PROVEN BY NUMBERS">실적으로 증명합니다</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:40px 60px;margin-top:40px;" class="lg:grid-cols-4" id="stats-grid">
+      <div>
+        <div class="stat-num counter-anim" data-target="35" data-suffix="년+">0</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:8px;" data-ko="업력" data-en="Years in Business">업력</div>
+      </div>
+      <div>
+        <div class="stat-num counter-anim" data-target="50000" data-display="5만+" data-suffix="">0</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:8px;" data-ko="용기 판매" data-en="Vessels Sold">용기 판매</div>
+      </div>
+      <div>
+        <div class="stat-num counter-anim" data-target="500" data-suffix="+">0</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:8px;" data-ko="거래 고객사" data-en="Clients">거래 고객사</div>
+      </div>
+      <div>
+        <div class="stat-num counter-anim" data-target="15" data-suffix="기">0</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:8px;" data-ko="LH₂ 벌크탱크" data-en="LH₂ Bulk Tanks">LH₂ 벌크탱크</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SECTION 3: CRYOGENIC VESSELS ====== -->
+<section id="sec-cryo" class="ts-section" data-dot-label="Cryogenics">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 30% 70%, rgba(0,60,100,0.5) 0%, rgba(0,20,40,0.6) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:600px;height:600px;background:rgba(0,150,200,0.12);bottom:0;left:10%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">CRYOGENIC VESSELS</div>
+    <h2 data-ko="초저온 용기" data-en="Cryogenic Vessels">초저온 용기</h2>
+    <p data-ko="Taylor-Wharton 한국 독점 파트너 35년.<br>휴대용 실린더부터 액화수소 벌크탱크까지<br>5만+ 용기가 전국에서 가동 중입니다." data-en="35 years as Taylor-Wharton's exclusive Korea partner.<br>From portable cylinders to liquid hydrogen bulk tanks.<br>50,000+ vessels operating nationwide.">Taylor-Wharton 한국 독점 파트너 35년.<br>휴대용 실린더부터 액화수소 벌크탱크까지<br>5만+ 용기가 전국에서 가동 중입니다.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#sec-contact" class="btn-primary" data-ko="자세히 보기" data-en="Learn More">자세히 보기</a>
+      <a href="#sec-contact" class="btn-outline" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SECTION 4: BIOBANKING ====== -->
+<section id="sec-bio" class="ts-section" data-dot-label="Biobanking">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 70% 30%, rgba(0,80,50,0.5) 0%, rgba(0,30,20,0.6) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:500px;height:500px;background:rgba(16,185,129,0.12);top:10%;right:10%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">BIOBANKING SOLUTIONS</div>
+    <h2 data-ko="바이오뱅킹 솔루션" data-en="Biobanking Solutions">바이오뱅킹 솔루션</h2>
+    <p data-ko="LABS · Revolution 극저온 냉동고부터<br>LN₂ 벌크탱크 · 진공배관 · 24/7 모니터링까지<br>원스탑 바이오뱅킹 인프라." data-en="From LABS & Revolution cryogenic freezers<br>to LN₂ bulk tanks · vacuum piping · 24/7 monitoring.<br>One-stop biobanking infrastructure.">LABS · Revolution 극저온 냉동고부터<br>LN₂ 벌크탱크 · 진공배관 · 24/7 모니터링까지<br>원스탑 바이오뱅킹 인프라.</p>
+    <a href="#sec-contact" class="btn-primary" data-ko="자세히 보기" data-en="Learn More">자세히 보기</a>
+  </div>
+</section>
+
+<!-- ====== SECTION 5: LIQUID HELIUM ====== -->
+<section id="sec-helium" class="ts-section" data-dot-label="Helium">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 40% 60%, rgba(80,30,120,0.5) 0%, rgba(30,10,50,0.6) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:500px;height:500px;background:rgba(168,85,247,0.12);bottom:20%;left:20%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">LIQUID HELIUM</div>
+    <h2 data-ko="액체헬륨 용기" data-en="Liquid Helium">액체헬륨 용기</h2>
+    <p data-ko="Cryofab Inc. 한국 독점 파트너.<br>액체헬륨 듀어 · 초전도 자석 듀어 · 진공배관.<br>대한민국 액체헬륨 시장 점유율 95%." data-en="Exclusive Korea partner of Cryofab Inc.<br>LHe dewars · superconducting magnet dewars · vacuum piping.<br>95% market share in Korea's liquid helium market.">Cryofab Inc. 한국 독점 파트너.<br>액체헬륨 듀어 · 초전도 자석 듀어 · 진공배관.<br>대한민국 액체헬륨 시장 점유율 95%.</p>
+    <a href="#sec-contact" class="btn-outline" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+  </div>
+</section>
+
+<!-- ====== SECTION 6: SPECIALTY GAS ====== -->
+<section id="sec-gas" class="ts-section" data-dot-label="Gas">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 60% 40%, rgba(120,80,0,0.4) 0%, rgba(50,30,0,0.5) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:450px;height:450px;background:rgba(245,158,11,0.1);top:15%;right:15%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">SPECIALTY GAS CYLINDERS</div>
+    <h2 data-ko="특수가스 실린더" data-en="Specialty Gas Cylinders">특수가스 실린더</h2>
+    <p data-ko="영국 Luxfer사 알루미늄 실린더 한국 독점 공급.<br>L6X® · SGS® 시리즈.<br>반도체 초고순도 가스 저장의 표준." data-en="Exclusive Korea distributor for Luxfer aluminum cylinders.<br>L6X® · SGS® series.<br>The standard for ultra-pure semiconductor gas storage.">영국 Luxfer사 알루미늄 실린더 한국 독점 공급.<br>L6X® · SGS® 시리즈.<br>반도체 초고순도 가스 저장의 표준.</p>
+    <a href="#sec-contact" class="btn-primary" data-ko="자세히 보기" data-en="Learn More">자세히 보기</a>
+  </div>
+</section>
+
+<!-- ====== SECTION 7: HEALTHCARE ====== -->
+<section id="sec-health" class="ts-section" data-dot-label="Healthcare">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 50%, rgba(30,60,100,0.4) 0%, rgba(10,20,40,0.5) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:400px;height:400px;background:rgba(100,150,255,0.08);top:30%;left:30%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">MEDICAL OXYGEN CYLINDERS</div>
+    <h2 data-ko="의료용 산소 실린더" data-en="Medical Oxygen Cylinders">의료용 산소 실린더</h2>
+    <p data-ko="미국 Thunderbird사 알루미늄 산소 실린더.<br>개인용 홈케어부터 병원 · 응급까지.<br>10만+ 공급 실적." data-en="Thunderbird (USA) aluminum O₂ cylinders.<br>From home care to hospitals & EMS.<br>100,000+ units supplied.">미국 Thunderbird사 알루미늄 산소 실린더.<br>개인용 홈케어부터 병원 · 응급까지.<br>10만+ 공급 실적.</p>
+    <a href="#sec-contact" class="btn-outline" data-ko="견적 문의" data-en="Get Quote">견적 문의</a>
+  </div>
+</section>
+
+<!-- ====== SECTION 8: GAS ENGINEERING ====== -->
+<section id="sec-eng" class="ts-section" data-dot-label="Engineering">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 70%, rgba(80,40,0,0.4) 0%, rgba(30,15,0,0.5) 40%, #000 100%);"></div>
+  <div class="glow-orb" style="width:500px;height:500px;background:rgba(245,100,20,0.08);bottom:10%;right:10%;"></div>
+  <div class="ts-content">
+    <div class="subtitle">GAS ENGINEERING</div>
+    <h2 data-ko="가스 엔지니어링" data-en="Gas Engineering">가스 엔지니어링</h2>
+    <p data-ko="반도체 팹 CO₂ 공급 시스템 설계 · 시공 · 관리.<br>삼성전자 평택 P1~P4 + 미국 테일러 프로젝트<br>연속 수주가 증명하는 기술력." data-en="Semiconductor fab CO₂ supply system design & construction.<br>Samsung Pyeongtaek P1~P4 + US Taylor project.<br>Consecutive orders prove our capabilities.">반도체 팹 CO₂ 공급 시스템 설계 · 시공 · 관리.<br>삼성전자 평택 P1~P4 + 미국 테일러 프로젝트<br>연속 수주가 증명하는 기술력.</p>
+    <a href="#sec-contact" class="btn-primary" data-ko="자세히 보기" data-en="Learn More">자세히 보기</a>
+  </div>
+</section>
+
+<!-- ====== SECTION 9: ABOUT ====== -->
+<section id="sec-about" class="ts-section" data-dot-label="About">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 50%, rgba(0,30,60,0.3) 0%, #000 80%);"></div>
+  <div class="ts-content" style="max-width:700px;">
+    <div class="subtitle" data-ko="ABOUT KC" data-en="ABOUT KC">ABOUT KC</div>
+    <h2 data-ko="신뢰와 기술의 35년" data-en="35 Years of Trust & Technology">신뢰와 기술의 35년</h2>
+    <p data-ko="1990년 초저온 용기 한 대를 팔며 시작했습니다.<br>35년이 지난 지금 — 초저온 용기 · 바이오뱅킹 · 액체헬륨 ·<br>액화수소 · 특수가스 · 가스 엔지니어링<br>6개 영역을 아우르는 극저온 토탈 솔루션 기업." data-en="We started in 1990 selling a single cryogenic vessel.<br>35 years later — cryogenic vessels · biobanking · liquid helium ·<br>liquid hydrogen · specialty gas · gas engineering.<br>A total cryogenic solutions company spanning 6 business areas.">1990년 초저온 용기 한 대를 팔며 시작했습니다.<br>35년이 지난 지금 — 초저온 용기 · 바이오뱅킹 · 액체헬륨 ·<br>액화수소 · 특수가스 · 가스 엔지니어링<br>6개 영역을 아우르는 극저온 토탈 솔루션 기업.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:8px;">
+      <span>Taylor-Wharton</span><span>·</span>
+      <span>Cryofab</span><span>·</span>
+      <span>Luxfer</span><span>·</span>
+      <span>IC Biomedical</span><span>·</span>
+      <span>Thunderbird</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SECTION 10: HISTORY ====== -->
+<section id="sec-history" class="ts-section" style="height:auto;min-height:100vh;scroll-snap-align:start;" data-dot-label="History">
+  <div class="bg-layer" style="background:linear-gradient(180deg, #000 0%, rgba(0,15,30,0.8) 50%, #000 100%);"></div>
+  <div class="ts-content" style="max-width:700px;padding-top:100px;padding-bottom:80px;">
+    <div class="subtitle" data-ko="연혁" data-en="HISTORY">연혁</div>
+    <h2 style="margin-bottom:48px;" data-ko="35년의 발자취" data-en="35 Years of Milestones">35년의 발자취</h2>
+    <div style="text-align:left;border-left:1px solid rgba(255,255,255,0.1);padding-left:32px;" id="timeline">
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">1990</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="한국초저온용기(주) 설립 · Taylor-Wharton 한국 독점 대리점 체결" data-en="Korea Cryogenics established · Taylor-Wharton exclusive Korea distributorship">한국초저온용기(주) 설립 · Taylor-Wharton 한국 독점 대리점 체결</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2000</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="Cryofab Inc. 한국 독점 계약 · 액체헬륨 시장 본격 진출" data-en="Cryofab Inc. exclusive Korea partnership · LHe market entry">Cryofab Inc. 한국 독점 계약 · 액체헬륨 시장 본격 진출</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2005</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="대통령 표창 수상 · 초저온 산업 발전 공로" data-en="Presidential Citation · Cryogenic industry contribution">대통령 표창 수상 · 초저온 산업 발전 공로</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2008</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="KSTAR(한국형 인공태양) 액체헬륨 공급 시작" data-en="Liquid helium supply to KSTAR (Korea's artificial sun)">KSTAR(한국형 인공태양) 액체헬륨 공급 시작</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2015</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="Luxfer Gas Cylinders 한국 독점 공급 · 반도체 특수가스 시장 진출" data-en="Luxfer Gas Cylinders exclusive Korea supply · Semiconductor specialty gas entry">Luxfer Gas Cylinders 한국 독점 공급 · 반도체 특수가스 시장 진출</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2017</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="삼성전자 평택 P1 CO₂ Supply System 수주" data-en="Samsung Pyeongtaek P1 CO₂ Supply System order">삼성전자 평택 P1 CO₂ Supply System 수주</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2020</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-top:4px;" data-ko="한국 최초 액화수소 벌크탱크 도입 · 설치" data-en="Korea's first liquid hydrogen bulk tank installation">한국 최초 액화수소 벌크탱크 도입 · 설치</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2022</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="삼성전자 미국 Taylor 프로젝트 수주 · 해외 시장 진출" data-en="Samsung USA Taylor project · Global market expansion">삼성전자 미국 Taylor 프로젝트 수주 · 해외 시장 진출</div>
+      </div>
+      <div class="tl-item" style="margin-bottom:28px;position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.8);">2024</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:4px;" data-ko="LH₂ 벌크탱크 15기 달성 · 삼성전자 P4 수주" data-en="15 LH₂ bulk tanks · Samsung P4 order">LH₂ 벌크탱크 15기 달성 · 삼성전자 P4 수주</div>
+      </div>
+      <div class="tl-item" style="position:relative;">
+        <div style="position:absolute;left:-38px;top:4px;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,0.5);"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:#fff;">2025</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-top:4px;" data-ko="초저온 용기 5만대 판매 돌파 · 웹사이트 리뉴얼" data-en="50,000 cryogenic vessels sold · Website renewal">초저온 용기 5만대 판매 돌파 · 웹사이트 리뉴얼</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SECTION 11: CONTACT ====== -->
+<section id="sec-contact" class="ts-section" data-dot-label="Contact">
+  <div class="bg-layer" style="background:radial-gradient(ellipse at 50% 50%, rgba(0,20,40,0.4) 0%, #000 80%);"></div>
+  <div class="ts-content" style="max-width:600px;">
+    <div class="subtitle" data-ko="CONTACT" data-en="CONTACT">CONTACT</div>
+    <h2 data-ko="견적 문의" data-en="Get a Quote">견적 문의</h2>
+    <p data-ko="초저온 솔루션이 필요하신가요?<br>전문 엔지니어가 최적의 솔루션을 제안합니다." data-en="Need a cryogenic solution?<br>Our expert engineers will propose the optimal solution.">초저온 솔루션이 필요하신가요?<br>전문 엔지니어가 최적의 솔루션을 제안합니다.</p>
+    <div style="display:flex;flex-direction:column;gap:20px;text-align:center;margin-bottom:32px;">
+      <div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-bottom:4px;" data-ko="전화" data-en="Phone">전화</div>
+        <a href="tel:031-737-8171" style="color:#fff;font-weight:600;font-size:1.1rem;text-decoration:none;">031-737-8171~4</a>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-bottom:4px;">Fax</div>
+        <span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">031-737-8175</span>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-bottom:4px;" data-ko="주소" data-en="Address">주소</div>
+        <span style="color:rgba(255,255,255,0.5);font-size:0.85rem;" data-ko="경기도 성남시 중원구 둔촌대로 560<br>벽산테크노피아 201호" data-en="201 Byeoksan Technopia, 560 Dunchon-daero,<br>Jungwon-gu, Seongnam-si, Gyeonggi-do">경기도 성남시 중원구 둔촌대로 560<br>벽산테크노피아 201호</span>
+      </div>
+    </div>
+    <a href="mailto:info@koreacryo.com" class="btn-primary" style="font-size:1rem;padding:14px 48px;" data-ko="이메일로 문의하기" data-en="Contact via Email">이메일로 문의하기</a>
+    <div style="margin-top:40px;font-size:0.7rem;color:rgba(255,255,255,0.2);">
+      <span data-ko="한국초저온용기(주) · CEO 이희란" data-en="Korea Cryogenics Co., Ltd · CEO Heeran Lee">한국초저온용기(주) · CEO 이희란</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="background:#000;border-top:1px solid rgba(255,255,255,0.05);padding:24px;text-align:center;">
+  <div style="font-size:0.7rem;color:rgba(255,255,255,0.2);">
+    © 2025 한국초저온용기(주) Korea Cryogenics Co., Ltd. All rights reserved.
+  </div>
+</footer>
+
+<script>
+// ===== SIDE DOT NAVIGATION =====
+const sections = document.querySelectorAll('.ts-section');
+const dotsContainer = document.getElementById('side-dots');
+sections.forEach((sec, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.addEventListener('click', () => sec.scrollIntoView({behavior:'smooth'}));
+  dotsContainer.appendChild(dot);
+});
+
+// ===== INTERSECTION OBSERVER FOR SECTIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = [...sections].indexOf(entry.target);
+      document.querySelectorAll('#side-dots .dot').forEach((d,i) => {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+  });
+}, {threshold: 0.5});
+sections.forEach(s => observer.observe(s));
+
+// ===== HERO SLOGAN ROTATION =====
+const slogansKo = [
+  ['극한의 온도', '무한한 가능성'],
+  ['차가운 기술', '뜨거운 신뢰'],
+  ['안전한 저장', '완벽한 순도'],
+  ['글로벌 기술', '로컬 전문성'],
+  ['절대영도의 끝', '우리의 영역']
+];
+const slogansEn = [
+  ['Extreme Temperature', 'Infinite Possibilities'],
+  ['Cold Technology', 'Burning Trust'],
+  ['Safe Storage', 'Perfect Purity'],
+  ['Global Technology', 'Local Expertise'],
+  ['Edge of Absolute Zero', 'Our Domain']
+];
+let sloganIdx = 0;
+let currentLang = 'ko';
+
+function updateSlogan() {
+  const slogans = currentLang === 'ko' ? slogansKo : slogansEn;
+  const l1 = document.getElementById('hero-line1');
+  const l2 = document.getElementById('hero-line2');
+  l1.classList.remove('show');
+  l2.classList.remove('show');
+  setTimeout(() => {
+    l1.textContent = slogans[sloganIdx][0];
+    l2.textContent = slogans[sloganIdx][1];
+    l1.classList.add('show');
+    setTimeout(() => l2.classList.add('show'), 200);
+    sloganIdx = (sloganIdx + 1) % slogans.length;
+  }, 400);
+}
+// Initial show
+setTimeout(() => {
+  document.getElementById('hero-line1').classList.add('show');
+  setTimeout(() => document.getElementById('hero-line2').classList.add('show'), 200);
+}, 300);
+setInterval(updateSlogan, 4000);
+
+// ===== COUNTER ANIMATION =====
+let countersAnimated = false;
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !countersAnimated) {
+      countersAnimated = true;
+      document.querySelectorAll('.counter-anim').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        const display = el.dataset.display;
+        const suffix = el.dataset.suffix || '';
+        if (display) {
+          el.textContent = display;
+          return;
+        }
+        let current = 0;
+        const step = Math.ceil(target / 60);
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          el.textContent = current.toLocaleString() + suffix;
+        }, 30);
+      });
+    }
+  });
+}, {threshold: 0.5});
+const statsSection = document.getElementById('sec-stats');
+if (statsSection) statsObserver.observe(statsSection);
+
+// ===== TIMELINE ANIMATION =====
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, {threshold: 0.2});
+document.querySelectorAll('.tl-item').forEach(el => tlObserver.observe(el));
+
+// ===== LANGUAGE TOGGLE =====
+function toggleLang() {
+  currentLang = currentLang === 'ko' ? 'en' : 'ko';
+  const flag = currentLang === 'ko' ? '🇰🇷' : '🇺🇸';
+  document.querySelectorAll('#lang-toggle, #lang-toggle-m').forEach(el => el.textContent = flag);
+  document.querySelectorAll('[data-ko][data-en]').forEach(el => {
+    const val = el.dataset[currentLang];
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = val;
+    } else if (el.hasAttribute('href') && !val) {
+      // skip
+    } else {
+      el.innerHTML = val;
+    }
+  });
+  // Update slogans immediately
+  const slogans = currentLang === 'ko' ? slogansKo : slogansEn;
+  const idx = (sloganIdx === 0 ? slogans.length - 1 : sloganIdx - 1);
+  document.getElementById('hero-line1').textContent = slogans[idx][0];
+  document.getElementById('hero-line2').textContent = slogans[idx][1];
+}
+document.getElementById('lang-toggle').addEventListener('click', toggleLang);
+const ltm = document.getElementById('lang-toggle-m');
+if (ltm) ltm.addEventListener('click', toggleLang);
+
+// ===== MOBILE MENU =====
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.add('open');
+});
+document.getElementById('mobile-close').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.remove('open');
+});
+document.querySelectorAll('.mm-link').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.remove('open');
+  });
+});
+
+// ===== NAV SCROLL STATE =====
+window.addEventListener('scroll', () => {
+  document.getElementById('ts-nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== STATS GRID RESPONSIVE =====
+const sg = document.getElementById('stats-grid');
+if (window.innerWidth >= 1024) sg.style.gridTemplateColumns = 'repeat(4,1fr)';
+</script>
+</body>
+</html>
