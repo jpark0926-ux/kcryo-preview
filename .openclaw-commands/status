@@ -1,0 +1,24 @@
+#!/bin/bash
+# /status command - Show Chris's current situation
+
+cd /Users/roturnjarvis/.openclaw/workspace
+
+echo "📊 **Chris Status** ($(date '+%H:%M'))"
+echo ""
+echo "**🏢 Business:**"
+echo "• 로턴 블로그: 85% (사진 대기)"
+echo "• KoreaCryo: 80% (사진 결정)"
+echo ""
+echo "**⚠️ Blockers: 2**"
+echo "• 로턴: 사진 필요"
+echo "• KoreaCryo: 사진 방향"
+echo ""
+echo "**🎯 Priority:**"
+echo "1. 로턴 사진 확보"
+echo "2. KoreaCryo 결정"
+echo "3. 투자 분석"
+echo ""
+echo "**💰 Portfolio:**"
+echo "• PLTR: 609주"
+echo "• IREN: 32주"
+echo "• NVDA: 120주"
