@@ -1,0 +1,130 @@
+# Personal Ontology Template
+# Copy this to your workspace root as: ontology.yml or [yourname]-ontology.yml
+
+core:
+  name: "[Your Name]"
+  timezone: "[e.g., Asia/Seoul, America/New_York]"
+  work_hours:
+    start: "[e.g., 09:00]"
+    peak: "[e.g., 15:00-18:00]"
+    end: "[e.g., 22:00]"
+  decision_style: "[e.g., data-driven, growth-focused, conservative]"
+  roles:
+    - "[e.g., Entrepreneur]"
+    - "[e.g., Investor]"
+    - "[e.g., Creator]"
+
+business:
+  companies: []
+    # Example:
+    # - name: "Company A"
+    #   role: "Founder"
+    #   projects:
+    #     - name: "Website Redesign"
+    #       status: "🟢 active"
+    #       priority: 1
+    #       progress: "60%"
+    #       blockers: []
+    #       next_actions:
+    #         - "Finish homepage by Friday"
+    #       files:
+    #         - "business/companyA/README.md"
+    
+  projects: []
+    # Example:
+    # - name: "Project Name"
+    #   status: "🟢 active / 🟡 waiting / 🔴 blocked"
+    #   priority: 1
+    #   start_date: "YYYY-MM-DD"
+    #   deadline: "YYYY-MM-DD"
+    #   progress: "50%"
+    #   blockers:
+    #     - "Waiting for client approval"
+    #   next_actions:
+    #     - "Send follow-up email"
+    #   files:
+    #     - "projects/project-name/README.md"
+
+investment:
+  portfolio: []
+    # Example:
+    # - symbol: "AAPL"
+    #   shares: 100
+    #   avg_cost: 150.00
+    #   current_price: 180.00
+    #   gain_pct: 20.0
+    #   thesis: "AI + Services growth"
+    #   entry_date: "YYYY-MM-DD"
+    #   target: 220.00
+    
+  watchlist: []
+    # Example:
+    # - symbol: "TSLA"
+    #   current_price: 250.00
+    #   target_entry: 200.00
+    #   target_exit: 400.00
+    #   catalyst: "Model 2 launch"
+    #   rating: "⭐⭐⭐⭐⭐"
+    #   zone: "Zone 2 (Buy opportunity)"
+    #   added_date: "YYYY-MM-DD"
+    
+  analysis_history: []
+    # Example:
+    # - date: "YYYY-MM-DD"
+    #   topic: "Stock A vs Stock B"
+    #   file: "personal/investment/stock-a-vs-b-YYYY-MM-DD.md"
+    #   decision: "Added Stock A to watchlist"
+
+personal:
+  goals: []
+    # Example:
+    # - category: "Health"
+    #   goal: "Run 3x per week"
+    #   status: "In progress"
+    #   current_streak: 2
+    # - category: "Learning"
+    #   goal: "Learn Python"
+    #   status: "Completed"
+    #   completion_date: "YYYY-MM-DD"
+    
+  habits: []
+    # Example:
+    # - name: "Morning review"
+    #   frequency: "Daily"
+    #   time: "09:00"
+    #   streak: 14
+    
+  energy_patterns:
+    peak_hours: "[e.g., 15:00-18:00]"
+    low_hours: "[e.g., 14:00-15:00, 22:00+]"
+    best_for_decisions: "[e.g., Afternoon 15:00]"
+    best_for_creative: "[e.g., Morning 10:00-12:00]"
+    best_for_routine: "[e.g., Early morning or late evening]"
+
+tools:
+  automation:
+    daily_briefing: "09:00"
+    weekly_insights: "Friday 19:00"
+  
+  optimization:
+    context_size: "[e.g., 4.5KB from 17.8KB (75% reduction)]"
+    token_savings: "[e.g., ~2,300 tokens/message]"
+    monthly_cost: "[e.g., ~$50-70 saved]"
+
+meta:
+  version: "1.0.0"
+  created: "YYYY-MM-DD"
+  last_updated: "YYYY-MM-DD HH:MM"
+  active_projects: 0
+  total_blockers: 0
+  priority_queue:
+    1: "[Top priority task]"
+    2: "[Second priority]"
+    3: "[Third priority]"
+
+# Notes:
+# - Update this file regularly (manual or via ontology-sync.py)
+# - Keep it lightweight (reference files, don't duplicate content)
+# - Use status emoji: 🟢 active, 🟡 waiting, 🔴 blocked, ⚪ planned
+# - Priority: 1 (highest) to 5 (lowest)
+# - Track what matters most to YOU
