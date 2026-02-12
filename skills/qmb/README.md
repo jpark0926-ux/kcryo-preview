@@ -46,13 +46,36 @@ rg --version
 ✅ Color output  
 ✅ $0 cost (local)
 
-## Phase 1 (Current)
+## Phase 1 ✅
 
 Keyword search using ripgrep (BM25-style)
 
-## Phase 2 (Future)
+## Phase 2 ✅ (Complete)
 
-Hybrid search: Keywords + Vector embeddings (semantic meaning)
+**Hybrid search**: Keywords + Semantic ranking (TF-IDF)
+
+```bash
+# New hybrid search (recommended)
+python3 search.py "your query"
+
+# Example
+python3 search.py "성장주"
+python3 search.py "Palantir" memory/
+```
+
+### Phase 2 Features
+- ✅ Keyword search (ripgrep speed)
+- ✅ Semantic relevance ranking (TF-IDF)
+- ✅ Top results with context
+- ✅ File path and line numbers
+- ✅ Relevance scores
+- ✅ Python 3.14 compatible
+
+### Files
+- `search.sh` - Phase 1 (keyword)
+- `search.py` - Phase 2 (hybrid) ⭐ Recommended
+- `semantic.py` - Full embedding version (optional)
+- `hybrid.py` - Combined interface
 
 ---
 
