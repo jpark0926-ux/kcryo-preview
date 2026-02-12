@@ -2,7 +2,7 @@
 # Chris의 업무와 삶을 연결하는 중심 구조
 
 version: "0.1.0-alpha"
-last_updated: "2026-02-12T19:24:00+09:00"
+last_updated: "2026-02-12T20:23:00+09:00"
 
 # ========================================
 # CORE: Chris
@@ -114,14 +114,33 @@ portfolio:
   watchlist:
     - symbol: CEG
       reason: "원전, AI 전력 인프라"
+      status: "분석 완료 (2026-02-12)"
+      fair_value: "$380-420"
+      current_price: "$360"
+      entry_zone: "Zone 2 (기회 매수)"
+      rating: "⭐⭐⭐⭐⭐"
+      decision: "워치 (타이밍 대기)"
+      next_action: "Zone 1 진입 or 2주 후 재검토"
+    
     - symbol: ETN
       reason: "전력 인프라"
+      status: "분석 완료 (2026-02-12)"
+      comparison: "CEG 대비 낮은 우선순위"
+    
     - symbol: "HD현대일렉트릭"
       reason: "한국 전력 장비"
   
   analysis_history:
     location: "personal/investment/"
     recent:
+      - date: "2026-02-12"
+        target: "CEG vs ETN"
+        files: 
+          - "ceg-vs-etn-comparison-2026-02-12.md"
+          - "ceg-detailed-analysis-2026-02-12.md"
+        conclusion: "CEG 추천 (워치리스트 추가)"
+        rating: "5/5"
+      
       - date: "2026-02-09"
         target: IREN
         file: "iren-fair-value-v2.md"
