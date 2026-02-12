@@ -17,6 +17,58 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
+## 🎯 Project-Specific Context (Telegram Groups)
+
+**Goal**: Minimize token usage by loading only relevant files per group/session.
+
+### Group Context Rules
+
+**Identify your session type first:**
+- Check session metadata or channel name
+- Load base context (SOUL, USER, today's memory) always
+- Add project-specific context ONLY when needed
+
+**Roturn Blog Group** (로턴 블로그):
+- Read: `business/roturn/README.md`
+- On-demand: `business/roturn/blog/*.md` when working on specific posts
+- Skip: KoreaCryo, investment files
+
+**KoreaCryo Group** (KoreaCryo 리뉴얼):
+- Read: `business/koreacryo/README.md`
+- On-demand: prototype files when editing
+- Skip: Roturn, investment files
+
+**Investment Analysis Group** (투자 분석):
+- Read: `personal/investment/README.md`
+- On-demand: specific analysis files when needed
+- Skip: Business files
+
+**Company Operations Group** (회사 운영):
+- Read: Both `business/roturn/README.md` AND `business/koreacryo/README.md` (overview only)
+- On-demand: specific files as needed
+
+**Main Session** (Direct DM with Chris):
+- Read everything: MEMORY.md, all README.md files
+- Full access to all projects
+
+### 🔧 Loading Strategy
+
+1. **Always load (base)**: SOUL.md, USER.md, IDENTITY.md, today's memory
+2. **Context-aware load**: Project README based on session
+3. **On-demand load**: Use `read` tool when actually working on files
+4. **Never preload**: Large files, old drafts, archived content
+
+### 📊 For Large Tasks
+
+When a task needs deep work (>50K tokens):
+```
+sessions_spawn(
+  task="상세 작업 설명",
+  label="roturn-blog-task"
+)
+```
+Subagent gets isolated context → no overflow risk.
+
 ## Memory
 
 You wake up fresh each session. These files are your continuity:
