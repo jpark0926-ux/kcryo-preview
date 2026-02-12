@@ -13,3 +13,8 @@
   - **roturn.com** — Retrofitting petrol cars into LPG bifuel cars
   - **koreacryo.com** — Cryogenic equipment and engineering
 - Based in Seoul, Korea
+
+## 현재 관심사 (2026-02)
+- AI 에이전트(Wayne Manor)를 활용한 업무 자동화 및 효율화
+- 목표: 회사 생산성 극대화 → 매출 증대
+- 접근 방식: **차근차근, 단계적으로**

@@ -1,0 +1,24 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-5",
+        "fallbacks": [
+          "anthropic/claude-opus-4",
+          "anthropic/claude-sonnet-3-5"
+        ]
+      },
+      "models": {
+        "anthropic/claude-sonnet-4-5": {
+          "alias": "sonnet"
+        },
+        "anthropic/claude-opus-4": {
+          "alias": "opus"
+        },
+        "anthropic/claude-sonnet-3-5": {
+          "alias": "sonnet3"
+        }
+      }
+    }
+  }
+}
