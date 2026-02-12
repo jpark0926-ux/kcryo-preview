@@ -32,7 +32,7 @@
             scroll-behavior: smooth;
         }
 
-        /* Hero Section - Fullscreen Cinematic */
+        /* Hero Section - Fullscreen Cinematic with Background Video */
         .hero {
             height: 100vh;
             position: relative;
@@ -41,6 +41,54 @@
             justify-content: center;
             overflow: hidden;
             background: linear-gradient(135deg, #0a0e1a 0%, #1a2332 100%);
+        }
+
+        /* Background Video */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.6);
+            z-index: 1;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .video-placeholder-text {
+            font-size: 1.2rem;
+            color: var(--cryo-blue);
+            margin-top: 20px;
+        }
+
+        /* Canvas for Vapor Effect */
+        #vaporCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .hero::before {
@@ -54,25 +102,12 @@
                 radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(0, 153, 204, 0.1) 0%, transparent 50%);
             animation: heroGlow 8s ease-in-out infinite alternate;
+            z-index: 0;
         }
 
         @keyframes heroGlow {
             0% { opacity: 0.5; transform: scale(1); }
             100% { opacity: 1; transform: scale(1.05); }
-        }
-
-        /* Background Image Placeholder - Replace with real cryogenic tank photo */
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%23000" width="1920" height="1080"/><circle cx="960" cy="540" r="300" fill="%2300d4ff" opacity="0.03"/><circle cx="1200" cy="300" r="200" fill="%2300d4ff" opacity="0.02"/></svg>') center/cover;
-            opacity: 0.3;
-            z-index: 0;
         }
 
         .hero-content {
@@ -157,6 +192,64 @@
             60% { transform: translateX(-50%) translateY(-8px); }
         }
 
+        /* Stats Section with Counter Animation */
+        .stats-section {
+            padding: 100px 80px;
+            background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
+            position: relative;
+        }
+
+        #statsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(0, 212, 255, 0.05);
+            border-color: var(--cryo-blue);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 900;
+            color: var(--cryo-blue);
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
         /* Split Screen Section */
         .split-section {
             min-height: 100vh;
@@ -178,7 +271,6 @@
             background: linear-gradient(135deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
         }
 
-        /* Image placeholder - replace with real photos */
         .split-image::before {
             content: '';
             position: absolute;
@@ -257,11 +349,28 @@
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Underline Animation for Links */
+        .feature-list li::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--cryo-blue);
+            transition: width 0.4s ease;
         }
 
         .feature-list li:hover {
             padding-left: 20px;
             color: var(--cryo-blue);
+        }
+
+        .feature-list li:hover::after {
+            width: 100%;
         }
 
         .feature-list li::before {
@@ -272,7 +381,7 @@
             font-weight: bold;
         }
 
-        /* CTA Button */
+        /* CTA Button with Ripple & Shimmer Effects */
         .cta-button {
             display: inline-flex;
             align-items: center;
@@ -286,6 +395,26 @@
             border-radius: 50px;
             transition: all 0.4s ease;
             border: 2px solid var(--cryo-blue);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Shimmer Effect */
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
         }
 
         .cta-button:hover {
@@ -293,6 +422,23 @@
             color: var(--cryo-blue);
             transform: translateX(10px);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
 
         /* Secondary Products Grid - Full Height */
@@ -331,6 +477,7 @@
             margin: 0 auto;
         }
 
+        /* Magnetic Cursor Effect for Cards */
         .secondary-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -339,6 +486,8 @@
             padding: 50px 40px;
             transition: all 0.4s ease;
             cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
         }
 
         .secondary-card:hover {
@@ -437,6 +586,19 @@
             transition: all 0.4s ease;
             border: 2px solid var(--cryo-blue);
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
         }
 
         .cta-primary:hover {
@@ -457,6 +619,8 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.4s ease;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
         }
 
         .cta-secondary:hover {
@@ -514,6 +678,15 @@
             .secondary-grid {
                 grid-template-columns: 1fr;
             }
+
+            .stats-section {
+                padding: 80px 40px;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -547,12 +720,10 @@
             .feature-list li {
                 font-size: 1rem;
             }
-        }
 
-        /* Loading Animation */
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
+            .stats-section {
+                padding: 60px 30px;
+            }
         }
 
         /* Parallax Effect */
@@ -564,8 +735,21 @@
 </head>
 <body>
 
-    <!-- Hero Section - Fullscreen Cinematic -->
+    <!-- Hero Section - Fullscreen Cinematic with Background Video -->
     <section class="hero">
+        <!-- Background Video (placeholder for now) -->
+        <!-- <video class="hero-video" autoplay loop muted playsinline>
+            <source src="videos/cryogenic-tank.mp4" type="video/mp4">
+        </video> -->
+        <div class="video-placeholder">
+            <div style="font-size: 8rem; opacity: 0.2;">❄️</div>
+            <p class="video-placeholder-text">극저온 탱크/액화가스 영상 예정</p>
+        </div>
+        <div class="hero-video-overlay"></div>
+        
+        <!-- Canvas for Vapor Effect -->
+        <canvas id="vaporCanvas"></canvas>
+        
         <div class="hero-content">
             <p class="hero-subtitle">Taylor-Wharton</p>
             <h1 class="hero-title">초저온<br>극한의 기술</h1>
@@ -574,13 +758,35 @@
                 세계 최고 수준의 극저온 기술로 대한민국의 미래를 만듭니다
             </p>
         </div>
-        <div class="scroll-indicator" onclick="document.querySelector('.split-section').scrollIntoView({behavior: 'smooth'})"></div>
+        <div class="scroll-indicator" onclick="document.querySelector('.stats-section').scrollIntoView({behavior: 'smooth'})"></div>
+    </section>
+
+    <!-- Stats Section with Counter Animation -->
+    <section class="stats-section reveal">
+        <canvas id="statsCanvas"></canvas>
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" data-target="253">0</div>
+                <div class="stat-label">극저온 -253°C</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="99.9">0</div>
+                <div class="stat-label">증발 효율 99.9%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="100000">0</div>
+                <div class="stat-label">최대 용량 100,000L</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="60">0</div>
+                <div class="stat-label">60년+ 기술력</div>
+            </div>
+        </div>
     </section>
 
     <!-- Product 1: Industrial Gas Storage -->
     <section class="split-section reveal">
         <div class="split-image">
-            <!-- Replace with: background-image: url('ppt-images/industrial-tank.jpg') -->
             <div class="split-image-content">❄️</div>
         </div>
         <div class="split-content">
@@ -607,7 +813,6 @@
     <!-- Product 2: Liquid Hydrogen -->
     <section class="split-section reveal">
         <div class="split-image">
-            <!-- Replace with: background-image: url('ppt-images/hydrogen-tank.jpg') -->
             <div class="split-image-content">⚡</div>
         </div>
         <div class="split-content">
@@ -633,6 +838,7 @@
 
     <!-- Secondary Products Section -->
     <section class="secondary-section reveal">
+        <canvas id="secondaryCanvas"></canvas>
         <div class="secondary-title">
             <h2>전문 특수 장비</h2>
             <p>연구, 의료, 바이오 분야를 위한 고성능 극저온 솔루션</p>
@@ -678,9 +884,164 @@
     </section>
 
     <script>
-        // Scroll Reveal Animation
+        // ===== 1. VAPOR PARTICLE EFFECT (Canvas) =====
+        class VaporParticle {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.ctx;
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * this.canvas.width;
+                this.y = this.canvas.height + Math.random() * 100;
+                this.size = Math.random() * 4 + 2;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.life = 1;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.life -= 0.002;
+                this.opacity = this.life * 0.5;
+
+                if (this.y < -50 || this.life <= 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                this.ctx.save();
+                this.ctx.globalAlpha = this.opacity;
+                this.ctx.fillStyle = Math.random() > 0.5 ? '#00d4ff' : '#ffffff';
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.restore();
+            }
+        }
+
+        function initVaporEffect(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            canvas.ctx = ctx;
+
+            const particleCount = 80;
+            const particles = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new VaporParticle(canvas));
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            });
+        }
+
+        // Initialize vapor effects for hero, stats, and secondary sections
+        initVaporEffect('vaporCanvas');
+        initVaporEffect('statsCanvas');
+        initVaporEffect('secondaryCanvas');
+
+        // ===== 2. COUNTER ANIMATION =====
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const startTime = performance.now();
+            const isDecimal = target % 1 !== 0;
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutQuad = progress * (2 - progress);
+                const current = start + (target - start) * easeOutQuad;
+                
+                if (isDecimal) {
+                    element.textContent = current.toFixed(1);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // ===== 3. RIPPLE EFFECT =====
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Add ripple effect to all buttons
+        document.querySelectorAll('.cta-button, .cta-primary, .cta-secondary').forEach(button => {
+            button.addEventListener('click', createRipple);
+        });
+
+        // ===== 4. MAGNETIC CURSOR EFFECT FOR CARDS =====
+        document.querySelectorAll('.secondary-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                const maxMove = 15;
+                const moveX = deltaX * maxMove;
+                const moveY = deltaY * maxMove;
+                
+                card.style.transform = `translateY(-15px) translate(${moveX}px, ${moveY}px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) translate(0, 0)';
+            });
+        });
+
+        // ===== SCROLL REVEAL & COUNTER TRIGGER =====
         const revealElements = document.querySelectorAll('.reveal');
-        
+        let countersAnimated = false;
+
         const revealOnScroll = () => {
             const windowHeight = window.innerHeight;
             
@@ -690,6 +1051,16 @@
                 
                 if (elementTop < windowHeight - revealPoint) {
                     element.classList.add('active');
+
+                    // Trigger counter animation for stats section
+                    if (!countersAnimated && element.classList.contains('stats-section')) {
+                        const counters = element.querySelectorAll('.stat-number');
+                        counters.forEach(counter => {
+                            const target = parseFloat(counter.getAttribute('data-target'));
+                            animateCounter(counter, target);
+                        });
+                        countersAnimated = true;
+                    }
                 }
             });
         };
@@ -697,7 +1068,7 @@
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll(); // Initial check
 
-        // Parallax Effect on Hero
+        // ===== PARALLAX EFFECT ON HERO =====
         const hero = document.querySelector('.hero');
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
@@ -708,7 +1079,7 @@
             }
         });
 
-        // Smooth scroll for all anchor links
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -722,8 +1093,11 @@
             });
         });
 
-        // Cursor glow effect (optional - enhances cinematic feel)
+        // ===== CURSOR GLOW EFFECT =====
+        let glowTimeout;
         document.addEventListener('mousemove', (e) => {
+            clearTimeout(glowTimeout);
+            
             const glow = document.createElement('div');
             glow.style.cssText = `
                 position: fixed;
@@ -739,11 +1113,21 @@
             `;
             document.body.appendChild(glow);
             
-            setTimeout(() => {
+            glowTimeout = setTimeout(() => {
                 glow.style.opacity = '0';
                 setTimeout(() => glow.remove(), 300);
             }, 100);
         });
+
+        // ===== VIDEO FALLBACK =====
+        // If video element exists, add error fallback
+        const heroVideo = document.querySelector('.hero-video');
+        if (heroVideo) {
+            heroVideo.addEventListener('error', () => {
+                heroVideo.style.display = 'none';
+                document.querySelector('.video-placeholder').style.opacity = '0.3';
+            });
+        }
     </script>
 
 </body>
