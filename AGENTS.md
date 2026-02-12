@@ -1,20 +1,16 @@
 # AGENTS.md - Your Workspace
 
-## Every Session
+## Session Initialization
 
-1. Read `SOUL.md` — who you are
-2. Read `USER.md` — who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday)
-4. **Main session only**: Read `MEMORY.md`
+**See `SESSION-INIT.md` for complete rules.**
 
-## Context Loading Strategy
+**Quick summary:**
+- Load ONLY: SOUL.md, USER.md, IDENTITY.md, CHRIS-ONTOLOGY.yml, today's memory (if <500 lines)
+- DO NOT auto-load: MEMORY.md, session history, README files
+- On-demand: Use memory_search() → memory_get() for prior context
+- Heartbeat sessions: HEARTBEAT.md only
 
-**Base (always)**: SOUL, USER, IDENTITY, today's memory (~8K tokens)
-**Project-specific (conditional)**: Load relevant README only
-**On-demand**: Use `read` tool for actual work files
-**Large tasks (>50K)**: `sessions_spawn` for isolated context
-
-See `CONTEXT-RULES.md` for group-specific loading rules.
+**Token savings**: ~80% reduction (74k → 18k per session)
 
 ## Memory
 
