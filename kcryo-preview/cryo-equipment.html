@@ -253,6 +253,9 @@
             top: 0;
             overflow: hidden;
             background: linear-gradient(135deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .split-image::before {
@@ -263,13 +266,15 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+                linear-gradient(90deg, rgba(10, 14, 26, 0.7) 0%, transparent 100%),
+                radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
             animation: imageGlow 5s ease-in-out infinite alternate;
+            z-index: 1;
         }
 
         @keyframes imageGlow {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.6; }
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
 
         .split-image-content {
@@ -472,6 +477,24 @@
             cursor: pointer;
             position: relative;
             transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .secondary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .secondary-card:hover::before {
+            opacity: 1;
         }
 
         .secondary-card:hover {
@@ -479,6 +502,11 @@
             background: rgba(0, 212, 255, 0.05);
             border-color: var(--cryo-blue);
             box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .secondary-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .secondary-card .icon {
@@ -767,8 +795,8 @@
 
     <!-- Product 1: Industrial Gas Storage -->
     <section class="split-section reveal">
-        <div class="split-image">
-            <div class="split-image-content">❄️</div>
+        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80');">
+            <div class="split-image-content" style="opacity: 0;"></div>
         </div>
         <div class="split-content">
             <span class="split-label">산업용 가스</span>
@@ -793,8 +821,8 @@
 
     <!-- Product 2: Liquid Hydrogen -->
     <section class="split-section reveal">
-        <div class="split-image">
-            <div class="split-image-content">⚡</div>
+        <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200&q=80');">
+            <div class="split-image-content" style="opacity: 0;"></div>
         </div>
         <div class="split-content">
             <span class="split-label">수소 경제</span>
