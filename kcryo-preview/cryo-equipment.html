@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초저온 장비 | Taylor-Wharton 제품 | KoreaCryo</title>
+    <meta name="description" content="Taylor-Wharton 초저온 저장 탱크, 액화수소 운송 장비, 산업용 가스 솔루션">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cryo-blue: #00d4ff;
+            --cryo-blue-dark: #0099cc;
+            --cryo-blue-light: #e6f9ff;
+            --dark-bg: #0a1628;
+            --dark-secondary: #1a2841;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--white);
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+            color: var(--white);
+            padding: 120px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--cryo-blue);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Product Categories - Main Focus */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+            border-color: var(--cryo-blue);
+        }
+
+        .product-card-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, var(--dark-bg), var(--dark-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card-image::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .product-icon {
+            font-size: 80px;
+            color: var(--cryo-blue);
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-card-content {
+            padding: 30px;
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .product-card .category {
+            display: inline-block;
+            background: var(--cryo-blue-light);
+            color: var(--cryo-blue-dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .product-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .product-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .product-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--cryo-blue);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--cryo-blue);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background: var(--cryo-blue-dark);
+            transform: translateX(5px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--cryo-blue);
+            color: var(--cryo-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--cryo-blue);
+            color: var(--white);
+            transform: translateX(0);
+        }
+
+        /* Secondary Products Grid */
+        .secondary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .secondary-card {
+            background: var(--white);
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .secondary-card:hover {
+            border-color: var(--cryo-blue);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .secondary-card .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .secondary-card h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .secondary-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--cryo-blue) 0%, var(--cryo-blue-dark) 100%);
+            color: var(--white);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-section .btn {
+            background: var(--white);
+            color: var(--cryo-blue);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+
+        .cta-section .btn:hover {
+            background: var(--dark-bg);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: var(--cryo-blue);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 60px;
+            }
+
+            .section {
+                padding: 50px 0;
+            }
+
+            .product-grid,
+            .secondary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card-image {
+                height: 220px;
+            }
+
+            .product-icon {
+                font-size: 60px;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card,
+        .secondary-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="subtitle">Taylor-Wharton</p>
+            <h1>초저온 장비 솔루션</h1>
+            <p>산업용 가스 저장부터 액화수소 인프라까지, 세계 최고 수준의 극저온 기술로 대한민국의 수소 경제와 산업 발전을 지원합니다</p>
+        </div>
+    </section>
+
+    <!-- Main Products Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>핵심 제품 라인업</h2>
+                <p>Taylor-Wharton의 검증된 기술력으로 안전하고 효율적인 극저온 솔루션을 제공합니다</p>
+            </div>
+
+            <div class="product-grid">
+                <!-- Industrial Gas Storage -->
+                <div class="product-card" onclick="location.href='#industrial-gas'">
+                    <div class="product-card-image">
+                        <div class="product-icon">❄️</div>
+                    </div>
+                    <div class="product-card-content">
+                        <span class="category">산업용 가스</span>
+                        <h3>산업용 가스 저장 탱크</h3>
+                        <p>액체질소(LIN), 액체산소(LOX), 액체아르곤(LAR) 등 산업용 극저온 가스의 안전한 저장과 공급을 위한 대용량 저장 탱크</p>
+                        <ul class="product-features">
+                            <li>500L ~ 100,000L 다양한 용량 옵션</li>
+                            <li>최첨단 진공 단열 기술</li>
+                            <li>낮은 증발 손실률 (< 0.5% /일)</li>
+                            <li>자동 압력 제어 시스템</li>
+                            <li>산업 안전 규격 완전 준수</li>
+                        </ul>
+                        <a href="#industrial-gas" class="btn">자세히 보기 →</a>
+                    </div>
+                </div>
+
+                <!-- Liquid Hydrogen -->
+                <div class="product-card" onclick="location.href='#hydrogen'">
+                    <div class="product-card-image">
+                        <div class="product-icon">⚡</div>
+                    </div>
+                    <div class="product-card-content">
+                        <span class="category">수소 경제</span>
+                        <h3>액화수소 저장 & 운송<span class="badge">NEW</span></h3>
+                        <p>차세대 청정 에너지 인프라를 위한 액화수소(LH2) 저장 탱크 및 운송용 트레일러 시스템</p>
+                        <ul class="product-features">
+                            <li>-253°C 극저온 저장 기술</li>
+                            <li>수소 전용 안전 설계</li>
+                            <li>운송용 트레일러 (5,000 ~ 50,000L)</li>
+                            <li>정치형 저장 탱크 (최대 200,000L)</li>
+                            <li>스마트 모니터링 시스템</li>
+                        </ul>
+                        <a href="#hydrogen" class="btn">자세히 보기 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secondary Products Section -->
+    <section class="section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <div class="section-title">
+                <h2>전문 특수 장비</h2>
+                <p>연구, 의료, 바이오 분야를 위한 고성능 극저온 솔루션</p>
+            </div>
+
+            <div class="secondary-grid">
+                <!-- Helium Dewars -->
+                <div class="secondary-card">
+                    <div class="icon">🧪</div>
+                    <h4>헬륨 듀어</h4>
+                    <p>초전도체 연구, MRI, NMR 등 극저온 응용 분야를 위한 고순도 액체헬륨 저장 용기. 초저증발 설계로 장기간 안정적 보관.</p>
+                </div>
+
+                <!-- Biobanking Freezers -->
+                <div class="secondary-card">
+                    <div class="icon">🧬</div>
+                    <h4>바이오뱅킹 프리저</h4>
+                    <p>생물학적 샘플, 줄기세포, 혈액, 조직의 장기 보관을 위한 액체질소 기반 초저온 냉동 시스템. 자동 재충전 및 온도 모니터링.</p>
+                </div>
+
+                <!-- Cryogenic Cylinders -->
+                <div class="secondary-card">
+                    <div class="icon">🔬</div>
+                    <h4>실험실용 극저온 용기</h4>
+                    <p>연구실 및 의료기관을 위한 소형 극저온 저장 용기. 이동식 설계와 안전 밸브 시스템으로 실험실 환경에 최적화.</p>
+                </div>
+
+                <!-- Microbulk Systems -->
+                <div class="secondary-card">
+                    <div class="icon">⚙️</div>
+                    <h4>마이크로벌크 시스템</h4>
+                    <p>중소 규모 사업장을 위한 효율적인 극저온 가스 공급 시스템. 자동 재충전 및 사용량 최적화로 운영 비용 절감.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Highlight -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Taylor-Wharton 기술력</h2>
+                <p>60년 이상 축적된 극저온 기술의 글로벌 리더</p>
+            </div>
+
+            <div class="product-grid" style="max-width: 900px; margin: 0 auto;">
+                <div class="secondary-card" style="border: none; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                    <div class="icon" style="color: var(--cryo-blue);">🛡️</div>
+                    <h4>검증된 안전성</h4>
+                    <p>ASME, CE, KGS 등 국제 안전 규격 인증. 전 세계 수만 개 설치 사례를 통해 검증된 신뢰성.</p>
+                </div>
+
+                <div class="secondary-card" style="border: none; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                    <div class="icon" style="color: var(--cryo-blue);">🔋</div>
+                    <h4>에너지 효율</h4>
+                    <p>업계 최고 수준의 단열 성능으로 증발 손실 최소화. 장기 운영 비용 절감 효과.</p>
+                </div>
+
+                <div class="secondary-card" style="border: none; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                    <div class="icon" style="color: var(--cryo-blue);">📱</div>
+                    <h4>스마트 모니터링</h4>
+                    <p>실시간 온도, 압력, 레벨 모니터링. IoT 기반 원격 관제 및 예지보전 시스템.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>초저온 장비 도입 상담</h2>
+            <p>귀사의 요구사항에 맞는 최적의 극저온 솔루션을 제안해 드립니다</p>
+            <a href="tel:02-1234-5678" class="btn">📞 전화 상담하기</a>
+            <a href="mailto:info@koreacryo.com" class="btn btn-outline" style="margin-left: 15px; background: transparent; border-color: white; color: white;">✉️ 이메일 문의</a>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.product-card, .secondary-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+
+</body>
+</html>
