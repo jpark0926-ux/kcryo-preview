@@ -1,0 +1,172 @@
+# CHRIS-ONTOLOGY.yml
+# Chris의 업무와 삶을 연결하는 중심 구조
+
+version: "0.1.0-alpha"
+last_updated: "2026-02-12T19:24:00+09:00"
+
+# ========================================
+# CORE: Chris
+# ========================================
+chris:
+  type: person
+  
+  profile:
+    timezone: "Asia/Seoul"
+    work_hours: "10:00-02:00"
+    energy_peak: "14:00-18:00"
+    decision_style: "차근차근, 데이터 기반"
+    telegram: "@Chrisjpark"
+  
+  roles:
+    - entrepreneur  # Roturn, KoreaCryo
+    - investor      # PLTR, IREN, NVDA...
+    - optimizer     # OpenClaw 활용
+
+# ========================================
+# BUSINESS LAYER
+# ========================================
+companies:
+  roturn:
+    name: "로턴"
+    industry: "LPG bifuel conversion"
+    website: "roturn.com"
+    owner: chris
+    
+    current_projects:
+      - name: "로턴 블로그"
+        id: "roturn-blog"
+        location: "business/roturn/"
+        status: "🟡 waiting"
+        progress: 85
+        blocker: "사진 필요 (Chris 제공)"
+        next_action: "사진 받으면 첫 글 발행"
+        priority: high
+        impact: "인지도 확대, SEO"
+    
+    key_rules:
+      - "자체개발 X → WFS/Prins 개발 O"
+      - "바이퓸 X → 바이퓨얼 O"
+  
+  koreacryo:
+    name: "한국초저온용기"
+    industry: "Cryogenic equipment"
+    website: "koreacryo.com"
+    owner: chris
+    
+    considering_rebrand:
+      new_name: "케이크라이오 (K-Cryo)"
+      status: "검토중"
+      trademark_clear: true
+    
+    current_projects:
+      - name: "웹사이트 리뉴얼"
+        id: "kcryo-website"
+        location: "business/koreacryo/"
+        status: "🟡 in-progress"
+        progress: 80
+        blocker: "사진 품질/방향 결정"
+        options:
+          - "AI 보정 (즉시, 저비용)"
+          - "제품 재촬영 (1주, 무료~$200)"
+          - "전문 촬영 ($1K-3K)"
+          - "3D 렌더링 (Three.js 인터랙티브)"
+        priority: medium
+    
+    key_changes:
+      - "Liquid Controls 단종 → Turbines Inc. 교체"
+
+# ========================================
+# INVESTMENT LAYER
+# ========================================
+portfolio:
+  owner: chris
+  style:
+    focus: ["성장주", "텐배거"]
+    approach: "데이터 기반, IB 리포트"
+    sectors: ["AI 전력", "원전", "반도체", "BTC 마이닝"]
+  
+  holdings:
+    PLTR:
+      shares: 609
+      conviction: high
+      thesis: "AI 플랫폼, 온톨로지"
+    
+    IREN:
+      shares: 32
+      conviction: medium-high
+      thesis: "BTC mining + AI datacenter"
+      analysis_file: "personal/investment/iren-fair-value-v2.md"
+    
+    NVDA:
+      shares: 120
+      conviction: high
+      thesis: "AI 반도체 리더"
+    
+    TSLA:
+      shares: 116
+    
+    IONQ:
+      shares: 700
+      thesis: "양자컴퓨팅"
+    
+    # ... 나머지 생략
+  
+  watchlist:
+    - symbol: CEG
+      reason: "원전, AI 전력 인프라"
+    - symbol: ETN
+      reason: "전력 인프라"
+    - symbol: "HD현대일렉트릭"
+      reason: "한국 전력 장비"
+  
+  analysis_history:
+    location: "personal/investment/"
+    recent:
+      - date: "2026-02-09"
+        target: IREN
+        file: "iren-fair-value-v2.md"
+        conclusion: "매수 유지"
+
+# ========================================
+# PROJECTS STATUS (Real-time)
+# ========================================
+active_projects:
+  count: 3
+  
+  by_status:
+    waiting: 1      # 로턴 블로그
+    in_progress: 1  # KoreaCryo 웹사이트
+    planning: 1     # 투자 분석
+  
+  blockers:
+    count: 2
+    type: "photo-related"  # Both need photo decisions
+  
+  priority_queue:
+    1: "로턴 블로그 (사진만 있으면 발행)"
+    2: "KoreaCryo 사진 방향 결정"
+    3: "투자 분석 (CEG, ETN 등)"
+
+# ========================================
+# INFRASTRUCTURE
+# ========================================
+tools:
+  primary: "OpenClaw (Wayne Manor 🦇)"
+  workspace: "/Users/roturnjarvis/.openclaw/workspace"
+  optimization:
+    - "Context: 17.8KB → 4.5KB (75% reduction)"
+    - "Token savings: 3,300/msg (72%)"
+    - "Cost: ~$50-70/mo saved"
+
+# ========================================
+# METADATA
+# ========================================
+ontology_meta:
+  created: "2026-02-12"
+  purpose: "Chris 중심 업무/투자/삶 연결"
+  inspiration: "Palantir Ontology"
+  phase: "alpha (맛보기)"
+  next_steps:
+    - "자동 업데이트 (파일 → yml 동기화)"
+    - "쿼리 엔진 (자연어 질문)"
+    - "대시보드 (/status 명령어)"
