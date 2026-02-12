@@ -199,14 +199,9 @@
             position: relative;
         }
 
-        #statsCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+        #statsCanvas,
+        #secondaryCanvas {
+            display: none; /* 증기 효과 비활성화 */
         }
 
         .stats-container {
@@ -898,15 +893,15 @@
                 this.size = Math.random() * 4 + 2;
                 this.speedY = Math.random() * 1 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 0.5;
-                this.opacity = Math.random() * 0.5 + 0.3;
+                this.opacity = Math.random() * 0.15 + 0.05; // 훨씬 투명하게
                 this.life = 1;
             }
 
             update() {
                 this.y -= this.speedY;
                 this.x += this.speedX;
-                this.life -= 0.002;
-                this.opacity = this.life * 0.5;
+                this.life -= 0.005; // 더 빨리 사라지게
+                this.opacity = this.life * 0.2; // 최대 투명도 낮춤
 
                 if (this.y < -50 || this.life <= 0) {
                     this.reset();
@@ -933,7 +928,7 @@
             canvas.height = canvas.offsetHeight;
             canvas.ctx = ctx;
 
-            const particleCount = 80;
+            const particleCount = 25; // 80에서 25로 대폭 감소
             const particles = [];
 
             for (let i = 0; i < particleCount; i++) {
@@ -957,10 +952,8 @@
             });
         }
 
-        // Initialize vapor effects for hero, stats, and secondary sections
+        // Initialize vapor effect only for hero section
         initVaporEffect('vaporCanvas');
-        initVaporEffect('statsCanvas');
-        initVaporEffect('secondaryCanvas');
 
         // ===== 2. COUNTER ANIMATION =====
         function animateCounter(element, target, duration = 2000) {
