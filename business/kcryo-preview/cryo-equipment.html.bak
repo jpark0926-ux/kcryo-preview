@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초저온 장비 | Taylor-Wharton 제품 | KoreaCryo</title>
+    <meta name="description" content="Taylor-Wharton 초저온 저장 탱크, 액화수소 운송 장비, 산업용 가스 솔루션">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cryo-blue: #00d4ff;
+            --cryo-blue-dark: #0099cc;
+            --dark-bg: #0a0e1a;
+            --dark-secondary: #1a1f2e;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            color: var(--white);
+            background-color: var(--dark-bg);
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hero Section - Fullscreen Cinematic with Background Video */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a2332 100%);
+        }
+
+        /* Background Video */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.6);
+            z-index: 1;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .video-placeholder-text {
+            font-size: 1.2rem;
+            color: var(--cryo-blue);
+            margin-top: 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 153, 204, 0.1) 0%, transparent 50%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes heroGlow {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 40px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: var(--cryo-blue);
+            margin-bottom: 25px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 300;
+            animation: fadeIn 1.5s ease-out 0.3s backwards;
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, var(--cryo-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeIn 1.5s ease-out 0.5s backwards;
+        }
+
+        .hero-description {
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            opacity: 0.9;
+            font-weight: 300;
+            animation: fadeIn 1.5s ease-out 0.7s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .scroll-indicator::before {
+            content: '⌄';
+            font-size: 3rem;
+            color: var(--cryo-blue);
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-15px); }
+            60% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* Stats Section with Counter Animation */
+        .stats-section {
+            padding: 100px 80px;
+            background: linear-gradient(180deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
+            position: relative;
+        }
+
+        #statsCanvas,
+        #secondaryCanvas {
+            display: none; /* 증기 효과 비활성화 */
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(0, 212, 255, 0.05);
+            border-color: var(--cryo-blue);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: clamp(3rem, 5vw, 4.5rem);
+            font-weight: 900;
+            color: var(--cryo-blue);
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Split Screen Section */
+        .split-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .split-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .split-image {
+            flex: 1;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--dark-secondary) 0%, var(--dark-bg) 100%);
+        }
+
+        .split-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            animation: imageGlow 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes imageGlow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+
+        .split-image-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10rem;
+            opacity: 0.3;
+            transition: transform 0.5s ease;
+        }
+
+        .split-section:hover .split-image-content {
+            transform: scale(1.1);
+        }
+
+        .split-content {
+            flex: 1;
+            padding: 100px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .split-label {
+            display: inline-block;
+            color: var(--cryo-blue);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .split-title {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .split-description {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            line-height: 1.8;
+            opacity: 0.85;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 50px;
+        }
+
+        .feature-list li {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Underline Animation for Links */
+        .feature-list li::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--cryo-blue);
+            transition: width 0.4s ease;
+        }
+
+        .feature-list li:hover {
+            padding-left: 20px;
+            color: var(--cryo-blue);
+        }
+
+        .feature-list li:hover::after {
+            width: 100%;
+        }
+
+        .feature-list li::before {
+            content: '→';
+            margin-right: 20px;
+            color: var(--cryo-blue);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* CTA Button with Ripple & Shimmer Effects */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 45px;
+            background: var(--cryo-blue);
+            color: var(--dark-bg);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            border: 2px solid var(--cryo-blue);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Shimmer Effect */
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: var(--cryo-blue);
+            transform: translateX(10px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Secondary Products Grid - Full Height */
+        .secondary-section {
+            min-height: 100vh;
+            padding: 120px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(180deg, var(--dark-bg) 0%, var(--dark-secondary) 100%);
+        }
+
+        .secondary-title {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .secondary-title h2 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .secondary-title p {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        .secondary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Magnetic Cursor Effect for Cards */
+        .secondary-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 50px 40px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .secondary-card:hover {
+            transform: translateY(-15px);
+            background: rgba(0, 212, 255, 0.05);
+            border-color: var(--cryo-blue);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .secondary-card .icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .secondary-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .secondary-card p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Final CTA Section - Cinematic */
+        .final-cta {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 40px;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0d1925 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2.5rem, 6vw, 5.5rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .final-cta p {
+            font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+            margin-bottom: 60px;
+            opacity: 0.85;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary {
+            padding: 25px 60px;
+            background: var(--cryo-blue);
+            color: var(--dark-bg);
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 800;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            border: 2px solid var(--cryo-blue);
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .cta-primary:hover {
+            background: transparent;
+            color: var(--cryo-blue);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .cta-secondary {
+            padding: 25px 60px;
+            background: transparent;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-secondary:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            transition: all 1s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: var(--cryo-blue);
+            color: var(--dark-bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-left: 15px;
+            vertical-align: middle;
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-section {
+                flex-direction: column !important;
+                min-height: auto;
+            }
+
+            .split-image {
+                height: 60vh;
+                position: relative;
+            }
+
+            .split-content {
+                padding: 60px 40px;
+            }
+
+            .secondary-section {
+                padding: 80px 40px;
+            }
+
+            .secondary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                padding: 80px 40px;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+
+            .split-content {
+                padding: 50px 30px;
+            }
+
+            .secondary-section {
+                padding: 60px 30px;
+            }
+
+            .final-cta {
+                padding: 80px 30px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-primary,
+            .cta-secondary {
+                width: 100%;
+                text-align: center;
+            }
+
+            .feature-list li {
+                font-size: 1rem;
+            }
+
+            .stats-section {
+                padding: 60px 30px;
+            }
+        }
+
+        /* Parallax Effect */
+        .parallax {
+            transform: translateZ(0);
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section - Fullscreen Cinematic with Background Video -->
+    <section class="hero">
+        <!-- Background Video (placeholder for now) -->
+        <!-- <video class="hero-video" autoplay loop muted playsinline>
+            <source src="videos/cryogenic-tank.mp4" type="video/mp4">
+        </video> -->
+        <div class="video-placeholder">
+            <div style="font-size: 8rem; opacity: 0.2;">❄️</div>
+            <p class="video-placeholder-text">극저온 탱크/액화가스 영상 예정</p>
+        </div>
+        <div class="hero-video-overlay"></div>
+        
+        <div class="hero-content">
+            <p class="hero-subtitle">Taylor-Wharton</p>
+            <h1 class="hero-title">초저온<br>극한의 기술</h1>
+            <p class="hero-description">
+                산업용 가스 저장부터 액화수소 인프라까지<br>
+                세계 최고 수준의 극저온 기술로 대한민국의 미래를 만듭니다
+            </p>
+        </div>
+        <div class="scroll-indicator" onclick="document.querySelector('.stats-section').scrollIntoView({behavior: 'smooth'})"></div>
+    </section>
+
+    <!-- Stats Section with Counter Animation -->
+    <section class="stats-section reveal">
+        <canvas id="statsCanvas"></canvas>
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" data-target="253">0</div>
+                <div class="stat-label">극저온 -253°C</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="99.9">0</div>
+                <div class="stat-label">증발 효율 99.9%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="100000">0</div>
+                <div class="stat-label">최대 용량 100,000L</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="60">0</div>
+                <div class="stat-label">60년+ 기술력</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product 1: Industrial Gas Storage -->
+    <section class="split-section reveal">
+        <div class="split-image">
+            <div class="split-image-content">❄️</div>
+        </div>
+        <div class="split-content">
+            <span class="split-label">산업용 가스</span>
+            <h2 class="split-title">대용량<br>극저온 저장</h2>
+            <p class="split-description">
+                액체질소, 액체산소, 액체아르곤 등 산업용 극저온 가스의 안전한 저장과 공급. 
+                최첨단 진공 단열 기술로 증발 손실을 최소화합니다.
+            </p>
+            <ul class="feature-list">
+                <li>500L ~ 100,000L 맞춤형 용량</li>
+                <li>증발 손실률 0.5% 미만 / 일</li>
+                <li>자동 압력 제어 시스템</li>
+                <li>ASME, KGS 안전 인증</li>
+                <li>실시간 IoT 모니터링</li>
+            </ul>
+            <a href="#contact" class="cta-button">
+                <span>상담 신청</span>
+                <span>→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Product 2: Liquid Hydrogen -->
+    <section class="split-section reveal">
+        <div class="split-image">
+            <div class="split-image-content">⚡</div>
+        </div>
+        <div class="split-content">
+            <span class="split-label">수소 경제</span>
+            <h2 class="split-title">액화수소<br>인프라<span class="badge">NEW</span></h2>
+            <p class="split-description">
+                차세대 청정 에너지를 위한 액화수소 저장 및 운송 솔루션. 
+                -253°C 극저온 환경에서도 안전하고 효율적인 수소 공급을 보장합니다.
+            </p>
+            <ul class="feature-list">
+                <li>-253°C 극저온 유지 기술</li>
+                <li>수소 전용 안전 설계</li>
+                <li>5,000 ~ 50,000L 운송 트레일러</li>
+                <li>최대 200,000L 정치형 탱크</li>
+                <li>스마트 충전 시스템</li>
+            </ul>
+            <a href="#contact" class="cta-button">
+                <span>상담 신청</span>
+                <span>→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Secondary Products Section -->
+    <section class="secondary-section reveal">
+        <canvas id="secondaryCanvas"></canvas>
+        <div class="secondary-title">
+            <h2>전문 특수 장비</h2>
+            <p>연구, 의료, 바이오 분야를 위한 고성능 극저온 솔루션</p>
+        </div>
+
+        <div class="secondary-grid">
+            <div class="secondary-card">
+                <span class="icon">🧪</span>
+                <h3>헬륨 듀어</h3>
+                <p>초전도체 연구, MRI, NMR 등 극저온 응용을 위한 고순도 액체헬륨 저장 용기. 초저증발 설계로 장기간 안정 보관.</p>
+            </div>
+
+            <div class="secondary-card">
+                <span class="icon">🧬</span>
+                <h3>바이오뱅킹 프리저</h3>
+                <p>생물학적 샘플, 줄기세포, 혈액, 조직의 장기 보관을 위한 액체질소 기반 초저온 냉동 시스템. 자동 재충전 및 온도 모니터링.</p>
+            </div>
+
+            <div class="secondary-card">
+                <span class="icon">🔬</span>
+                <h3>실험실용 극저온 용기</h3>
+                <p>연구실 및 의료기관을 위한 소형 극저온 저장 용기. 이동식 설계와 안전 밸브 시스템으로 실험실 환경에 최적화.</p>
+            </div>
+
+            <div class="secondary-card">
+                <span class="icon">⚙️</span>
+                <h3>마이크로벌크 시스템</h3>
+                <p>중소 규모 사업장을 위한 효율적인 극저온 가스 공급 시스템. 자동 재충전 및 사용량 최적화로 운영 비용 절감.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta" id="contact">
+        <div class="final-cta-content">
+            <h2>극저온 기술의<br>파트너가 되어드립니다</h2>
+            <p>귀사의 요구사항에 맞는 최적의 극저온 솔루션을 제안해 드립니다.<br>60년 이상 축적된 Taylor-Wharton의 기술력을 경험하세요.</p>
+            <div class="cta-buttons">
+                <a href="tel:02-1234-5678" class="cta-primary">📞 전화 상담</a>
+                <a href="mailto:info@koreacryo.com" class="cta-secondary">✉️ 이메일 문의</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ===== 1. COUNTER ANIMATION =====
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const startTime = performance.now();
+            const isDecimal = target % 1 !== 0;
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutQuad = progress * (2 - progress);
+                const current = start + (target - start) * easeOutQuad;
+                
+                if (isDecimal) {
+                    element.textContent = current.toFixed(1);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // ===== 3. RIPPLE EFFECT =====
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Add ripple effect to all buttons
+        document.querySelectorAll('.cta-button, .cta-primary, .cta-secondary').forEach(button => {
+            button.addEventListener('click', createRipple);
+        });
+
+        // ===== 4. MAGNETIC CURSOR EFFECT FOR CARDS =====
+        document.querySelectorAll('.secondary-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                const maxMove = 15;
+                const moveX = deltaX * maxMove;
+                const moveY = deltaY * maxMove;
+                
+                card.style.transform = `translateY(-15px) translate(${moveX}px, ${moveY}px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) translate(0, 0)';
+            });
+        });
+
+        // ===== SCROLL REVEAL & COUNTER TRIGGER =====
+        const revealElements = document.querySelectorAll('.reveal');
+        let countersAnimated = false;
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+
+                    // Trigger counter animation for stats section
+                    if (!countersAnimated && element.classList.contains('stats-section')) {
+                        const counters = element.querySelectorAll('.stat-number');
+                        counters.forEach(counter => {
+                            const target = parseFloat(counter.getAttribute('data-target'));
+                            animateCounter(counter, target);
+                        });
+                        countersAnimated = true;
+                    }
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // ===== PARALLAX EFFECT ON HERO =====
+        const hero = document.querySelector('.hero');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxSpeed = 0.5;
+            
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
+            }
+        });
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== CURSOR GLOW EFFECT =====
+        let glowTimeout;
+        document.addEventListener('mousemove', (e) => {
+            clearTimeout(glowTimeout);
+            
+            const glow = document.createElement('div');
+            glow.style.cssText = `
+                position: fixed;
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+                pointer-events: none;
+                left: ${e.clientX - 150}px;
+                top: ${e.clientY - 150}px;
+                z-index: 9999;
+                transition: opacity 0.3s;
+            `;
+            document.body.appendChild(glow);
+            
+            glowTimeout = setTimeout(() => {
+                glow.style.opacity = '0';
+                setTimeout(() => glow.remove(), 300);
+            }, 100);
+        });
+
+        // ===== VIDEO FALLBACK =====
+        // If video element exists, add error fallback
+        const heroVideo = document.querySelector('.hero-video');
+        if (heroVideo) {
+            heroVideo.addEventListener('error', () => {
+                heroVideo.style.display = 'none';
+                document.querySelector('.video-placeholder').style.opacity = '0.3';
+            });
+        }
+    </script>
+
+</body>
+</html>
