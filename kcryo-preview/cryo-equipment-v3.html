@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초저온 장비 | Taylor-Wharton | 한국초저온용기</title>
+<meta name="description" content="Taylor-Wharton 초저온 저장 탱크, 액화수소 인프라, 산업용 가스 솔루션 - 극한의 온도를 다루는 기술">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cryo-blue: #00d4ff;
+  --cryo-blue-dark: #0099cc;
+  --dark-bg: #060d1b;
+  --dark-secondary: #0a1628;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--dark-bg);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== SCROLL REVEAL SYSTEM ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays for grouped children */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0s; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.2s; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 0.3s; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 0.4s; }
+
+/* ===== NAVIGATION BAR ===== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(10, 14, 26, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.navbar.scrolled {
+  height: 60px;
+  background: rgba(10, 14, 26, 0.97);
+  box-shadow: 0 1px 30px rgba(0, 0, 0, 0.4);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-logo:hover {
+  opacity: 0.85;
+}
+
+.nav-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+}
+
+.nav-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.nav-logo-kr {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.nav-logo-en {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  margin-left: auto;
+  list-style: none;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 0;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--white);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--cryo-blue);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-icon {
+  font-size: 10px;
+  transition: transform 0.3s ease;
+  opacity: 0.5;
+}
+
+.nav-dropdown:hover .nav-dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: -12px;
+  min-width: 220px;
+  background: rgba(10, 14, 26, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-dropdown-item {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.nav-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+}
+
+.nav-cta {
+  padding: 9px 22px;
+  background: var(--cryo-blue);
+  color: var(--dark-bg);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.nav-cta:hover {
+  background: #33ddff;
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--dark-bg);
+  padding-top: 70px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 1000px;
+  padding: 0 40px;
+}
+
+.hero-breadcrumb {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s ease 0.1s forwards;
+}
+
+.hero-breadcrumb a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.hero-breadcrumb a:hover {
+  color: var(--cryo-blue);
+}
+
+.hero-breadcrumb span {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 7px 18px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 50px;
+  color: var(--cryo-blue);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s ease 0.2s forwards;
+}
+
+.hero-title {
+  font-size: clamp(44px, 7vw, 72px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 28px;
+  color: var(--white);
+  letter-spacing: -1px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s ease 0.35s forwards;
+}
+
+.hero-title-accent {
+  background: linear-gradient(135deg, var(--cryo-blue) 0%, #66e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 0 auto 0;
+  font-weight: 300;
+  opacity: 0;
+  animation: heroFadeIn 0.8s ease 0.5s forwards;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin-top: 64px;
+  opacity: 0;
+  animation: heroFadeIn 0.8s ease 0.65s forwards;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-value {
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--cryo-blue);
+  display: block;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+.hero-stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 500;
+}
+
+/* Thin divider between hero stats */
+.hero-stat + .hero-stat {
+  position: relative;
+  padding-left: 48px;
+}
+
+.hero-stat + .hero-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== STORY SECTION ===== */
+.story-section {
+  padding: 140px 40px;
+  position: relative;
+  background: var(--dark-bg);
+}
+
+.story-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-label {
+  font-size: 12px;
+  color: var(--cryo-blue);
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.section-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 32px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.section-description {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.85;
+  font-weight: 300;
+}
+
+/* ===== PRODUCT SECTION ===== */
+.product-section {
+  padding: 40px 40px 80px;
+  background: var(--dark-bg);
+}
+
+.product-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 140px;
+}
+
+.product-grid.reversed {
+  direction: rtl;
+}
+
+.product-grid.reversed > * {
+  direction: ltr;
+}
+
+.product-image {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  aspect-ratio: 4/3;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-image:hover img {
+  transform: scale(1.04);
+}
+
+.product-info {
+  padding: 20px 0;
+}
+
+.product-label {
+  font-size: 12px;
+  color: var(--cryo-blue);
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.product-title {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.product-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--cryo-blue);
+  color: var(--dark-bg);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.product-description {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.8;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.product-features {
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.product-features li {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 0;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.product-features li:last-child {
+  border-bottom: none;
+}
+
+.product-features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cryo-blue);
+  opacity: 0.7;
+}
+
+.product-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: transparent;
+  color: var(--cryo-blue);
+  text-decoration: none;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.product-cta:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.5);
+}
+
+/* ===== SECONDARY PRODUCTS ===== */
+.secondary-section {
+  padding: 120px 40px;
+  background: var(--dark-secondary);
+  position: relative;
+}
+
+.secondary-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.secondary-header h2 {
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.secondary-header p {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 300;
+}
+
+.secondary-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.secondary-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 36px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: default;
+  position: relative;
+}
+
+.secondary-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(0, 212, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.secondary-card .icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.secondary-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.secondary-card p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  padding: 140px 40px;
+  background: var(--dark-bg);
+  text-align: center;
+  position: relative;
+}
+
+.final-cta::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.final-cta h2 {
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.final-cta p {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.8;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-primary {
+  padding: 14px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  background: var(--cryo-blue);
+  color: var(--dark-bg);
+}
+
+.cta-primary:hover {
+  background: #33ddff;
+}
+
+.cta-secondary {
+  padding: 14px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cta-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--white);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+  
+  .nav-menu {
+    display: none;
+  }
+  
+  .hero-stats {
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .hero-stat + .hero-stat {
+    padding-left: 0;
+  }
+
+  .hero-stat + .hero-stat::before {
+    display: none;
+  }
+  
+  .product-grid,
+  .product-grid.reversed {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    direction: ltr;
+  }
+
+  .secondary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .story-section,
+  .secondary-section,
+  .final-cta {
+    padding: 80px 24px;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-breadcrumb,
+  .hero-badge,
+  .hero-title,
+  .hero-subtitle,
+  .hero-stats {
+    opacity: 1;
+    animation: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <a href="../koreacryo-prototype/index.html" class="nav-logo">
+    <div class="nav-logo-icon">KC</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-kr">한국초저온용기</span>
+      <span class="nav-logo-en">KOREA CRYOGENICS</span>
+    </div>
+  </a>
+
+  <ul class="nav-menu">
+    <li class="nav-item">
+      <a href="../koreacryo-prototype/index.html" class="nav-link">홈</a>
+    </li>
+    
+    <li class="nav-item nav-dropdown">
+      <a href="#" class="nav-link nav-dropdown-toggle active">
+        제품
+        <span class="nav-dropdown-icon">▼</span>
+      </a>
+      <div class="nav-dropdown-menu">
+        <a href="cryo-equipment-v3.html" class="nav-dropdown-item">❄️ 초저온 장비</a>
+        <a href="#" class="nav-dropdown-item">💧 액체헬륨</a>
+        <a href="#" class="nav-dropdown-item">🧪 특수가스</a>
+        <a href="#" class="nav-dropdown-item">🧬 바이오뱅킹</a>
+        <a href="#" class="nav-dropdown-item">⚙️ 가스 엔지니어링</a>
+      </div>
+    </li>
+    
+    <li class="nav-item">
+      <a href="../koreacryo-prototype/index.html#about" class="nav-link">회사소개</a>
+    </li>
+    
+    <li class="nav-item">
+      <a href="#contact" class="nav-cta">문의하기</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-breadcrumb">
+      <a href="../koreacryo-prototype/index.html">홈</a>
+      <span>/</span>
+      <a href="#">제품</a>
+      <span>/</span>
+      <span>초저온 장비</span>
+    </div>
+    
+    <div class="hero-badge">Taylor-Wharton Official Partner</div>
+    
+    <h1 class="hero-title">
+      극한의 온도를<br>
+      <span class="hero-title-accent">다루는 기술</span>
+    </h1>
+    
+    <p class="hero-subtitle">
+      -253°C 액화수소부터 -196°C 액체질소까지.<br>
+      Taylor-Wharton의 60년 극저온 기술력으로 안전하고<br>
+      효율적인 저장 솔루션을 제공합니다.
+    </p>
+    
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value" data-target="-253" data-suffix="°C">-253°C</span>
+        <span class="hero-stat-label">Liquid Hydrogen</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" data-target="-196" data-suffix="°C">-196°C</span>
+        <span class="hero-stat-label">Liquid Nitrogen</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value" data-target="60" data-suffix="+">60+</span>
+        <span class="hero-stat-label">Years Experience</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Story Section -->
+<section class="story-section">
+  <div class="story-content">
+    <span class="section-label reveal">Innovation</span>
+    <h2 class="section-title reveal">
+      세계 최고 수준의<br>
+      초저온 저장 기술
+    </h2>
+    <p class="section-description reveal">
+      Taylor-Wharton은 1742년 설립 이래 280년 이상 극저온 기술의 혁신을 이끌어왔습니다. 
+      항공우주, 의료, 반도체, 에너지 산업 전반에 걸쳐 안전하고 신뢰할 수 있는 
+      초저온 저장 솔루션을 제공하며, 한국초저온용기는 이 세계적 기술을 국내에 공급합니다.
+    </p>
+  </div>
+</section>
+
+<!-- Product 1: Industrial Gas Storage -->
+<section class="product-section">
+  <div class="product-container">
+    
+    <div class="product-grid">
+      <div class="product-image reveal">
+        <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=800&q=80" alt="Industrial Gas Storage" loading="lazy">
+      </div>
+      <div class="product-info">
+        <span class="product-label reveal">산업용 가스</span>
+        <h2 class="product-title reveal">대용량 극저온 저장</h2>
+        <p class="product-description reveal">
+          액체질소(LIN), 액체산소(LOX), 액체아르곤(LAR) 등 산업용 극저온 가스의 안전한 저장과 공급. 
+          최첨단 진공 단열 기술로 증발 손실을 최소화합니다.
+        </p>
+        <ul class="product-features reveal">
+          <li>500L ~ 100,000L 맞춤형 용량</li>
+          <li>증발 손실률 0.5% 미만 / 일</li>
+          <li>자동 압력 제어 시스템</li>
+          <li>ASME, KGS 안전 인증</li>
+          <li>실시간 IoT 모니터링</li>
+        </ul>
+        <a href="#contact" class="product-cta reveal">
+          상담 신청하기 →
+        </a>
+      </div>
+    </div>
+
+    <div class="product-grid reversed">
+      <div class="product-image reveal">
+        <img src="images/tw-hydrogen-storage-tank.jpg" alt="Taylor-Wharton Hydrogen Storage Tank" loading="lazy">
+      </div>
+      <div class="product-info">
+        <span class="product-label reveal">수소 경제</span>
+        <h2 class="product-title reveal">
+          액화수소 저장 탱크
+          <span class="product-badge">NEW</span>
+        </h2>
+        <p class="product-description reveal">
+          차세대 청정 에너지를 위한 Taylor-Wharton 액화수소 저장 솔루션. 
+          -253°C 극저온 환경에서도 안전하고 효율적인 수소 공급을 보장합니다.
+        </p>
+        <ul class="product-features reveal">
+          <li>3,000 ~ 18,000 갤런 수평/수직 탱크</li>
+          <li>펌프라인 옵션: 무펌프 / 단일 / 이중 리던던트</li>
+          <li>대형 용기 맞춤 설계 가능</li>
+          <li>고객 요구사항 맞춤 제작</li>
+          <li>수소 전용 안전 설계 및 ASME 인증</li>
+        </ul>
+        <a href="#contact" class="product-cta reveal">
+          상담 신청하기 →
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Secondary Products -->
+<section class="secondary-section">
+  <div class="secondary-header">
+    <span class="section-label reveal">Specialized</span>
+    <h2 class="reveal">전문 특수 장비</h2>
+    <p class="reveal">연구, 의료, 바이오 분야를 위한 고성능 극저온 솔루션</p>
+  </div>
+
+  <div class="secondary-grid reveal-stagger">
+    <div class="secondary-card reveal">
+      <span class="icon">🧪</span>
+      <h3>헬륨 듀어</h3>
+      <p>초전도체 연구, MRI, NMR 등 극저온 응용을 위한 고순도 액체헬륨 저장 용기. 초저증발 설계로 장기간 안정 보관.</p>
+    </div>
+
+    <div class="secondary-card reveal">
+      <span class="icon">🧬</span>
+      <h3>바이오뱅킹 프리저</h3>
+      <p>생물학적 샘플, 줄기세포, 혈액, 조직의 장기 보관을 위한 액체질소 기반 초저온 냉동 시스템. 자동 재충전 및 온도 모니터링.</p>
+    </div>
+
+    <div class="secondary-card reveal">
+      <span class="icon">🔬</span>
+      <h3>실험실용 극저온 용기</h3>
+      <p>연구실 및 의료기관을 위한 소형 극저온 저장 용기. 이동식 설계와 안전 밸브 시스템으로 실험실 환경에 최적화.</p>
+    </div>
+
+    <div class="secondary-card reveal">
+      <span class="icon">⚙️</span>
+      <h3>마이크로벌크 시스템</h3>
+      <p>중소 규모 사업장을 위한 효율적인 극저온 가스 공급 시스템. 자동 재충전 및 사용량 최적화로 운영 비용 절감.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta" id="contact">
+  <div class="final-cta-content">
+    <h2 class="reveal">극저온 기술의<br>파트너가 되어드립니다</h2>
+    <p class="reveal">
+      귀사의 요구사항에 맞는 최적의 극저온 솔루션을 제안해 드립니다.<br>
+      60년 이상 축적된 Taylor-Wharton의 기술력을 경험하세요.
+    </p>
+    <div class="cta-buttons reveal">
+      <a href="tel:02-1234-5678" class="cta-primary">전화 상담</a>
+      <a href="mailto:info@koreacryo.com" class="cta-secondary">이메일 문의</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// ===== Navbar scroll effect =====
+const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// ===== Scroll reveal (IntersectionObserver) =====
+const revealElements = document.querySelectorAll('.reveal');
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+// ===== Animated stat counters =====
+const statElements = document.querySelectorAll('.hero-stat-value[data-target]');
+let statsCounted = false;
+
+function animateCounters() {
+  if (statsCounted) return;
+  statsCounted = true;
+
+  statElements.forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isNeg = target < 0;
+    const absTarget = Math.abs(target);
+    const duration = 1200;
+    const start = performance.now();
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(absTarget * ease);
+      el.textContent = (isNeg ? '-' : '') + current + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    el.textContent = (isNeg ? '-' : '') + '0' + suffix;
+    requestAnimationFrame(update);
+  });
+}
+
+// Trigger counters when hero stats are visible
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) statsObserver.observe(heroStats);
+
+// ===== Smooth scroll for anchor links =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 # Chris의 업무와 삶을 연결하는 중심 구조
 
 version: "0.1.0-alpha"
-last_updated: "2026-02-12T20:23:00+09:00"
+last_updated: "2026-02-13T01:40:00+09:00"
 
 # ========================================
 # CORE: Chris
@@ -84,6 +84,19 @@ portfolio:
     focus: ["성장주", "텐배거"]
     approach: "데이터 기반, IB 리포트"
     sectors: ["AI 전력", "원전", "반도체", "BTC 마이닝"]
+    
+  philosophy:
+    horizon: "5년+ 장기 투자"
+    goal: "텐배거 사냥 (10x returns)"
+    patience: "시간은 아군, 복리는 무기"
+    conviction: "확신이 서면 집중, 흔들리지 않음"
+    
+    criteria_10x:
+      - "구조적 공급 부족 (UUUU 우라늄 28% deficit)"
+      - "10년+ 지속되는 메가트렌드 (AI 전력, 원전 르 네상스)"
+      - "실적 가시성 3-5년 내 확보"
+      - "현재 적자라도 손익분기점 명확"
+      - "경쟁 우위 (미국 유일, 기술 장벽 등)"
   
   holdings:
     PLTR:
@@ -112,6 +125,22 @@ portfolio:
     # ... 나머지 생략
   
   watchlist:
+    - symbol: UUUU
+      name: "Energy Fuels Inc."
+      reason: "우라늄 채광 + 토류 원소 (AI 전력 수요 간접 수혜)"
+      status: "분석 완료 (2026-02-13)"
+      current_price: "~$22"
+      market_cap: "$5.2B"
+      fair_value_range: "$19-34 (PSR 기본~낙관)"
+      target_10x: "$220"
+      thesis: "우라늄 공급 부족 28% + AI 전력 폭발 + 미국 유일 정련소"
+      rating: "⭐⭐⭐⭐ (4/5)"
+      decision: "워치 (적정가 $15 이하 대기 or 현재가 소규모 분할 매수)"
+      time_horizon: "5년+"
+      risk: "High (pre-profitability, commodity volatility)"
+      related: "CEG (downstream nuclear utility)"
+      analysis_file: "personal/investment/watchlist.md"
+    
     - symbol: CEG
       reason: "원전, AI 전력 인프라"
       status: "분석 완료 (2026-02-12)"
