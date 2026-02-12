@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초저온 장비 | Taylor-Wharton | 한국초저온용기(주)</title>
+<meta name="description" content="Taylor-Wharton 초저온 저장 탱크, 액화수소 인프라, 산업용 가스 솔루션 — 극한의 온도를 다루는 기술">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cryo-950: #060d1b;
+  --cryo-900: #0a1628;
+  --cryo-800: #0f2240;
+  --cryo-700: #143060;
+  --cryo-500: #00d4ff;
+  --cryo-400: #00e5ff;
+  --cryo-300: #80f0ff;
+  --cryo-200: #b3f5ff;
+  --ice-500: #00BFFF;
+  --ice-glow: rgba(0, 212, 255, 0.6);
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cryo-950);
+  color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== SCROLL PROGRESS ===== */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--cryo-500), var(--cryo-400), var(--ice-500));
+  z-index: 9999;
+  box-shadow: 0 0 8px var(--ice-glow), 0 0 16px rgba(0,212,255,0.3);
+  transition: width 0.05s linear;
+}
+
+/* ===== NAVIGATION ===== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 70px;
+  background: rgba(10, 14, 26, 0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+  z-index: 1000; display: flex; align-items: center; padding: 0 40px;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.navbar.scrolled {
+  height: 60px; background: rgba(10,14,26,0.98);
+  box-shadow: 0 4px 30px rgba(0,212,255,0.08);
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; transition: transform 0.3s; }
+.nav-logo:hover { transform: translateY(-2px); }
+.nav-logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 20px; color: white;
+  box-shadow: 0 4px 15px rgba(0,212,255,0.3);
+}
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+.nav-logo-kr { font-size: 16px; font-weight: 700; color: white; }
+.nav-logo-en { font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; }
+.nav-menu { display: flex; align-items: center; gap: 40px; margin-left: auto; list-style: none; }
+.nav-item { position: relative; }
+.nav-link {
+  color: rgba(255,255,255,0.8); text-decoration: none; font-size: 15px; font-weight: 500;
+  padding: 8px 0; transition: color 0.3s; display: flex; align-items: center; gap: 4px;
+}
+.nav-link:hover { color: #00d4ff; }
+.nav-link.active { color: #00d4ff; }
+.nav-link::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+  background: linear-gradient(90deg, #00d4ff, #00e5ff); transition: width 0.3s;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+.nav-dropdown { position: relative; }
+.nav-dropdown-icon { font-size: 12px; transition: transform 0.3s; }
+.nav-dropdown:hover .nav-dropdown-icon { transform: rotate(180deg); }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 20px); left: 0; min-width: 240px;
+  background: rgba(10,14,26,0.98); backdrop-filter: blur(16px);
+  border: 1px solid rgba(0,212,255,0.2); border-radius: 12px; padding: 8px 0;
+  opacity: 0; visibility: hidden; transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.8); text-decoration: none; padding: 12px 20px; font-size: 14px;
+  transition: all 0.2s;
+}
+.nav-dropdown-item:hover { background: rgba(0,212,255,0.1); color: #00d4ff; padding-left: 24px; }
+.nav-cta {
+  padding: 10px 24px; background: linear-gradient(135deg, #00d4ff, #0099cc);
+  color: white; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+  transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,212,255,0.3);
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,255,0.4); }
+
+/* Mobile nav */
+.nav-mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; margin-left: auto; }
+.nav-mobile-toggle span { width: 24px; height: 2px; background: #00d4ff; transition: all 0.3s; display: block; }
+.nav-mobile-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-mobile-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-mobile-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+#mobile-menu {
+  display: none; position: fixed; top: 70px; left: 0; right: 0;
+  background: rgba(6,13,27,0.98); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,212,255,0.15); padding: 20px;
+  transform: translateY(-10px); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  z-index: 999;
+}
+#mobile-menu.open { display: block; transform: translateY(0); opacity: 1; }
+#mobile-menu a {
+  display: block; padding: 14px 0; color: rgba(255,255,255,0.8);
+  text-decoration: none; font-size: 16px; font-weight: 500;
+  border-bottom: 1px solid rgba(0,212,255,0.08); transition: color 0.3s;
+}
+#mobile-menu a:hover { color: #00d4ff; }
+#mobile-menu a.active { color: #00d4ff; }
+
+/* ===== PARTICLES & EFFECTS ===== */
+.particle {
+  position: absolute; background: rgba(0,212,255,0.4); border-radius: 50%;
+  animation: float linear infinite; box-shadow: 0 0 6px rgba(0,212,255,0.3);
+}
+@keyframes float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
+.ice-crystal {
+  position: absolute; color: rgba(0,229,255,0.15); font-size: 18px;
+  animation: crystal-fall linear infinite; pointer-events: none;
+}
+@keyframes crystal-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+@keyframes frost-sweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+.frost-line {
+  position: absolute; height: 1px; width: 300px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.6), rgba(0,229,255,0.3), transparent);
+  animation: frost-sweep 4s linear infinite; filter: blur(0.5px);
+  box-shadow: 0 0 6px rgba(0,212,255,0.2);
+}
+.scanlines {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.015) 2px, rgba(0,212,255,0.015) 4px);
+}
+
+/* ===== GRADIENT TEXT ===== */
+.gradient-text {
+  background: linear-gradient(135deg, #00e5ff, #00BFFF, #0080ff, #00e5ff);
+  background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===== GLITCH TEXT ===== */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+.glitch::before {
+  color: #00e5ff; animation: glitch-1 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+.glitch::after {
+  color: #0080ff; animation: glitch-2 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+@keyframes glitch-1 {
+  0%, 95% { transform: none; opacity: 0; }
+  96% { transform: translate(2px, -2px); opacity: 0.8; }
+  97% { transform: translate(-2px, 2px); opacity: 0; }
+  98% { transform: translate(2px, 1px); opacity: 0.8; }
+  100% { transform: none; opacity: 0; }
+}
+@keyframes glitch-2 {
+  0%, 93% { transform: none; opacity: 0; }
+  94% { transform: translate(-2px, 2px); opacity: 0.8; }
+  96% { transform: translate(-1px, 2px); opacity: 0.8; }
+  100% { transform: none; opacity: 0; }
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal {
+  opacity: 0; transform: translateY(50px);
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ===== HERO SECTION ===== */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center;
+  justify-content: center; overflow: hidden; padding-top: 70px;
+}
+.hero-bg-grid {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image: linear-gradient(rgba(0,212,255,1) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(0,212,255,1) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.parallax-orb {
+  position: absolute; border-radius: 50%;
+  transition: transform 0.15s linear;
+}
+@keyframes hero-in {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.hero-anim { animation: hero-in 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+.hero-anim-d1 { animation-delay: 0.15s; opacity: 0; }
+.hero-anim-d2 { animation-delay: 0.4s; opacity: 0; }
+.hero-anim-d3 { animation-delay: 0.65s; opacity: 0; }
+.hero-anim-d4 { animation-delay: 0.9s; opacity: 0; }
+
+/* ===== BRAND STORY SECTIONS ===== */
+.bx-section {
+  min-height: 60vh; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; padding: 80px 0;
+}
+.bx-reveal {
+  opacity: 0; transform: translateY(60px);
+  transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+}
+.bx-reveal.visible { opacity: 1; transform: translateY(0); }
+.bx-reveal-delay-1 { transition-delay: 0.15s; }
+.bx-reveal-delay-2 { transition-delay: 0.3s; }
+.bx-reveal-delay-3 { transition-delay: 0.45s; }
+.bx-tag {
+  font-family: 'Outfit', sans-serif; font-size: 0.7rem;
+  letter-spacing: 0.3em; color: rgba(0,212,255,0.5); text-transform: uppercase;
+}
+.bx-title {
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.15;
+  background: linear-gradient(135deg, #00e5ff, #00BFFF, #e0f7ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-top: 12px; margin-bottom: 24px;
+}
+.bx-body {
+  font-size: 1rem; line-height: 1.9; color: rgba(180,210,230,0.85); max-width: 480px;
+}
+.bx-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+  align-items: center; max-width: 1200px; width: 100%; padding: 0 2rem;
+}
+
+/* Temperature visual */
+.temp-visual {
+  font-family: 'Outfit', sans-serif; font-size: clamp(8rem, 18vw, 14rem);
+  font-weight: 900; line-height: 1; user-select: none;
+  background: linear-gradient(135deg, #00e5ff 0%, #0080ff 50%, #00e5ff 100%);
+  background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 60px rgba(0,212,255,0.4));
+  animation: temp-glow 4s ease-in-out infinite;
+}
+@keyframes temp-glow {
+  0%, 100% { filter: drop-shadow(0 0 40px rgba(0,212,255,0.3)); background-position: 0% 50%; }
+  50% { filter: drop-shadow(0 0 80px rgba(0,212,255,0.6)); background-position: 100% 50%; }
+}
+
+/* Molecule visual — concentric layers */
+.molecule-visual {
+  position: relative; width: clamp(200px, 28vw, 300px); height: clamp(200px, 28vw, 300px); margin: 0 auto;
+}
+.mol-ring {
+  position: absolute; border-radius: 50%; border: 2px solid; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.mol-ring-outer {
+  width: 100%; height: 100%; border-color: rgba(0,212,255,0.3);
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+.mol-ring-mid {
+  width: 65%; height: 65%; border-color: rgba(0,212,255,0.15);
+  animation: ring-pulse 3s ease-in-out infinite 0.5s;
+}
+.mol-ring-inner {
+  width: 30%; height: 30%; border: none;
+  background: radial-gradient(circle, rgba(0,212,255,0.8) 0%, rgba(0,212,255,0.1) 70%, transparent 100%);
+  animation: core-glow 2s ease-in-out infinite;
+}
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+@keyframes core-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(0,212,255,0.4), 0 0 60px rgba(0,212,255,0.2); }
+  50% { box-shadow: 0 0 50px rgba(0,212,255,0.7), 0 0 100px rgba(0,212,255,0.3); }
+}
+
+/* Orbit visual */
+.orbit-visual {
+  position: relative; width: clamp(200px, 28vw, 300px); height: clamp(200px, 28vw, 300px); margin: 0 auto;
+}
+.orbit-ring {
+  position: absolute; width: 100%; height: 100%; border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 50%; top: 0; left: 0;
+}
+.orbit-dot {
+  position: absolute; width: 14px; height: 14px; background: #00e5ff; border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0,229,255,0.8), 0 0 40px rgba(0,229,255,0.3);
+  top: -7px; left: 50%; margin-left: -7px; animation: orbit-spin 4s linear infinite;
+}
+.orbit-ring:nth-child(2) { width: 65%; height: 65%; top: 17.5%; left: 17.5%; }
+.orbit-ring:nth-child(2) .orbit-dot {
+  animation-duration: 3s; animation-direction: reverse;
+  width: 10px; height: 10px; top: -5px; margin-left: -5px; opacity: 0.7;
+}
+.orbit-ring:nth-child(3) { width: 35%; height: 35%; top: 32.5%; left: 32.5%; }
+.orbit-ring:nth-child(3) .orbit-dot {
+  animation-duration: 2s; width: 8px; height: 8px; top: -4px; margin-left: -4px; opacity: 0.5;
+}
+@keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ===== PRODUCT SHOWCASE ===== */
+.product-showcase {
+  position: relative; overflow: hidden;
+  padding: 100px 0;
+}
+.product-showcase::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--cryo-950) 0%, rgba(10,22,40,0.8) 50%, var(--cryo-950) 100%);
+}
+.product-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+  position: relative; z-index: 2;
+}
+.product-grid.reversed { direction: rtl; }
+.product-grid.reversed > * { direction: ltr; }
+
+.product-image-wrap {
+  position: relative; border-radius: 20px; overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,0,0,0.3));
+  border: 1px solid rgba(0,212,255,0.1);
+  padding: 0;
+  transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.product-image-wrap::before {
+  content: ''; position: absolute; inset: -2px;
+  background: linear-gradient(135deg, transparent, rgba(0,212,255,0.15), transparent);
+  border-radius: inherit; opacity: 0; transition: opacity 0.5s; z-index: 1;
+}
+.product-image-wrap:hover::before { opacity: 1; }
+.product-image-wrap:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 50px rgba(0,212,255,0.12), 0 20px 60px rgba(0,0,0,0.4);
+  border-color: rgba(0,212,255,0.3);
+}
+.product-image-wrap img {
+  width: 100%; height: auto; display: block;
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.product-image-wrap:hover img { transform: scale(1.03); }
+.product-image-wrap .image-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+  background: linear-gradient(to top, rgba(6,13,27,0.8) 0%, transparent 100%);
+  pointer-events: none; z-index: 2;
+}
+
+.product-tag {
+  font-family: 'Outfit', sans-serif; font-size: 0.7rem;
+  letter-spacing: 0.3em; color: rgba(0,212,255,0.6); text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.product-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; line-height: 1.15;
+  color: #fff; margin-bottom: 8px;
+}
+.product-title .badge {
+  display: inline-block; padding: 3px 12px; margin-left: 10px;
+  background: linear-gradient(135deg, #00d4ff, #0099cc); border-radius: 50px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; vertical-align: middle;
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,212,255,0.3); }
+  50% { box-shadow: 0 0 25px rgba(0,212,255,0.6); }
+}
+.product-subtitle {
+  font-size: 1.05rem; color: rgba(180,210,230,0.7); line-height: 1.8; margin-bottom: 28px;
+}
+.product-features {
+  list-style: none; margin-bottom: 32px;
+}
+.product-features li {
+  font-size: 0.95rem; color: rgba(255,255,255,0.75); padding: 10px 0 10px 32px;
+  position: relative; line-height: 1.6;
+  border-bottom: 1px solid rgba(0,212,255,0.06);
+}
+.product-features li::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3);
+}
+.product-features li::after {
+  content: '✓'; position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+  color: var(--cryo-500); font-size: 11px; font-weight: 900;
+}
+.product-cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 36px; border-radius: 50px; font-size: 15px; font-weight: 600;
+  text-decoration: none; color: var(--cryo-950);
+  background: linear-gradient(135deg, var(--cryo-500), var(--ice-500));
+  box-shadow: 0 4px 25px rgba(0,212,255,0.3);
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.product-cta-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 40px rgba(0,212,255,0.4);
+}
+
+/* ===== SVG PRODUCT ILLUSTRATION ===== */
+.svg-illustration { width: 100%; max-width: 320px; margin: 0 auto; display: block; }
+@keyframes svg-wave {
+  0%, 100% { d: path("M10,70 Q30,65 50,70 Q70,75 90,70 L90,90 L10,90 Z"); }
+  50% { d: path("M10,70 Q30,75 50,70 Q70,65 90,70 L90,90 L10,90 Z"); }
+}
+@keyframes svg-bubble {
+  0% { transform: translateY(0); opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+@keyframes svg-vapor {
+  0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
+  50% { transform: translateY(-15px) scaleX(1.5); opacity: 0.3; }
+  100% { transform: translateY(-30px) scaleX(2); opacity: 0; }
+}
+
+/* ===== SECONDARY PRODUCTS GRID ===== */
+.secondary-section {
+  position: relative; padding: 120px 2rem; overflow: hidden;
+}
+.secondary-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--cryo-950) 0%, rgba(8,14,34,0.9) 50%, var(--cryo-950) 100%);
+}
+.secondary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;
+}
+.secondary-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(0,212,255,0.08);
+  border-radius: 20px; padding: 36px; position: relative; overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.secondary-card::before {
+  content: ''; position: absolute; inset: -2px;
+  background: linear-gradient(135deg, transparent, rgba(0,212,255,0.1), transparent);
+  border-radius: inherit; opacity: 0; transition: opacity 0.5s;
+}
+.secondary-card:hover::before { opacity: 1; }
+.secondary-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 40px rgba(0,212,255,0.1), 0 20px 60px rgba(0,0,0,0.3);
+  border-color: rgba(0,212,255,0.3);
+}
+.secondary-card .card-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+  transition: all 0.4s;
+}
+.secondary-card:hover .card-icon {
+  background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 20px rgba(0,212,255,0.2);
+}
+.secondary-card h3 {
+  font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 12px;
+}
+.secondary-card p {
+  font-size: 0.88rem; color: rgba(180,210,230,0.65); line-height: 1.7;
+}
+
+/* ===== STATS SECTION ===== */
+.stats-section {
+  position: relative; padding: 100px 2rem; overflow: hidden;
+}
+.stats-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 60%);
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+  max-width: 1000px; margin: 0 auto; position: relative; z-index: 2; text-align: center;
+}
+.stat-item .stat-value {
+  font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900; margin-bottom: 8px;
+}
+.stat-item .stat-label {
+  font-size: 0.85rem; color: rgba(180,210,230,0.6); letter-spacing: 0.5px;
+}
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  position: relative; padding: 120px 2rem; text-align: center; overflow: hidden;
+}
+.final-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.08) 0%, transparent 60%);
+  animation: cta-pulse 4s ease-in-out infinite;
+}
+@keyframes cta-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+.cta-title {
+  font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.25; margin-bottom: 24px;
+}
+.cta-body {
+  font-size: 1.05rem; color: rgba(180,210,230,0.7); line-height: 1.8; max-width: 600px;
+  margin: 0 auto 40px;
+}
+.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.cta-buttons a {
+  padding: 16px 40px; border-radius: 50px; font-size: 15px; font-weight: 600;
+  text-decoration: none; transition: all 0.3s;
+}
+.cta-primary {
+  background: linear-gradient(135deg, var(--cryo-500), var(--ice-500));
+  color: var(--cryo-950); box-shadow: 0 4px 25px rgba(0,212,255,0.3);
+}
+.cta-primary:hover {
+  transform: translateY(-3px); box-shadow: 0 8px 40px rgba(0,212,255,0.4);
+}
+.cta-secondary {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cryo-300);
+}
+.cta-secondary:hover {
+  background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.5);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid rgba(0,212,255,0.06); padding: 40px 2rem; text-align: center;
+  background: var(--cryo-950);
+}
+.footer p { font-size: 0.8rem; color: rgba(180,210,230,0.3); }
+
+/* ===== SHIMMER TEXT ===== */
+.shimmer-text {
+  background: linear-gradient(90deg, #00e5ff 0%, #fff 30%, #00e5ff 60%, #0080ff 100%);
+  background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+/* ===== COUNTER ANIMATION ===== */
+@keyframes counter-whoosh { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.counter-done { animation: counter-whoosh 0.4s cubic-bezier(0.16,1,0.3,1); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+  .nav-menu { display: none; }
+  .nav-mobile-toggle { display: flex; }
+  .bx-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+  .bx-body { margin: 0 auto; }
+  .product-grid { grid-template-columns: 1fr; gap: 32px; }
+  .product-grid.reversed { direction: ltr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .secondary-grid { grid-template-columns: 1fr; }
+  .temp-visual { font-size: clamp(5rem, 15vw, 8rem); }
+}
+@media (max-width: 480px) {
+  .hero { padding-top: 80px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+
+<!-- Navigation -->
+<nav class="navbar" id="navbar">
+  <a href="../koreacryo-prototype/index.html" class="nav-logo">
+    <div class="nav-logo-icon">KC</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-kr">한국초저온용기</span>
+      <span class="nav-logo-en">KOREA CRYOGENICS</span>
+    </div>
+  </a>
+  <ul class="nav-menu">
+    <li class="nav-item"><a href="../koreacryo-prototype/index.html" class="nav-link">홈</a></li>
+    <li class="nav-item nav-dropdown">
+      <a href="#" class="nav-link active" style="cursor:pointer;">제품 <span class="nav-dropdown-icon">▼</span></a>
+      <div class="nav-dropdown-menu">
+        <a href="cryo-equipment-final.html" class="nav-dropdown-item"><span>❄️</span> 초저온 장비</a>
+        <a href="#" class="nav-dropdown-item"><span>💧</span> 액체헬륨</a>
+        <a href="#" class="nav-dropdown-item"><span>🧪</span> 특수가스</a>
+        <a href="#" class="nav-dropdown-item"><span>🧬</span> 바이오뱅킹</a>
+        <a href="#" class="nav-dropdown-item"><span>⚙️</span> 가스 엔지니어링</a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="../koreacryo-prototype/index.html#about" class="nav-link">회사소개</a></li>
+    <li class="nav-item"><a href="#contact" class="nav-cta">문의하기</a></li>
+  </ul>
+  <div class="nav-mobile-toggle" id="menu-btn">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div id="mobile-menu">
+  <a href="../koreacryo-prototype/index.html">홈</a>
+  <a href="cryo-equipment-final.html" class="active">초저온 장비</a>
+  <a href="#">액체헬륨</a>
+  <a href="#">특수가스</a>
+  <a href="#">바이오뱅킹</a>
+  <a href="../koreacryo-prototype/index.html#about">회사소개</a>
+  <a href="#contact">문의하기</a>
+</div>
+
+<!-- ============================================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================================ -->
+<section class="hero" id="top">
+  <!-- Atmospheric layers -->
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#060d1b 0%,#080e22 50%,#060d1b 100%)"></div>
+  <div class="hero-bg-grid"></div>
+  <div class="scanlines"></div>
+
+  <!-- Parallax orbs -->
+  <div class="parallax-orb" id="orb1" style="top:20%;left:15%;width:500px;height:500px;background:rgba(0,212,255,0.06);filter:blur(120px);"></div>
+  <div class="parallax-orb" id="orb2" style="bottom:15%;right:10%;width:400px;height:400px;background:rgba(0,100,255,0.05);filter:blur(100px);"></div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:rgba(0,64,255,0.04);border-radius:50%;filter:blur(100px);"></div>
+
+  <!-- Frost lines -->
+  <div class="frost-line" style="top:18%;animation-delay:0s;"></div>
+  <div class="frost-line" style="top:42%;animation-delay:1.2s;"></div>
+  <div class="frost-line" style="top:68%;animation-delay:2.4s;"></div>
+  <div class="frost-line" style="top:85%;animation-delay:0.6s;"></div>
+
+  <!-- Particles container -->
+  <div id="particles" style="position:absolute;inset:0;pointer-events:none;"></div>
+  <div id="crystals" style="position:absolute;inset:0;pointer-events:none;"></div>
+
+  <!-- Hero content -->
+  <div style="position:relative;z-index:10;max-width:900px;margin:0 auto;padding:0 1.5rem;text-align:center;">
+    <div class="hero-anim hero-anim-d1" style="display:inline-block;padding:6px 20px;border:1px solid rgba(0,212,255,0.25);border-radius:50px;font-size:0.8rem;letter-spacing:0.15em;color:var(--cryo-300);margin-bottom:24px;">
+      TAYLOR-WHARTON OFFICIAL PARTNER
+    </div>
+
+    <div class="hero-anim hero-anim-d2" style="margin-bottom:24px;">
+      <h1 style="font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1.08;">
+        <span class="glitch" data-text="극한의 온도를">극한의 온도를</span><br>
+        <span class="gradient-text">다루는 기술</span>
+      </h1>
+    </div>
+
+    <div class="hero-anim hero-anim-d3" style="margin-bottom:40px;">
+      <p style="font-size:clamp(1rem,2vw,1.2rem);color:var(--cryo-300);max-width:600px;margin:0 auto;line-height:1.8;opacity:0.85;">
+        –253°C 액화수소부터 –196°C 액체질소까지.<br>
+        280년 역사의 Taylor-Wharton 극저온 기술력을<br class="hidden-mobile">
+        한국초저온용기가 제공합니다.
+      </p>
+    </div>
+
+    <div class="hero-anim hero-anim-d4" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#products" style="padding:14px 36px;background:linear-gradient(135deg,var(--cryo-500),var(--ice-500));color:var(--cryo-950);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:all 0.3s;box-shadow:0 4px 25px rgba(0,212,255,0.3);" onmouseover="this.style.transform='translateY(-3px) scale(1.02)';this.style.boxShadow='0 8px 40px rgba(0,212,255,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 25px rgba(0,212,255,0.3)'">
+        제품 살펴보기 →
+      </a>
+      <a href="#contact" style="padding:14px 36px;border:1px solid rgba(0,212,255,0.35);color:var(--cryo-300);border-radius:50px;font-weight:600;text-decoration:none;font-size:0.95rem;transition:all 0.3s;" onmouseover="this.style.background='rgba(0,212,255,0.08)';this.style.borderColor='rgba(0,212,255,0.6)'" onmouseout="this.style.background='';this.style.borderColor='rgba(0,212,255,0.35)'">
+        견적 문의
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:bounce 2s infinite;">
+    <span style="font-size:0.65rem;color:rgba(0,212,255,0.5);letter-spacing:0.3em;">SCROLL</span>
+    <svg width="20" height="20" fill="none" stroke="rgba(0,212,255,0.5)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+  </div>
+  <style>@keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-8px); } }</style>
+</section>
+
+<!-- ============================================================ -->
+<!-- BRAND STORY: TEMPERATURE JOURNEY -->
+<!-- ============================================================ -->
+
+<!-- Section 1: -253°C -->
+<section class="bx-section" style="background:linear-gradient(180deg,#050a16 0%,#040912 100%);">
+  <div class="bx-grid">
+    <div class="bx-reveal" style="display:flex;align-items:center;justify-content:center;">
+      <div class="temp-visual" aria-hidden="true">–253</div>
+    </div>
+    <div>
+      <span class="bx-reveal bx-tag">CHAPTER 01 — THE EXTREME</span>
+      <h3 class="bx-reveal bx-reveal-delay-1 bx-title">–253°C — 수소가 잠드는 온도</h3>
+      <p class="bx-reveal bx-reveal-delay-2 bx-body">
+        우주 공간의 온도에 근접하는 –253°C. 이 극한에서 수소 분자는 운동을 멈추고 
+        액체가 됩니다. Taylor-Wharton은 이 불가능에 가까운 온도를 지상에서 안전하게 
+        담아내는 기술을 완성했습니다. 한국초저온용기는 그 기술의 국내 유일 파트너입니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: -196°C -->
+<section class="bx-section" style="background:linear-gradient(180deg,#040912 0%,#03070e 100%);">
+  <div class="bx-grid">
+    <div class="bx-reveal" style="display:flex;align-items:center;justify-content:center;">
+      <div class="molecule-visual">
+        <div class="mol-ring mol-ring-outer"></div>
+        <div class="mol-ring mol-ring-mid"></div>
+        <div class="mol-ring mol-ring-inner"></div>
+      </div>
+    </div>
+    <div>
+      <span class="bx-reveal bx-tag">CHAPTER 02 — THE FOUNDATION</span>
+      <h3 class="bx-reveal bx-reveal-delay-1 bx-title">–196°C — 산업의 핵심 온도</h3>
+      <p class="bx-reveal bx-reveal-delay-2 bx-body">
+        질소, 산소, 아르곤. 산업의 근간을 이루는 가스들이 액체로 변하는 영역. 
+        반도체 세정, 금속 가공, 의료 연구 — 눈에 보이지 않지만 모든 첨단 산업의 
+        뒤에는 이 온도를 다루는 기술이 있습니다. 이중벽 진공 단열, 
+        0.5% 미만의 일일 증발률. 기술이 곧 신뢰입니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Precision -->
+<section class="bx-section" style="background:linear-gradient(180deg,#03070e 0%,#02050b 100%);">
+  <div class="bx-grid">
+    <div class="bx-reveal" style="display:flex;align-items:center;justify-content:center;">
+      <div class="orbit-visual">
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      </div>
+    </div>
+    <div>
+      <span class="bx-reveal bx-tag">CHAPTER 03 — THE PRECISION</span>
+      <h3 class="bx-reveal bx-reveal-delay-1 bx-title">280년의 기술 궤적</h3>
+      <p class="bx-reveal bx-reveal-delay-2 bx-body">
+        1742년, Taylor-Wharton의 역사가 시작되었습니다. 항공우주, 에너지, 
+        의료, 반도체 — 인류 산업의 변곡점마다 극저온 기술이 함께했습니다. 
+        끊임없이 회전하는 분자처럼, 멈추지 않는 혁신. 
+        그 궤적 위에 한국초저온용기가 서 있습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STATS SECTION -->
+<!-- ============================================================ -->
+<section class="stats-section" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-value gradient-text counter" data-target="253">0</div>
+      <div class="stat-label">°C 극저온 대응</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-value gradient-text counter" data-target="280">0</div>
+      <div class="stat-label">년+ TW 기술 역사</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-value gradient-text counter" data-target="15">0</div>
+      <div class="stat-label">기 LH₂ 벌크탱크</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-value gradient-text counter" data-target="500">0</div>
+      <div class="stat-label">+ 고객사</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PRODUCT 1: INDUSTRIAL GAS STORAGE -->
+<!-- ============================================================ -->
+<section class="product-showcase" id="products">
+  <div class="product-grid">
+    <!-- Left: SVG Illustration -->
+    <div class="reveal" style="display:flex;align-items:center;justify-content:center;">
+      <svg class="svg-illustration" viewBox="0 0 300 360" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;">
+        <defs>
+          <linearGradient id="tankBody" x1="75" y1="40" x2="225" y2="320">
+            <stop offset="0%" stop-color="#1a3a5c"/>
+            <stop offset="50%" stop-color="#0d2240"/>
+            <stop offset="100%" stop-color="#081830"/>
+          </linearGradient>
+          <linearGradient id="liquidFill" x1="100" y1="180" x2="200" y2="300">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#0066cc" stop-opacity="0.8"/>
+          </linearGradient>
+          <linearGradient id="metalSheen" x1="75" y1="0" x2="225" y2="0">
+            <stop offset="0%" stop-color="#2a5580" stop-opacity="0"/>
+            <stop offset="40%" stop-color="#4a8ab0" stop-opacity="0.4"/>
+            <stop offset="60%" stop-color="#4a8ab0" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#2a5580" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- Base shadow -->
+        <ellipse cx="150" cy="330" rx="70" ry="8" fill="rgba(0,212,255,0.08)"/>
+        <!-- Tank body -->
+        <rect x="85" y="50" width="130" height="260" rx="30" fill="url(#tankBody)" stroke="rgba(0,212,255,0.25)" stroke-width="1.5"/>
+        <!-- Metal sheen -->
+        <rect x="85" y="50" width="130" height="260" rx="30" fill="url(#metalSheen)"/>
+        <!-- Inner wall indicator -->
+        <rect x="100" y="65" width="100" height="230" rx="22" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="1" stroke-dasharray="4 4"/>
+        <!-- Vacuum indicators -->
+        <circle cx="92" cy="120" r="2" fill="rgba(0,212,255,0.15)"/>
+        <circle cx="92" cy="180" r="2" fill="rgba(0,212,255,0.15)"/>
+        <circle cx="92" cy="240" r="2" fill="rgba(0,212,255,0.15)"/>
+        <circle cx="208" cy="140" r="2" fill="rgba(0,212,255,0.15)"/>
+        <circle cx="208" cy="200" r="2" fill="rgba(0,212,255,0.15)"/>
+        <circle cx="208" cy="260" r="2" fill="rgba(0,212,255,0.15)"/>
+        <!-- Liquid nitrogen fill -->
+        <path d="M105,200 Q150,192 195,200 L195,285 Q195,298 182,298 L118,298 Q105,298 105,285 Z" fill="url(#liquidFill)" opacity="0.7">
+          <animate attributeName="d" dur="3s" repeatCount="indefinite" values="M105,200 Q150,192 195,200 L195,285 Q195,298 182,298 L118,298 Q105,298 105,285 Z;M105,200 Q150,208 195,200 L195,285 Q195,298 182,298 L118,298 Q105,298 105,285 Z;M105,200 Q150,192 195,200 L195,285 Q195,298 182,298 L118,298 Q105,298 105,285 Z"/>
+        </path>
+        <!-- Bubbles -->
+        <circle cx="130" cy="260" r="3" fill="rgba(0,212,255,0.5)" filter="url(#glow)">
+          <animate attributeName="cy" dur="2s" repeatCount="indefinite" values="260;200;260" keyTimes="0;0.5;1"/>
+          <animate attributeName="opacity" dur="2s" repeatCount="indefinite" values="0.7;0;0.7"/>
+        </circle>
+        <circle cx="160" cy="280" r="2" fill="rgba(0,212,255,0.4)">
+          <animate attributeName="cy" dur="2.5s" repeatCount="indefinite" values="280;210;280" keyTimes="0;0.5;1" begin="0.5s"/>
+          <animate attributeName="opacity" dur="2.5s" repeatCount="indefinite" values="0.6;0;0.6" begin="0.5s"/>
+        </circle>
+        <circle cx="145" cy="270" r="2.5" fill="rgba(0,212,255,0.4)">
+          <animate attributeName="cy" dur="1.8s" repeatCount="indefinite" values="270;205;270" keyTimes="0;0.5;1" begin="1s"/>
+          <animate attributeName="opacity" dur="1.8s" repeatCount="indefinite" values="0.5;0;0.5" begin="1s"/>
+        </circle>
+        <!-- Pressure gauge -->
+        <circle cx="215" cy="90" r="18" fill="rgba(6,13,27,0.8)" stroke="rgba(0,212,255,0.4)" stroke-width="1.5"/>
+        <line x1="215" y1="90" x2="215" y2="78" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)">
+          <animateTransform attributeName="transform" type="rotate" values="-30 215 90;10 215 90;-30 215 90" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <circle cx="215" cy="90" r="2" fill="#00d4ff"/>
+        <!-- Top connections -->
+        <rect x="125" y="35" width="50" height="20" rx="4" fill="#0d2240" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+        <rect x="140" y="22" width="20" height="18" rx="3" fill="#0d2240" stroke="rgba(0,212,255,0.25)" stroke-width="1"/>
+        <!-- Vapor -->
+        <g filter="url(#glow)" opacity="0.4">
+          <circle cx="145" cy="15" r="4" fill="rgba(0,212,255,0.3)">
+            <animate attributeName="cy" dur="2s" repeatCount="indefinite" values="18;-10"/>
+            <animate attributeName="opacity" dur="2s" repeatCount="indefinite" values="0.4;0"/>
+            <animate attributeName="r" dur="2s" repeatCount="indefinite" values="3;6"/>
+          </circle>
+          <circle cx="155" cy="12" r="3" fill="rgba(0,212,255,0.2)">
+            <animate attributeName="cy" dur="2.5s" repeatCount="indefinite" values="15;-12" begin="0.7s"/>
+            <animate attributeName="opacity" dur="2.5s" repeatCount="indefinite" values="0.3;0" begin="0.7s"/>
+            <animate attributeName="r" dur="2.5s" repeatCount="indefinite" values="2;5" begin="0.7s"/>
+          </circle>
+        </g>
+        <!-- Labels -->
+        <text x="150" y="345" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="rgba(0,212,255,0.5)" letter-spacing="2">LIN / LOX / LAR</text>
+      </svg>
+    </div>
+    <!-- Right: Product Info -->
+    <div>
+      <div class="product-tag reveal">INDUSTRIAL GAS STORAGE</div>
+      <h2 class="product-title reveal reveal-delay-1">대용량 극저온 저장</h2>
+      <p class="product-subtitle reveal reveal-delay-2">
+        액체질소(LIN), 액체산소(LOX), 액체아르곤(LAR) — 산업의 근간을 이루는 
+        극저온 가스를 안전하게 저장하고 공급합니다. 최첨단 진공 단열 기술로 
+        증발 손실을 최소화하고, 24시간 무인 운용을 실현합니다.
+      </p>
+      <ul class="product-features reveal reveal-delay-2">
+        <li>500L ~ 100,000L 맞춤형 용량 설계</li>
+        <li>증발 손실률 0.5% 미만 / 일</li>
+        <li>자동 압력 제어 및 안전 방출 시스템</li>
+        <li>ASME, KGS 국제 안전 인증</li>
+        <li>실시간 IoT 원격 모니터링</li>
+      </ul>
+      <a href="#contact" class="product-cta-btn reveal reveal-delay-3">상담 신청하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PRODUCT 2: LIQUID HYDROGEN TANK (TW Image) -->
+<!-- ============================================================ -->
+<section class="product-showcase" style="padding-top:60px;">
+  <div class="product-grid reversed">
+    <!-- Image -->
+    <div class="product-image-wrap reveal">
+      <img src="images/tw-hydrogen-storage-tank.jpg" alt="Taylor-Wharton Liquid Hydrogen Storage Tank" loading="lazy">
+      <div class="image-overlay"></div>
+    </div>
+    <!-- Info -->
+    <div>
+      <div class="product-tag reveal">HYDROGEN ECONOMY</div>
+      <h2 class="product-title reveal reveal-delay-1">
+        액화수소 저장 탱크 <span class="badge">NEW</span>
+      </h2>
+      <p class="product-subtitle reveal reveal-delay-2">
+        차세대 청정 에너지를 위한 Taylor-Wharton 액화수소 저장 솔루션.
+        –253°C 극저온 환경에서도 안전하고 효율적인 수소 인프라를 구축합니다.
+        수소경제 시대의 핵심 기반 기술.
+      </p>
+      <ul class="product-features reveal reveal-delay-2">
+        <li>3,000 ~ 18,000 갤런 수평/수직 탱크</li>
+        <li>펌프라인 옵션: 무펌프 / 단일 / 이중 리던던트</li>
+        <li>대형 용기 맞춤 설계 가능</li>
+        <li>고객 요구사항 맞춤 제작</li>
+        <li>수소 전용 안전 설계 및 ASME 인증</li>
+      </ul>
+      <a href="#contact" class="product-cta-btn reveal reveal-delay-3">상담 신청하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECONDARY PRODUCTS -->
+<!-- ============================================================ -->
+<section class="secondary-section" id="secondary">
+  <div style="position:relative;z-index:2;text-align:center;max-width:700px;margin:0 auto 60px;">
+    <span class="bx-tag reveal" style="display:block;margin-bottom:12px;">SPECIALIZED SOLUTIONS</span>
+    <h2 class="reveal reveal-delay-1" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.2;margin-bottom:16px;">
+      <span class="shimmer-text">전문 특수 장비</span>
+    </h2>
+    <p class="reveal reveal-delay-2" style="font-size:1rem;color:rgba(180,210,230,0.6);line-height:1.7;">
+      연구, 의료, 바이오 분야를 위한<br>고성능 극저온 솔루션 라인업
+    </p>
+  </div>
+
+  <div class="secondary-grid">
+    <div class="secondary-card reveal">
+      <div class="card-icon">🧪</div>
+      <h3>헬륨 듀어</h3>
+      <p>초전도체 연구, MRI, NMR 등 극저온 응용을 위한 고순도 액체헬륨 저장 용기. 초저증발 설계로 장기간 안정 보관이 가능합니다.</p>
+    </div>
+    <div class="secondary-card reveal reveal-delay-1">
+      <div class="card-icon">🧬</div>
+      <h3>바이오뱅킹 프리저</h3>
+      <p>줄기세포, 혈액, 조직의 장기 보관을 위한 액체질소 기반 초저온 냉동 시스템. 자동 재충전 및 24시간 온도 모니터링.</p>
+    </div>
+    <div class="secondary-card reveal reveal-delay-2">
+      <div class="card-icon">🔬</div>
+      <h3>실험실용 극저온 용기</h3>
+      <p>연구실 및 의료기관을 위한 소형 극저온 저장 용기. 이동식 설계와 안전 밸브 시스템으로 실험실 환경에 최적화.</p>
+    </div>
+    <div class="secondary-card reveal reveal-delay-3">
+      <div class="card-icon">⚙️</div>
+      <h3>마이크로벌크 시스템</h3>
+      <p>중소 규모 사업장을 위한 효율적인 극저온 가스 공급 시스템. 자동 재충전과 사용량 최적화로 운영 비용을 절감합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FINAL CTA -->
+<!-- ============================================================ -->
+<section class="final-cta" id="contact">
+  <div style="position:relative;z-index:2;max-width:700px;margin:0 auto;">
+    <h2 class="cta-title reveal">
+      <span class="shimmer-text">극저온 기술의</span><br>
+      파트너가 되어드립니다
+    </h2>
+    <p class="cta-body reveal reveal-delay-1">
+      귀사의 요구사항에 맞는 최적의 극저온 솔루션을 제안해 드립니다.<br>
+      280년 이상 축적된 Taylor-Wharton의 기술력을 경험하세요.
+    </p>
+    <div class="cta-buttons reveal reveal-delay-2">
+      <a href="tel:02-1234-5678" class="cta-primary">📞 전화 상담</a>
+      <a href="mailto:info@koreacryo.com" class="cta-secondary">✉️ 이메일 문의</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2025 한국초저온용기(주) Korea Cryogenics Co., Ltd. All rights reserved.</p>
+</footer>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  // ===== SCROLL PROGRESS BAR =====
+  const progressBar = document.getElementById('scroll-progress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    progressBar.style.width = pct + '%';
+  }
+
+  // ===== NAVBAR SCROLL =====
+  const navbar = document.getElementById('navbar');
+  function updateNav() {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  }
+
+  // ===== MOBILE MENU =====
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    menuBtn.classList.toggle('active');
+    mobileMenu.classList.toggle('open');
+  });
+
+  // ===== SCROLL REVEAL (IntersectionObserver) =====
+  const revealEls = document.querySelectorAll('.reveal, .bx-reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ===== PARTICLES =====
+  const particlesEl = document.getElementById('particles');
+  function spawnParticle() {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;bottom:-10px;animation-duration:${Math.random()*6+6}s;animation-delay:${Math.random()*2}s;`;
+    particlesEl.appendChild(p);
+    setTimeout(() => p.remove(), 12000);
+  }
+  // Spawn particles periodically
+  setInterval(spawnParticle, 400);
+  // Initial batch
+  for (let i = 0; i < 15; i++) setTimeout(spawnParticle, i * 200);
+
+  // ===== ICE CRYSTALS =====
+  const crystalsEl = document.getElementById('crystals');
+  const crystalChars = ['❄', '✦', '✧', '◇', '⬡'];
+  function spawnCrystal() {
+    const c = document.createElement('div');
+    c.className = 'ice-crystal';
+    c.textContent = crystalChars[Math.floor(Math.random() * crystalChars.length)];
+    c.style.cssText = `left:${Math.random()*100}%;font-size:${Math.random()*12+10}px;animation-duration:${Math.random()*8+8}s;animation-delay:${Math.random()*3}s;`;
+    crystalsEl.appendChild(c);
+    setTimeout(() => c.remove(), 16000);
+  }
+  setInterval(spawnCrystal, 800);
+  for (let i = 0; i < 8; i++) setTimeout(spawnCrystal, i * 300);
+
+  // ===== PARALLAX ORBS =====
+  const orb1 = document.getElementById('orb1');
+  const orb2 = document.getElementById('orb2');
+  function updateParallax() {
+    const y = window.scrollY;
+    if (orb1) orb1.style.transform = `translateY(${y * 0.08}px)`;
+    if (orb2) orb2.style.transform = `translateY(${y * -0.05}px)`;
+  }
+
+  // ===== COUNTER ANIMATION =====
+  const counters = document.querySelectorAll('.counter');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterObserver.observe(c));
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1500;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const current = Math.round(eased * target);
+      el.textContent = current.toLocaleString();
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toLocaleString();
+        el.classList.add('counter-done');
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ===== SCROLL EVENT (throttled via rAF) =====
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateProgress();
+        updateNav();
+        updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Close mobile menu if open
+        mobileMenu.classList.remove('open');
+        menuBtn.classList.remove('active');
+      }
+    });
+  });
+
+  // Initial calls
+  updateProgress();
+  updateNav();
+})();
+</script>
+</body>
+</html>
