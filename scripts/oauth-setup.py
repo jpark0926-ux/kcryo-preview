@@ -19,10 +19,10 @@ CONFIG_DIR = os.path.expanduser("~/.openclaw/config")
 CREDENTIALS_FILE = os.path.join(CONFIG_DIR, "google-workspace-credentials.json")
 TOKEN_FILE = os.path.join(CONFIG_DIR, "google-workspace-token.pickle")
 
-# Scopes
+# Scopes - Full access for read/write
 SCOPES = [
     'https://www.googleapis.com/auth/gmail.readonly',
-    'https://www.googleapis.com/auth/drive.readonly',
+    'https://www.googleapis.com/auth/drive',  # Full drive access (not readonly)
     'https://www.googleapis.com/auth/calendar.readonly'
 ]
 
