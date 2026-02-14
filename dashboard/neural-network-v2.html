@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRIS-ONTOLOGY NEURAL NETWORK 🦇</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+            background: #000; color: #fff; overflow: hidden;
+        }
+        #canvas-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(87,166,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at center, #0a0a1a 0%, #000 100%);
+        }
+        .ui-layer { position: fixed; pointer-events: none; width: 100%; height: 100%; z-index: 10; }
+        .header { position: absolute; top: 24px; left: 32px; pointer-events: auto; }
+        .header .badge { display: inline-block; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: #000; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 4px; margin-bottom: 8px; letter-spacing: 1px; }
+        .header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(90deg, #fff 0%, #58a6ff 50%, #fff 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s ease-in-out infinite; letter-spacing: -1px; }
+        @keyframes shimmer { 0%,100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+        .header .subtitle { font-size: 13px; color: #8b949e; margin-top: 6px; letter-spacing: 0.5px; }
+        .neural-stats { position: absolute; top: 24px; right: 32px; background: rgba(13,17,23,0.95); border: 1px solid rgba(48,54,61,0.8); border-radius: 16px; padding: 24px; pointer-events: auto; backdrop-filter: blur(20px); min-width: 280px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(88,166,255,0.1); }
+        .neural-stats h3 { font-size: 11px; color: #58a6ff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .neural-stats h3::before { content: ''; width: 8px; height: 8px; background: #ff6b35; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+        .stat-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(33,38,45,0.5); }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-label { font-size: 12px; color: #8b949e; }
+        .stat-value { font-size: 14px; font-weight: 600; font-family: 'SF Mono', monospace; }
+        .stat-value.active { color: #3fb950; }
+        .stat-value.warning { color: #f0883e; }
+        .stat-value.info { color: #58a6ff; }
+        .legend { position: absolute; top: 50%; right: 32px; transform: translateY(-50%); background: rgba(13,17,23,0.9); border: 1px solid rgba(48,54,61,0.5); border-radius: 12px; padding: 16px; pointer-events: auto; }
+        .legend-item { display: flex; align-items: center; gap: 10px; margin: 8px 0; font-size: 12px; color: #8b949e; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .legend-dot.person { background: #ff6b35; box-shadow: 0 0 10px #ff6b35; }
+        .legend-dot.company { background: #58a6ff; box-shadow: 0 0 10px #58a6ff; }
+        .legend-dot.partner { background: #3fb950; box-shadow: 0 0 10px #3fb950; }
+        .legend-dot.investment { background: #a371f7; box-shadow: 0 0 10px #a371f7; }
+        .legend-dot.data { background: #f778ba; box-shadow: 0 0 10px #f778ba; }
+        .legend-dot.digital { background: #ffd700; box-shadow: 0 0 10px #ffd700; }
+        .controls { position: absolute; bottom: 24px; right: 32px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; }
+        .control-btn { background: rgba(13,17,23,0.9); border: 1px solid rgba(48,54,61,0.8); color: #fff; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .control-btn:hover { background: rgba(88,166,255,0.2); border-color: rgba(88,166,255,0.5); transform: translateY(-2px); }
+        .control-btn.active { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: #000; border-color: transparent; }
+        .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1000; }
+        .loading-spinner { width: 60px; height: 60px; border: 3px solid rgba(255,107,53,0.2); border-top-color: #ff6b35; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { margin-top: 16px; font-size: 12px; color: #8b949e; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div class="ui-layer">
+        <div class="header">
+            <div class="badge">LIVE</div>
+            <h1>CHRIS-ONTOLOGY</h1>
+            <div class="subtitle">Neural Network v2.0 • 28 Nodes • 45 Connections</div>
+        </div>
+        <div class="neural-stats">
+            <h3>Network Status</h3>
+            <div class="stat-item"><span class="stat-label">Active Nodes</span><span class="stat-value active">28</span></div>
+            <div class="stat-item"><span class="stat-label">Connections</span><span class="stat-value info">45</span></div>
+            <div class="stat-item"><span class="stat-label">Sync Rate</span><span class="stat-value active">98.7%</span></div>
+            <div class="stat-item"><span class="stat-label">Digital Chris</span><span class="stat-value warning">v0.1 Learning</span></div>
+        </div>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot person"></div><span>Person</span></div>
+            <div class="legend-item"><div class="legend-dot company"></div><span>Company</span></div>
+            <div class="legend-item"><div class="legend-dot partner"></div><span>Partner</span></div>
+            <div class="legend-item"><div class="legend-dot investment"></div><span>Investment</span></div>
+            <div class="legend-item"><div class="legend-dot data"></div><span>Data Source</span></div>
+            <div class="legend-item"><div class="legend-dot digital"></div><span>Digital Chris</span></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn active" id="btn-rotate"><span>⟳</span> Auto Rotate</button>
+            <button class="control-btn" id="btn-pulse"><span>◉</span> Pulse Effect</button>
+            <button class="control-btn" id="btn-reset"><span>⌂</span> Reset View</button>
+        </div>
+    </div>
+    <div class="loading" id="loading"><div class="loading-spinner"></div><p>INITIALIZING NEURAL NETWORK</p></div>
+    <script>
+        // ==========================================
+        // NEURAL NETWORK DATA
+        // ==========================================
+        const data = {
+            nodes: [
+                // Person (Orange)
+                { id: 'chris', label: 'Chris', category: 'person', value: 100, color: 0xff6b35 },
+                { id: 'hylee', label: '이혜용', category: 'person', value: 50, color: 0xff6b35 },
+                { id: 'dikang', label: '강대일', category: 'person', value: 55, color: 0xff6b35 },
+                { id: 'tony', label: 'Tony Bazouni', category: 'person', value: 60, color: 0xff6b35 },
+                // Company (Blue)
+                { id: 'koreacryo', label: 'Korea Cryo', category: 'company', value: 80, color: 0x58a6ff },
+                { id: 'roturn', label: 'Roturn', category: 'company', value: 60, color: 0x58a6ff },
+                { id: 'po_kcmie', label: 'PO#KCMIE', category: 'company', value: 40, color: 0x58a6ff },
+                { id: 'nie', label: 'NIE Project', category: 'company', value: 45, color: 0x58a6ff },
+                // Partner (Green)
+                { id: 'luxfer', label: 'Luxfer', category: 'partner', value: 70, color: 0x3fb950 },
+                { id: 'taylor', label: 'Taylor-Wharton', category: 'partner', value: 65, color: 0x3fb950 },
+                { id: 'icb', label: 'ICBiomedical', category: 'partner', value: 55, color: 0x3fb950 },
+                { id: 'holy', label: 'Holy Cryo', category: 'partner', value: 45, color: 0x3fb950 },
+                { id: 'thunder', label: 'Thunderbird', category: 'partner', value: 40, color: 0x3fb950 },
+                { id: 'hyundai', label: 'Hyundai/Kia', category: 'partner', value: 75, color: 0x3fb950 },
+                // Investment (Purple)
+                { id: 'pltr', label: 'PLTR +338%', category: 'investment', value: 85, color: 0xa371f7 },
+                { id: 'nvda', label: 'NVDA +171%', category: 'investment', value: 80, color: 0xa371f7 },
+                { id: 'btc', label: 'BTC -20%', category: 'investment', value: 90, color: 0xa371f7 },
+                { id: 'eth', label: 'ETH +39%', category: 'investment', value: 75, color: 0xa371f7 },
+                { id: 'sk', label: 'SK Hynix', category: 'investment', value: 70, color: 0xa371f7 },
+                // Data (Pink)
+                { id: 'gmail', label: 'Gmail 1803', category: 'data', value: 60, color: 0xf778ba },
+                { id: 'calendar', label: 'Calendar', category: 'data', value: 50, color: 0xf778ba },
+                { id: 'erp', label: 'eCount ERP', category: 'data', value: 45, color: 0xf778ba },
+                { id: 'drive', label: 'Drive', category: 'data', value: 55, color: 0xf778ba },
+                // Digital (Gold)
+                { id: 'ai', label: 'Digital Chris AI', category: 'digital', value: 95, color: 0xffd700 },
+                { id: 'neural', label: 'Neural Net', category: 'digital', value: 70, color: 0xffd700 },
+            ],
+            links: [
+                { source: 'chris', target: 'koreacryo', strength: 10 },
+                { source: 'chris', target: 'roturn', strength: 8 },
+                { source: 'chris', target: 'ai', strength: 10 },
+                { source: 'koreacryo', target: 'luxfer', strength: 9 },
+                { source: 'koreacryo', target: 'taylor', strength: 8 },
+                { source: 'koreacryo', target: 'icb', strength: 7 },
+                { source: 'koreacryo', target: 'holy', strength: 6 },
+                { source: 'koreacryo', target: 'thunder', strength: 5 },
+                { source: 'koreacryo', target: 'hyundai', strength: 8 },
+                { source: 'chris', target: 'hylee', strength: 7 },
+                { source: 'chris', target: 'dikang', strength: 8 },
+                { source: 'chris', target: 'tony', strength: 7 },
+                { source: 'luxfer', target: 'tony', strength: 9 },
+                { source: 'holy', target: 'dikang', strength: 8 },
+                { source: 'ai', target: 'gmail', strength: 9 },
+                { source: 'ai', target: 'calendar', strength: 7 },
+                { source: 'ai', target: 'erp', strength: 6 },
+                { source: 'ai', target: 'drive', strength: 7 },
+                { source: 'ai', target: 'neural', strength: 10 },
+                { source: 'chris', target: 'pltr', strength: 9 },
+                { source: 'chris', target: 'nvda', strength: 8 },
+                { source: 'chris', target: 'btc', strength: 9 },
+                { source: 'chris', target: 'eth', strength: 8 },
+                { source: 'chris', target: 'sk', strength: 7 },
+                { source: 'koreacryo', target: 'po_kcmie', strength: 7 },
+                { source: 'po_kcmie', target: 'thunder', strength: 8 },
+                { source: 'hylee', target: 'po_kcmie', strength: 9 },
+                { source: 'koreacryo', target: 'nie', strength: 8 },
+                { source: 'nie', target: 'holy', strength: 9 },
+                { source: 'dikang', target: 'nie', strength: 9 },
+            ]
+        };
+
+        // ==========================================
+        // THREE.JS SETUP
+        // ==========================================
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.03);
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 45);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        
+        const pLight1 = new THREE.PointLight(0xff6b35, 1, 100);
+        pLight1.position.set(20, 20, 20);
+        scene.add(pLight1);
+        
+        const pLight2 = new THREE.PointLight(0x58a6ff, 1, 100);
+        pLight2.position.set(-20, -20, 20);
+        scene.add(pLight2);
+        
+        const pLight3 = new THREE.PointLight(0xa371f7, 0.8, 100);
+        pLight3.position.set(0, 30, -20);
+        scene.add(pLight3);
+        
+        // ==========================================
+        // CREATE NODES
+        // ==========================================
+        const nodes = [];
+        const nodeMap = {};
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        
+        data.nodes.forEach((nodeData) => {
+            const material = new THREE.MeshPhongMaterial({
+                color: nodeData.color,
+                emissive: nodeData.color,
+                emissiveIntensity: 0.4,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.95
+            });
+            
+            const mesh = new THREE.Mesh(geometry, material);
+            
+            // Spherical distribution
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const radius = 12 + Math.random() * 18;
+            
+            mesh.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            mesh.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            mesh.position.z = radius * Math.cos(phi);
+            
+            // Scale by value
+            const scale = 0.6 + (nodeData.value / 100) * 1.8;
+            mesh.scale.set(scale, scale, scale);
+            
+            mesh.userData = nodeData;
+            mesh.userData.originalScale = scale;
+            mesh.userData.velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.015,
+                (Math.random() - 0.5) * 0.015,
+                (Math.random() - 0.5) * 0.015
+            );
+            
+            scene.add(mesh);
+            nodes.push(mesh);
+            nodeMap[nodeData.id] = mesh;
+            
+            // Glow effect
+            const glowGeo = new THREE.SphereGeometry(1, 32, 32);
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: nodeData.color,
+                transparent: true,
+                opacity: 0.12
+            });
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            glow.scale.set(2.2, 2.2, 2.2);
+            mesh.add(glow);
+        });
+        
+        // ==========================================
+        // CREATE CONNECTIONS
+        // ==========================================
+        const connections = [];
+        
+        data.links.forEach(link => {
+            const src = nodeMap[link.source];
+            const tgt = nodeMap[link.target];
+            if (src && tgt) {
+                const pts = [src.position, tgt.position];
+                const geo = new THREE.BufferGeometry().setFromPoints(pts);
+                const mat = new THREE.LineBasicMaterial({
+                    color: 0x58a6ff,
+                    transparent: true,
+                    opacity: 0.15 + (link.strength / 25)
+                });
+                const line = new THREE.Line(geo, mat);
+                scene.add(line);
+                connections.push({ line, src, tgt, geo });
+            }
+        });
+        
+        // ==========================================
+        // PARTICLES
+        // ==========================================
+        const pGeo = new THREE.BufferGeometry();
+        const pCount = 400;
+        const pPos = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount * 3; i++) {
+            pPos[i] = (Math.random() - 0.5) * 80;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({ color: 0x58a6ff, size: 0.15, transparent: true, opacity: 0.4 });
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
+        
+        // ==========================================
+        // ANIMATION LOOP
+        // ==========================================
+        let pulseActive = false;
+        let time = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            controls.update();
+            
+            // Node floating animation
+            nodes.forEach((node, i) => {
+                node.position.add(node.userData.velocity);
+                
+                // Boundary check
+                if (node.position.length() > 35) {
+                    node.userData.velocity.multiplyScalar(-1);
+                }
+                
+                // Pulse effect
+                if (pulseActive) {
+                    const scale = node.userData.originalScale * (1 + Math.sin(time * 3 + i) * 0.15);
+                    node.scale.set(scale, scale, scale);
+                }
+            });
+            
+            // Update connection lines
+            connections.forEach(conn => {
+                const positions = conn.geo.attributes.position.array;
+                positions[0] = conn.src.position.x;
+                positions[1] = conn.src.position.y;
+                positions[2] = conn.src.position.z;
+                positions[3] = conn.tgt.position.x;
+                positions[4] = conn.tgt.position.y;
+                positions[5] = conn.tgt.position.z;
+                conn.geo.attributes.position.needsUpdate = true;
+            });
+            
+            // Particle rotation
+            particles.rotation.y += 0.0005;
+            particles.rotation.x += 0.0002;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // ==========================================
+        // INTERACTION
+        // ==========================================
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let hoveredNode = null;
+        
+        function onMouseMove(e) {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+            
+            if (intersects.length > 0) {
+                const node = intersects[0].object;
+                if (hoveredNode !== node) {
+                    if (hoveredNode) {
+                        gsap.to(hoveredNode.scale, {
+                            x: hoveredNode.userData.originalScale,
+                            y: hoveredNode.userData.originalScale,
+                            z: hoveredNode.userData.originalScale,
+                            duration: 0.3
+                        });
+                    }
+                    hoveredNode = node;
+                    document.body.style.cursor = 'pointer';
+                    gsap.to(node.scale, {
+                        x: node.userData.originalScale * 1.4,
+                        y: node.userData.originalScale * 1.4,
+                        z: node.userData.originalScale * 1.4,
+                        duration: 0.3
+                    });
+                }
+            } else {
+                if (hoveredNode) {
+                    gsap.to(hoveredNode.scale, {
+                        x: hoveredNode.userData.originalScale,
+                        y: hoveredNode.userData.originalScale,
+                        z: hoveredNode.userData.originalScale,
+                        duration: 0.3
+                    });
+                    hoveredNode = null;
+                    document.body.style.cursor = 'default';
+                }
+            }
+        }
+        
+        function onClick(e) {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+            if (intersects.length > 0) {
+                const node = intersects[0].object;
+                gsap.to(camera.position, {
+                    x: node.position.x * 0.6,
+                    y: node.position.y * 0.6,
+                    z: node.position.z * 0.6 + 15,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            }
+        }
+        
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('click', onClick);
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // ==========================================
+        // CONTROLS
+        // ==========================================
+        document.getElementById('btn-rotate').addEventListener('click', function() {
+            controls.autoRotate = !controls.autoRotate;
+            this.classList.toggle('active');
+        });
+        
+        document.getElementById('btn-pulse').addEventListener('click', function() {
+            pulseActive = !pulseActive;
+            this.classList.toggle('active');
+        });
+        
+        document.getElementById('btn-reset').addEventListener('click', function() {
+            gsap.to(camera.position, { x: 0, y: 0, z: 45, duration: 1 });
+            controls.target.set(0, 0, 0);
+        });
+        
+        // Hide loading
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+        }, 1500);
+        
+        animate();
+    </script>
+</body>
+</html>

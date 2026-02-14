@@ -29,6 +29,22 @@ digital_chris:
     low: { response_time: "Monday", keywords: ["뉴스레터", "홍보"] }
   phase: "Phase 1 - Pattern Extraction"
   next_phase: "Phase 2 - Body Text Sentiment Analysis"
+  investment_model:
+    version: "v0.1"
+    status: "active"
+    file: "memory/decisions/Digital_Chris_Investment_Model_v0.1.md"
+    total_assets: 562634662
+    total_gain: 39.26
+    rebalancing_strategy:
+      target_btc_eth_pct: 55
+      current_alts_value: 12700000
+      liquidation_trigger: immediate
+    top_convictions:
+      - { symbol: "NVDA", action: "buy", confidence: 88, thesis: "AI chip dominance" }
+      - { symbol: "BTC", action: "accumulate", confidence: 72, thesis: "ETF inflows sustained" }
+      - { symbol: "ETH", action: "buy", confidence: 68, thesis: "L2 scaling maturity" }
+      - { symbol: "SK하이닉스", action: "accumulate", confidence: 85, thesis: "HBM3E dominant" }
+    liquidation_list: ["XRP", "XLM", "ADA", "ABCL"]
 
 # ===== PERSON =====
 person:
