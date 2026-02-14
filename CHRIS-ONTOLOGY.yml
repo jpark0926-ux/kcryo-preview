@@ -4,7 +4,7 @@
 # Evolution: Daily updates based on work patterns
 
 ---
-version: "0.1.0-alpha"
+version: "0.2.0-alpha"
 last_updated: "2026-02-14"
 
 # ===== PERSON =====
@@ -78,20 +78,87 @@ sources:
 # ===== INVESTMENT =====
 investment:
   style: "성장주/텐배거 선호"
+  philosophy: "data_driven_conviction"
   metrics:
-    - PSR
-    - EV/Revenue
+    profitable: ["PER", "PBR", "EV/EBITDA"]
+    deficit: ["PSR", "EV/Revenue", "Growth_Rate"]
   avoids:
     - PER_for_deficit_companies
+    - self_estimated_conservative_forecasts
+  
   interests:
-    - AI_power_infrastructure
-    - nuclear_power
-    - semiconductors
-    - BTC_mining
+    primary:
+      - AI_power_infrastructure
+      - nuclear_power
+      - semiconductors
+      - BTC_mining/AI_datacenter
+    secondary:
+      - quantum_computing
+      - space
+      - renewable_energy
+  
   report_format: "telegram_summary + markdown_file"
   models:
     default: "sonnet"
     deep_analysis: "opus"
+  
+  # 포트폴리오 관리 패턴
+  portfolio:
+    snapshot_time: "18:00_KST_daily"
+    tracking_frequency: "daily"
+    rebalance_threshold: "10%_deviation"
+    
+    current_structure:
+      us_equities:
+        allocation_pct: 51
+        focus: "AI_quantum_space"
+        top_holdings:
+          - { symbol: "PLTR", shares: 609, conviction: "high" }
+          - { symbol: "TSLA", shares: 116, conviction: "medium" }
+          - { symbol: "IONQ", shares: 700, conviction: "high" }
+          - { symbol: "NVDA", shares: 120, conviction: "high" }
+          - { symbol: "RKLB", shares: 205, conviction: "medium" }
+      
+      crypto:
+        allocation_pct: 33
+        strategy: "BTC_ETH_concentration"
+        target: { BTC: "primary", ETH: "secondary", alts: "liquidate_to_15M" }
+        top_holdings:
+          - { coin: "BTC", amount: 1.35, target_increase: true }
+          - { coin: "ETH", amount: 16, target_increase: true }
+          - { coin: "XRP", amount: 1841, status: "liquidate" }
+          - { coin: "XLM", amount: 24000, status: "liquidate" }
+          - { coin: "ADA", amount: 9500, status: "liquidate" }
+      
+      korea_equities:
+        allocation_pct: 16
+        focus: "semiconductor_power"
+        top_holdings:
+          - { name: "삼성전자", shares: 123, avg_price: 161000 }
+          - { name: "SK하이닉스", shares: 10, avg_price: 858000 }
+          - { name: "현대차", shares: null, avg_price: null }
+  
+  # 의사결정 로직
+  decision_rules:
+    - trigger: "daily_snapshot"
+      action: "record_price_changes"
+      notify_if: "|change| > 5%"
+    
+    - trigger: "IB_report_release"
+      action: "analyze_target_price_consensus"
+      priority: "high"
+    
+    - trigger: "earnings_announcement"
+      action: "check_eps_revenue_vs_consensus"
+      priority: "critical"
+    
+    - trigger: "altcoin_target_reached"
+      action: "liquidate_and_convert_to_BTC_ETH"
+      target_amount: 15000000_KRW
+    
+    - trigger: "rebalance_signal"
+      condition: "sector_allocation_deviation > 10%"
+      action: "suggest_rebalance_plan"
 
 # ===== DECISION RULES =====
 rules:
@@ -135,11 +202,46 @@ projects:
 
 # ===== PENDING DECISIONS =====
 decisions:
-  - item: "KoreaCryo 상호변경"
-    options:
-      - "케이크라이오(주)"
-      - "K-Cryo"
+  koreacryo_name_change:
+    options: ["케이크라이오(주)", "K-Cryo"]
     status: "under_review"
+    criteria: ["brand_recognition", "domain_availability", "global_expansion"]
+  
+  investment_entries:
+    - ticker: "CEG"
+      name: "Constellation Energy"
+      status: "watching"
+      trigger: "pullback_to_support"
+      
+    - ticker: "ETN"
+      name: "Eaton"
+      status: "watching"
+      trigger: "IB_report_consensus_check"
+      
+    - ticker: "UUUU"
+      name: "Energy Fuels"
+      status: "radar"
+      thesis: "uranium_rare_earth"
+      target_multiple: "10x"
+      risk_level: "high"
+      
+    - ticker: "HD현대일렉트릭"
+      status: "comparing"
+      vs: "두산에너빌리티"
+      
+  portfolio_actions:
+    - action: "SK하이닉스_비중확대"
+      status: "pending_timing"
+      criteria: "pullback_entry"
+      
+    - action: "알트코인_정리"
+      current_value: 12720000
+      target_value: 15000000
+      needed_gain: "+17.9%"
+      status: "in_progress"
+      
+    - action: "BTC_ETH_집중"
+      trigger: "altcoin_liquidation_complete"
     
 # ===== EVOLUTION LOG =====
 evolution:
@@ -150,3 +252,17 @@ evolution:
       - "Connected Google Calendar"
       - "Connected eCount API"
     patterns_observed: []
+    
+  - date: "2026-02-14"
+    changes:
+      - "Added investment ontology: portfolio structure, decision rules"
+      - "Defined rebalance logic: altcoin -> BTC/ETH"
+      - "Added watchlist: CEG, ETN, UUUU, HD현대일렉트릭"
+      - "Documented daily snapshot pattern (18:00 KST)"
+      - "Added conviction levels per holding"
+    patterns_observed:
+      - "Daily 18:00 portfolio snapshot habit"
+      - "Liquidation target system (₩15M threshold)"
+      - "IB report dependency for entry decisions"
+      - "High conviction: PLTR, IONQ, NVDA"
+      - "Medium conviction: TSLA, RKLB"
