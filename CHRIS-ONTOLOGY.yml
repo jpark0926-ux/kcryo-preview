@@ -177,6 +177,24 @@ investment:
   
 # ===== BUSINESS PARTNERS (Auto-tracked from Email Analysis) =====
 partners:
+  thunderbird_metals:
+    name: "Thunderbird Metals East"
+    legal_name: "Metal Impact East LLC DBA"
+    country: "USA"
+    domain: "tbirdmfg.com"
+    address: "235 Riverbend Road, Graham, NC 27253"
+    sector: "금속 가공/제조"
+    contact: "Vienna Coble"
+    contact_title: "Senior Customer Service Representative"
+    contact_email: "vienna.coble@tbirdmfg.com"
+    contact_phone: "+1-743-205-1933"
+    relationship: "주요 공급사"
+    status: "active"
+    po_history: ["KCMIE-241218_MD15", "KCMIE-250218", "KCMIE-250728_C020", "KCMIE-260108"]
+    last_po: "KCMIE-260108"
+    last_contact: "2026-01-17"
+    notes: "알루미늄 surcharge 적용, 60일 선적"
+
   luxfer:
     name: "Luxfer"
     country: "UK/USA"
@@ -233,6 +251,22 @@ partners:
     status: "CRITICAL"
     last_contact: "2026-02-12"
 
+# ===== PURCHASE ORDERS (Active Tracking) =====
+orders:
+  active:
+    - po_number: "KCMIE-260108"
+      supplier: "thunderbird_metals"
+      order_date: "2026-01-08"
+      confirm_date: "2026-01-17"
+      shipping_deadline: "2026-03-17"
+      status: "confirmed"
+      lead_time_days: 60
+      items: ["ME24"]
+      risks: ["aluminum_surcharge", "shipping_deadline"]
+      notes: "rev.1 확정, 60일 선적 윈도우"
+      contact: "Vienna Coble"
+      next_action: "태국 출장 중 모니터링"
+      
 # ===== TRIPS & TRAVEL =====
 trips:
   thailand_wish_project_2026:
