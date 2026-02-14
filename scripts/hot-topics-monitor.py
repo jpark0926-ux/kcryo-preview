@@ -485,51 +485,52 @@ class HotTopicsMonitor:
         return new_posts
 
     def send_notification(self, posts):
-        """알림 메시지 생성 및 전송"""
-        # 카테고리별 그룹화
-        by_category = {}
+        """알림 메시지 생성 및 전송 - 커뮤별 TOP 5"""
+        # 출처별 그룹화
+        by_source = {'클리앙': [], '뽐뿌': [], '더쿠': [], '딴지': []}
         for post in posts:
-            cat = post['category']
-            if cat not in by_category:
-                by_category[cat] = []
-            by_category[cat].append(post)
-
-        # 메시지 생성
+            source = post['source']
+            if source in by_source:
+                by_source[source].append(post)
+        
+        # 메시지 생성 (HTML 형식으로 클릭 가능한 링크)
         message = f"🔥 <b>실시간 핫토픽</b>\n"
-        message += f"⏰ {datetime.now().strftime('%H:%M')} 기준\n"
-        message += f"📊 신규 {len(posts)}개\n\n"
-
-        # 카테고리별 (많은 순)
-        sorted_cats = sorted(by_category.items(), key=lambda x: len(x[1]), reverse=True)
-
-        for cat, cat_posts in sorted_cats:
-            message += f"<b>[{cat}]</b> {len(cat_posts)}개\n"
-
-            # 점수 높은 순으로 3개만
-            cat_posts.sort(key=lambda x: x['score'], reverse=True)
-            for post in cat_posts[:3]:
+        message += f"⏰ {datetime.now().strftime('%H:%M')} 기준\n\n"
+        
+        # 커뮤별 TOP 5
+        for source, source_posts in by_source.items():
+            if not source_posts:
+                continue
+            
+            # 점수순 정렬 후 TOP 5
+            source_posts.sort(key=lambda x: x.get('score', x['views']), reverse=True)
+            top_posts = source_posts[:5]
+            
+            message += f"<b>📌 {source} TOP {len(top_posts)}</b>\n"
+            
+            for i, post in enumerate(top_posts, 1):
                 emoji = post['sentiment']['emoji']
-                title_short = post['title'][:35] + "..." if len(post['title']) > 35 else post['title']
-                message += f"{emoji} [{post['source']}] {title_short}\n"
-                message += f"   👁 {post['views']:,} 💬 {post['comments']:,}\n"
+                title = post['title'][:30] + "..." if len(post['title']) > 30 else post['title']
+                views = f"{post['views']:,}" if post['views'] > 0 else "N/A"
+                comments = f"💬{post['comments']}" if post['comments'] > 0 else ""
+                
+                # 클릭 가능한 링크 (HTML)
+                message += f"{i}. {emoji} <a href='{post['url']}'>{title}</a>\n"
+                message += f"   👁 {views} {comments}\n"
+            
             message += "\n"
-
+        
         # 전체 통계
-        total_views = sum(p['views'] for p in posts)
-        total_comments = sum(p['comments'] for p in posts)
-
-        sentiment_dist = {'🟢': 0, '🔴': 0, '⚪': 0, '🔥': 0}
-        for p in posts:
-            emoji = p['sentiment']['emoji']
-            sentiment_dist[emoji] = sentiment_dist.get(emoji, 0) + 1
-
-        message += f"<b>통계:</b> 👁 {total_views:,} | 💬 {total_comments:,}\n"
-        message += f"<b>감성:</b> 🟢{sentiment_dist['🟢']} 🔴{sentiment_dist['🔴']} ⚪{sentiment_dist['⚪']} 🔥{sentiment_dist['🔥']}"
-
+        total_posts = sum(len(v) for v in by_source.values())
+        total_views = sum(sum(p['views'] for p in v) for v in by_source.values())
+        
+        message += f"<b>📊 전체:</b> {total_posts}개 게시물, 총 {total_views:,} 조회\n"
+        message += f"<i>15분마다 업데이트</i>"
+        
         print("\n" + "="*70)
-        print(message)
+        print(message.replace('<b>', '').replace('</b>', '').replace('<a href=\'', '[').replace('\'>', '] ').replace('</a>', '').replace('<i>', '').replace('</i>', ''))
         print("="*70)
-
+        
         self.send_telegram(message)
 
 if __name__ == "__main__":
