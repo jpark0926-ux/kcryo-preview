@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRIS-ONTOLOGY Visualizer 🦇</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d1117 100%);
+            padding: 20px 40px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .version {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            background: #0d1117;
+            border-right: 1px solid #30363d;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .sidebar h3 {
+            color: #ff6b35;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .entity-list {
+            list-style: none;
+        }
+        
+        .entity-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .entity-item:hover {
+            background: #161b22;
+            border-left-color: #ff6b35;
+        }
+        
+        .entity-item.active {
+            background: #21262d;
+            border-left-color: #ff6b35;
+        }
+        
+        .entity-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+        
+        .main-content {
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .viz-container {
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .viz-title {
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        .viz-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: #30363d;
+            border-color: #ff6b35;
+        }
+        
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        #graph {
+            width: 100%;
+            height: 450px;
+        }
+        
+        .node circle {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .node:hover circle {
+            filter: brightness(1.3);
+        }
+        
+        .node text {
+            font-size: 11px;
+            fill: #fff;
+            pointer-events: none;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        .link {
+            stroke: #30363d;
+            stroke-width: 1.5;
+            opacity: 0.6;
+        }
+        
+        .link.active {
+            stroke: #ff6b35;
+            stroke-width: 2.5;
+            opacity: 1;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(22, 27, 34, 0.95);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 250px;
+            z-index: 1000;
+        }
+        
+        .tooltip h4 {
+            color: #ff6b35;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .tooltip p {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        
+        .detail-panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .detail-panel h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #21262d;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-key {
+            color: #888;
+            font-size: 13px;
+        }
+        
+        .detail-value {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .force-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .slider-control {
+            background: rgba(22, 27, 34, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        
+        .slider-control label {
+            font-size: 11px;
+            color: #888;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .slider-control input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🦇 CHRIS-ONTOLOGY Visualizer</h1>
+        <span class="version">v0.2.1-alpha | Last Updated: 2026-02-14 20:35</span>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h3>🧬 Entity Types</h3>
+            <ul class="entity-list">
+                <li class="entity-item active" data-type="all">
+                    <span class="entity-icon">🌐</span>All Entities
+                </li>
+                <li class="entity-item" data-type="person">
+                    <span class="entity-icon">👤</span>Person (Chris)
+                </li>
+                <li class="entity-item" data-type="company">
+                    <span class="entity-icon">🏢</span>Companies
+                </li>
+                <li class="entity-item" data-type="employee">
+                    <span class="entity-icon">👥</span>Employees (15)
+                </li>
+                <li class="entity-item" data-type="source">
+                    <span class="entity-icon">📡</span>Data Sources
+                </li>
+                <li class="entity-item" data-type="investment">
+                    <span class="entity-icon">📈</span>Investment
+                </li>
+                <li class="entity-item" data-type="partner">
+                    <span class="entity-icon">🤝</span>Partners
+                </li>
+                <li class="entity-item" data-type="trip">
+                    <span class="entity-icon">✈️</span>Trips
+                </li>
+            </ul>
+            
+            <h3 style="margin-top: 30px;">📊 Quick Stats</h3>
+            <div class="stat-card" style="margin-bottom: 10px;">
+                <div class="stat-value" style="font-size: 24px;">15</div>
+                <div class="stat-label">Korea Cryo Employees</div>
+            </div>
+            <div class="stat-card" style="margin-bottom: 10px;">
+                <div class="stat-value" style="font-size: 24px;">1,803</div>
+                <div class="stat-label">Emails Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="font-size: 24px;">4</div>
+                <div class="stat-label">Active Cron Jobs</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Companies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Team Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1,044</div>
+                    <div class="stat-label">Business Emails</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">₩562M</div>
+                    <div class="stat-label">Portfolio Value</div>
+                </div>
+            </div>
+            
+            <div class="viz-container">
+                <div class="viz-header">
+                    <h2 class="viz-title">🔗 Ontology Relationship Graph</h2>
+                    <div class="viz-controls">
+                        <button class="btn" onclick="resetZoom()">Reset View</button>
+                        <button class="btn primary" onclick="toggleAnimation()">Pause</button>
+                    </div>
+                </div>
+                <div id="graph"></div>
+                <div class="force-controls">
+                    <div class="slider-control">
+                        <label>Link Distance</label>
+                        <input type="range" id="linkDistance" min="50" max="200" value="100" onchange="updateForce()">
+                    </div>
+                    <div class="slider-control">
+                        <label>Charge Strength</label>
+                        <input type="range" id="chargeStrength" min="-500" max="-50" value="-300" onchange="updateForce()">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-panel" id="detailPanel">
+                <h3>📋 Entity Details</h3>
+                <p style="color: #666; font-size: 14px;">Click on a node in the graph to view details</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        // Ontology Data
+        const ontologyData = {
+            nodes: [
+                // Central Node
+                { id: "chris", name: "Chris", type: "person", group: 1, size: 30, 
+                  details: { role: "Founder/CEO", timezone: "Asia/Seoul", work: "14:00-18:00", sleep: "01:00-02:00" }},
+                
+                // Companies
+                { id: "roturn", name: "Roturn", type: "company", group: 2, size: 25,
+                  details: { type: "LPG bifuel", status: "active", focus: "WFS/Prins 개발" }},
+                { id: "koreacryo", name: "KoreaCryo", type: "company", group: 2, size: 25,
+                  details: { type: "초저온 장비", status: "active", focus: "웹사이트 리뉴얼" }},
+                
+                // Korea Cryo Employees
+                { id: "emp1", name: "이회란", type: "employee", group: 3, size: 15,
+                  details: { dept: "경영지원팀", position: "대표이사", email: "hrlee@koreacryo.com" }},
+                { id: "emp2", name: "정선희", type: "employee", group: 3, size: 15,
+                  details: { dept: "영업팀", position: "책임매니저", email: "sjeong@koreacryo.com" }},
+                { id: "emp3", name: "강대일", type: "employee", group: 3, size: 15,
+                  details: { dept: "영업팀", position: "책임매니저", email: "" }},
+                { id: "emp4", name: "이혜용", type: "employee", group: 3, size: 15,
+                  details: { dept: "경영지원팀", position: "책임매니저", email: "hylee@koreacryo.com" }},
+                { id: "emp5", name: "김경세", type: "employee", group: 3, size: 15,
+                  details: { dept: "경영지원팀", position: "책임매니저", email: "sskim@koreacryo.com" }},
+                { id: "emp6", name: "정진숙", type: "employee", group: 3, size: 15,
+                  details: { dept: "경영지원팀", position: "매니저", email: "jsjeong@koreacryo.com" }},
+                { id: "emp7", name: "김광수", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "책임매니저", email: "kskim@koreacryo.com" }},
+                { id: "emp8", name: "한승한", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "shhan@koreacryo.com" }},
+                { id: "emp9", name: "강정기", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "jkkang@koreacryo.com" }},
+                { id: "emp10", name: "권영건", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "ygkwon@koreacryo.com" }},
+                { id: "emp11", name: "엄태준", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "tjeom@koreacryo.com" }},
+                { id: "emp12", name: "이영동", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "ydlee@koreacryo.com" }},
+                { id: "emp13", name: "정성욱", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "swjeong@koreacryo.com" }},
+                { id: "emp14", name: "박창수", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "csbak@koreacryo.com" }},
+                { id: "emp15", name: "김해성", type: "employee", group: 3, size: 15,
+                  details: { dept: "기술영업팀", position: "매니저", email: "hskim@koreacryo.com" }},
+                
+                // Data Sources
+                { id: "calendar", name: "Google Calendar", type: "source", group: 4, size: 18,
+                  details: { provider: "google", status: "connected", account: "chrispark@koreacryo.com" }},
+                { id: "gmail", name: "Gmail", type: "source", group: 4, size: 18,
+                  details: { provider: "gmail", emails: 1803, analyzed: 1044 }},
+                { id: "ecount", name: "eCount ERP", type: "source", group: 4, size: 18,
+                  details: { provider: "ecount", code: "82532", status: "session_based" }},
+                { id: "drive", name: "Google Drive", type: "source", group: 4, size: 18,
+                  details: { provider: "google_drive", monitored: ["KC/견적", "KC/발주"] }},
+                
+                // Investment
+                { id: "investment", name: "Portfolio", type: "investment", group: 5, size: 22,
+                  details: { value: "₩562M", gain: "+39.26%", style: "성장주/텐배거" }},
+                
+                // Key Partners
+                { id: "luxfer", name: "Luxfer", type: "partner", group: 6, size: 16,
+                  details: { type: "Hydrogen Valves", priority: "HIGH", contact: "Alex Millward" }},
+                { id: "taylor", name: "Taylor-Wharton", type: "partner", group: 6, size: 16,
+                  details: { type: "Cryogenic Equipment", contact: "Tony Bazouni" }},
+                { id: "holy", name: "Holy Cryogenics", type: "partner", group: 6, size: 16,
+                  details: { type: "Vacuum Pipeline", status: "Quotation Progress" }},
+                { id: "icbio", name: "ICBiomedical", type: "partner", group: 6, size: 16,
+                  details: { type: "Medical Cryo", contact: "Chris Olsen" }},
+                
+                // Trip
+                { id: "thailand", name: "Thailand Trip", type: "trip", group: 7, size: 20,
+                  details: { dates: "2026-02-17 ~ 02-23", location: "Mae Sot", type: "Volunteer" }},
+            ],
+            links: [
+                { source: "chris", target: "roturn", value: 10 },
+                { source: "chris", target: "koreacryo", value: 10 },
+                { source: "chris", target: "investment", value: 8 },
+                { source: "chris", target: "thailand", value: 5 },
+                { source: "koreacryo", target: "emp1", value: 3 },
+                { source: "koreacryo", target: "emp2", value: 3 },
+                { source: "koreacryo", target: "emp3", value: 3 },
+                { source: "koreacryo", target: "emp4", value: 3 },
+                { source: "koreacryo", target: "emp5", value: 3 },
+                { source: "koreacryo", target: "emp6", value: 3 },
+                { source: "koreacryo", target: "emp7", value: 3 },
+                { source: "koreacryo", target: "emp8", value: 3 },
+                { source: "koreacryo", target: "emp9", value: 3 },
+                { source: "koreacryo", target: "emp10", value: 3 },
+                { source: "koreacryo", target: "emp11", value: 3 },
+                { source: "koreacryo", target: "emp12", value: 3 },
+                { source: "koreacryo", target: "emp13", value: 3 },
+                { source: "koreacryo", target: "emp14", value: 3 },
+                { source: "koreacryo", target: "emp15", value: 3 },
+                { source: "koreacryo", target: "calendar", value: 4 },
+                { source: "koreacryo", target: "gmail", value: 4 },
+                { source: "koreacryo", target: "ecount", value: 4 },
+                { source: "koreacryo", target: "drive", value: 4 },
+                { source: "koreacryo", target: "luxfer", value: 5 },
+                { source: "koreacryo", target: "taylor", value: 5 },
+                { source: "koreacryo", target: "holy", value: 4 },
+                { source: "koreacryo", target: "icbio", value: 3 },
+            ]
+        };
+        
+        const colors = {
+            person: "#ff6b35",
+            company: "#58a6ff",
+            employee: "#7ee787",
+            source: "#f0883e",
+            investment: "#a371f7",
+            partner: "#79c0ff",
+            trip: "#ff7b72"
+        };
+        
+        // Setup SVG
+        const width = document.getElementById('graph').clientWidth;
+        const height = 450;
+        
+        const svg = d3.select("#graph")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", [0, 0, width, height]);
+        
+        // Add zoom behavior
+        const g = svg.append("g");
+        
+        const zoom = d3.zoom()
+            .scaleExtent([0.5, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+        
+        // Force simulation
+        let simulation = d3.forceSimulation(ontologyData.nodes)
+            .force("link", d3.forceLink(ontologyData.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(d => d.size + 10));
+        
+        // Draw links
+        const link = g.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(ontologyData.links)
+            .join("line")
+            .attr("class", "link")
+            .attr("stroke-width", d => Math.sqrt(d.value));
+        
+        // Draw nodes
+        const node = g.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(ontologyData.nodes)
+            .join("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+        
+        node.append("circle")
+            .attr("r", d => d.size)
+            .attr("fill", d => colors[d.type])
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 2)
+            .attr("opacity", 0.9);
+        
+        node.append("text")
+            .attr("dx", d => d.size + 5)
+            .attr("dy", 4)
+            .text(d => d.name)
+            .style("font-size", d => d.type === "person" ? "14px" : "11px")
+            .style("font-weight", d => d.type === "person" ? "bold" : "normal");
+        
+        // Tooltip
+        const tooltip = d3.select("#tooltip");
+        
+        node.on("mouseover", (event, d) => {
+            tooltip.style("opacity", 1)
+                .html(`<h4>${d.name}</h4><p>Type: ${d.type}</p>`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px");
+        })
+        .on("mouseout", () => {
+            tooltip.style("opacity", 0);
+        })
+        .on("click", (event, d) => {
+            showDetails(d);
+            
+            // Highlight connected links
+            link.classed("active", l => l.source.id === d.id || l.target.id === d.id);
+        });
+        
+        // Simulation tick
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+            
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Show details panel
+        function showDetails(d) {
+            const panel = document.getElementById('detailPanel');
+            let html = `<h3>${d.name}</h3>`;
+            html += `<div class="detail-item"><span class="detail-key">Type</span><span class="detail-value">${d.type}</span></div>`;
+            
+            for (const [key, value] of Object.entries(d.details)) {
+                html += `<div class="detail-item"><span class="detail-key">${key}</span><span class="detail-value">${Array.isArray(value) ? value.join(', ') : value}</span></div>`;
+            }
+            
+            panel.innerHTML = html;
+        }
+        
+        // Controls
+        let isAnimating = true;
+        
+        function toggleAnimation() {
+            if (isAnimating) {
+                simulation.stop();
+                document.querySelector('.btn.primary').textContent = 'Resume';
+            } else {
+                simulation.restart();
+                document.querySelector('.btn.primary').textContent = 'Pause';
+            }
+            isAnimating = !isAnimating;
+        }
+        
+        function resetZoom() {
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity
+            );
+        }
+        
+        function updateForce() {
+            const linkDist = +document.getElementById('linkDistance').value;
+            const charge = +document.getElementById('chargeStrength').value;
+            
+            simulation.force("link").distance(linkDist);
+            simulation.force("charge").strength(charge);
+            simulation.alpha(1).restart();
+        }
+        
+        // Filter by type
+        document.querySelectorAll('.entity-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.entity-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const type = this.dataset.type;
+                
+                if (type === 'all') {
+                    node.style('opacity', 1);
+                    link.style('opacity', 0.6);
+                } else {
+                    node.style('opacity', d => d.type === type ? 1 : 0.2);
+                    link.style('opacity', 0.1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
