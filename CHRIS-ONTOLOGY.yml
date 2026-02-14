@@ -5,7 +5,30 @@
 
 ---
 version: "0.2.1-alpha"
-last_updated: "2026-02-14 20:35"
+last_updated: "2026-02-14 22:00"
+
+# ===== DIGITAL CHRIS (AI Clone) =====
+digital_chris:
+  version: "v0.1"
+  status: "learning"
+  training_data:
+    emails_analyzed: 1803
+    period: "2020-09 ~ 2026-02"
+    high_priority: 759
+    analysis_file: "memory/decisions/Digital_Chris_v0.1_Pattern_Analysis.md"
+  patterns_extracted:
+    peak_hours: ["16:00-18:00", "01:00-02:00"]
+    peak_day: "Wednesday"
+    email_response_rate: 0.041
+    critical_keywords: ["URGENT", "PO#", "수소밸브", "단종"]
+    top_partners: ["luxfer.com", "hyundai.com", "icbiomedical.com"]
+  decision_rules:
+    urgent: { response_time: "< 4 hours", keywords: ["URGENT", "단종", "재고부족"] }
+    high: { response_time: "< 24 hours", keywords: ["PO#", "견적", "미팅"] }
+    medium: { response_time: "< 48 hours", keywords: ["검사", "배송", "수정"] }
+    low: { response_time: "Monday", keywords: ["뉴스레터", "홍보"] }
+  phase: "Phase 1 - Pattern Extraction"
+  next_phase: "Phase 2 - Body Text Sentiment Analysis"
 
 # ===== PERSON =====
 person:
