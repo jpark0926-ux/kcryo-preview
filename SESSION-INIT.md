@@ -23,6 +23,21 @@
 - Don't load the whole file
 - Search first, read second
 
+## Post-Compaction Auto-Recovery
+
+**Trigger condition:**
+- `contextTokens < 5000` AND `messages.length < 3` AND `session age < 5 minutes`
+
+**Auto-recovery steps:**
+1. Run `sessions_list()` to find recent sessions
+2. Filter: same channel + same user + last 24 hours
+3. Get `sessions_history()` from most recent session
+4. Extract last 20 user/assistant exchanges
+5. Summarize: "세션 복구됨. 토요일에 한 작업: Gmail AI, Telegram 연동, Dashboard v2 완성"
+6. Continue naturally — **never ask "뭐하고 있었지?"**
+
+**Silent mode:** If recovery successful, just continue. Don't announce unless user asks.
+
 ### 4. Update memory/YYYY-MM-DD.md at end of session with:
 - What you worked on
 - Decisions made
