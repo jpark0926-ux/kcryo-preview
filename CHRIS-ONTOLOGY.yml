@@ -1,220 +1,152 @@
 # CHRIS-ONTOLOGY.yml
-# Chris의 업무와 삶을 연결하는 중심 구조
+# Chris의 운영 체제 (Wayne Manor와의 공유 데이터)
+# Created: 2026-02-14
+# Evolution: Daily updates based on work patterns
 
+---
 version: "0.1.0-alpha"
-last_updated: "2026-02-13T01:40:00+09:00"
+last_updated: "2026-02-14"
 
-# ========================================
-# CORE: Chris
-# ========================================
-chris:
-  type: person
-  
-  profile:
-    timezone: "Asia/Seoul"
-    work_hours: "10:00-02:00"
-    energy_peak: "14:00-18:00"
-    decision_style: "차근차근, 데이터 기반"
-    telegram: "@Chrisjpark"
-  
-  roles:
-    - entrepreneur  # Roturn, KoreaCryo
-    - investor      # PLTR, IREN, NVDA...
-    - optimizer     # OpenClaw 활용
+# ===== PERSON =====
+person:
+  name: "Chris"
+  telegram: "@Chrisjpark"
+  timezone: "Asia/Seoul"
+  work_hours:
+    preferred: "14:00-18:00"
+    actual: "~02:00"
+  personality:
+    type: "집념의_사나이"
+    traits:
+      - persistent_until_done
+      - no_giving_up
+      - data_driven_decisions
+      - proactive_efficiency
+  sleep_pattern: "01:00-02:00"
 
-# ========================================
-# BUSINESS LAYER
-# ========================================
+# ===== COMPANIES =====
 companies:
   roturn:
     name: "로턴"
-    industry: "LPG bifuel conversion"
-    website: "roturn.com"
-    owner: chris
-    
-    current_projects:
-      - name: "로턴 블로그"
-        id: "roturn-blog"
-        location: "business/roturn/"
-        status: "🟡 waiting"
-        progress: 85
-        blocker: "사진 필요 (Chris 제공)"
-        next_action: "사진 받으면 첫 글 발행"
-        priority: high
-        impact: "인지도 확대, SEO"
-    
+    type: "LPG bifuel 전문"
+    status: "active"
+    priorities:
+      - blog_content
+      - technical_marketing
     key_rules:
       - "자체개발 X → WFS/Prins 개발 O"
       - "바이퓸 X → 바이퓨얼 O"
-  
+    
   koreacryo:
-    name: "한국초저온용기"
-    industry: "Cryogenic equipment"
-    website: "koreacryo.com"
-    owner: chris
-    
-    considering_rebrand:
-      new_name: "케이크라이오 (K-Cryo)"
-      status: "검토중"
-      trademark_clear: true
-    
-    current_projects:
-      - name: "웹사이트 리뉴얼"
-        id: "kcryo-website"
-        location: "business/koreacryo/"
-        status: "🟡 in-progress"
-        progress: 80
-        blocker: "사진 품질/방향 결정"
-        options:
-          - "AI 보정 (즉시, 저비용)"
-          - "제품 재촬영 (1주, 무료~$200)"
-          - "전문 촬영 ($1K-3K)"
-          - "3D 렌더링 (Three.js 인터랙티브)"
-        priority: medium
-    
-    key_changes:
+    name: "KoreaCryo"
+    type: "초저온 장비"
+    status: "active"
+    priorities:
+      - website_renewal
+      - name_change_review
+      - erp_integration
+    key_rules:
       - "Liquid Controls 단종 → Turbines Inc. 교체"
+    name_candidates:
+      - "케이크라이오(주)"
+      - "K-Cryo"
 
-# ========================================
-# INVESTMENT LAYER
-# ========================================
-portfolio:
-  owner: chris
-  style:
-    focus: ["성장주", "텐배거"]
-    approach: "데이터 기반, IB 리포트"
-    sectors: ["AI 전력", "원전", "반도체", "BTC 마이닝"]
+# ===== DATA SOURCES =====
+sources:
+  calendar:
+    provider: "google_calendar"
+    accounts:
+      - chrispark@koreacryo.com
+    status: "connected"
     
-  philosophy:
-    horizon: "5년+ 장기 투자"
-    goal: "텐배거 사냥 (10x returns)"
-    patience: "시간은 아군, 복리는 무기"
-    conviction: "확신이 서면 집중, 흔들리지 않음"
+  email:
+    provider: "gmail"
+    accounts:
+      - chrispark@koreacryo.com
     
-    criteria_10x:
-      - "구조적 공급 부족 (UUUU 우라늄 28% deficit)"
-      - "10년+ 지속되는 메가트렌드 (AI 전력, 원전 르 네상스)"
-      - "실적 가시성 3-5년 내 확보"
-      - "현재 적자라도 손익분기점 명확"
-      - "경쟁 우위 (미국 유일, 기술 장벽 등)"
-  
-  holdings:
-    PLTR:
-      shares: 609
-      conviction: high
-      thesis: "AI 플랫폼, 온톨로지"
+  erp:
+    provider: "ecount"
+    company_code: "82532"
+    status: "session_based"
     
-    IREN:
-      shares: 32
-      conviction: medium-high
-      thesis: "BTC mining + AI datacenter"
-      analysis_file: "personal/investment/iren-fair-value-v2.md"
+  storage:
+    provider: "google_drive"
+    monitored_folders:
+      - "KC/견적"
+      - "KC/발주"
+
+# ===== INVESTMENT =====
+investment:
+  style: "성장주/텐배거 선호"
+  metrics:
+    - PSR
+    - EV/Revenue
+  avoids:
+    - PER_for_deficit_companies
+  interests:
+    - AI_power_infrastructure
+    - nuclear_power
+    - semiconductors
+    - BTC_mining
+  report_format: "telegram_summary + markdown_file"
+  models:
+    default: "sonnet"
+    deep_analysis: "opus"
+
+# ===== DECISION RULES =====
+rules:
+  - id: "work_hours_sacred"
+    condition: "14:00-18:00"
+    action: "protect_flow_state"
+    priority: "critical"
     
-    NVDA:
-      shares: 120
-      conviction: high
-      thesis: "AI 반도체 리더"
+  - id: "no_suggest_rest"
+    condition: "user_working"
+    action: "never_suggest_stopping"
+    priority: "critical"
     
-    TSLA:
-      shares: 116
+  - id: "data_accuracy_check"
+    condition: "dates_numbers_facts"
+    action: "double_verify_with_source"
+    priority: "high"
     
-    IONQ:
-      shares: 700
-      thesis: "양자컴퓨팅"
-    
-    # ... 나머지 생략
-  
-  watchlist:
-    - symbol: UUUU
-      name: "Energy Fuels Inc."
-      reason: "우라늄 채광 + 토류 원소 (AI 전력 수요 간접 수혜)"
-      status: "분석 완료 (2026-02-13)"
-      current_price: "~$22"
-      market_cap: "$5.2B"
-      fair_value_range: "$19-34 (PSR 기본~낙관)"
-      target_10x: "$220"
-      thesis: "우라늄 공급 부족 28% + AI 전력 폭발 + 미국 유일 정련소"
-      rating: "⭐⭐⭐⭐ (4/5)"
-      decision: "워치 (적정가 $15 이하 대기 or 현재가 소규모 분할 매수)"
-      time_horizon: "5년+"
-      risk: "High (pre-profitability, commodity volatility)"
-      related: "CEG (downstream nuclear utility)"
-      analysis_file: "personal/investment/watchlist.md"
-    
-    - symbol: CEG
-      reason: "원전, AI 전력 인프라"
-      status: "분석 완료 (2026-02-12)"
-      fair_value: "$380-420"
-      current_price: "$360"
-      entry_zone: "Zone 2 (기회 매수)"
-      rating: "⭐⭐⭐⭐⭐"
-      decision: "워치 (타이밍 대기)"
-      next_action: "Zone 1 진입 or 2주 후 재검토"
-    
-    - symbol: ETN
-      reason: "전력 인프라"
-      status: "분석 완료 (2026-02-12)"
-      comparison: "CEG 대비 낮은 우선순위"
-    
-    - symbol: "HD현대일렉트릭"
-      reason: "한국 전력 장비"
-  
-  analysis_history:
-    location: "personal/investment/"
-    recent:
-      - date: "2026-02-12"
-        target: "CEG vs ETN"
-        files: 
-          - "ceg-vs-etn-comparison-2026-02-12.md"
-          - "ceg-detailed-analysis-2026-02-12.md"
-        conclusion: "CEG 추천 (워치리스트 추가)"
-        rating: "5/5"
+  - id: "automation_first"
+    condition: "repetitive_task"
+    action: "find_automation_solution"
+    priority: "medium"
+
+# ===== ACTIVE PROJECTS =====
+projects:
+  current:
+    - id: "thailand_trip_2026"
+      name: "소원프로젝트 필드트립"
+      org: "기아대책"
+      dates: "2026-02-17 ~ 2026-02-23"
+      status: "preparing"
+      location: "태국 메소트 (미얀마 국경)"
       
-      - date: "2026-02-09"
-        target: IREN
-        file: "iren-fair-value-v2.md"
-        conclusion: "매수 유지"
+    - id: "kc_weekly_automation"
+      name: "KC 주간 리포트 자동화"
+      status: "operational"
+      
+    - id: "ontology_evolution"
+      name: "Ontology 구조화"
+      status: "in_progress"
 
-# ========================================
-# PROJECTS STATUS (Real-time)
-# ========================================
-active_projects:
-  count: 3
-  
-  by_status:
-    waiting: 1      # 로턴 블로그
-    in_progress: 1  # KoreaCryo 웹사이트
-    planning: 1     # 투자 분석
-  
-  blockers:
-    count: 2
-    type: "photo-related"  # Both need photo decisions
-  
-  priority_queue:
-    1: "로턴 블로그 (사진만 있으면 발행)"
-    2: "KoreaCryo 사진 방향 결정"
-    3: "투자 분석 (CEG, ETN 등)"
-
-# ========================================
-# INFRASTRUCTURE
-# ========================================
-tools:
-  primary: "OpenClaw (Wayne Manor 🦇)"
-  workspace: "/Users/roturnjarvis/.openclaw/workspace"
-  optimization:
-    - "Context: 17.8KB → 4.5KB (75% reduction)"
-    - "Token savings: 3,300/msg (72%)"
-    - "Cost: ~$50-70/mo saved"
-
-# ========================================
-# METADATA
-# ========================================
-ontology_meta:
-  created: "2026-02-12"
-  purpose: "Chris 중심 업무/투자/삶 연결"
-  inspiration: "Palantir Ontology"
-  phase: "alpha (맛보기)"
-  next_steps:
-    - "자동 업데이트 (파일 → yml 동기화)"
-    - "쿼리 엔진 (자연어 질문)"
-    - "대시보드 (/status 명령어)"
+# ===== PENDING DECISIONS =====
+decisions:
+  - item: "KoreaCryo 상호변경"
+    options:
+      - "케이크라이오(주)"
+      - "K-Cryo"
+    status: "under_review"
+    
+# ===== EVOLUTION LOG =====
+evolution:
+  - date: "2026-02-14"
+    changes:
+      - "Initial ontology structure created"
+      - "Added personality: 집념의_사나이"
+      - "Connected Google Calendar"
+      - "Connected eCount API"
+    patterns_observed: []
