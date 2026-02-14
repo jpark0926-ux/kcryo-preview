@@ -91,10 +91,36 @@ echo "┃     ✅ 발주 확정       1건                                   ┃
 echo "┃     📋 진행중          3건                                   ┃"
 echo "┃     📊 전환율          33% (발주/견적)                       ┃"
 echo "┃                                                              ┃"
-echo "┃  💰 재무 (eCount 연동 예정)                                  ┃"
-echo "┃     매출               ₩--,---,---    (API 연결 후 표시)    ┃"
-echo "┃     매입               ₩--,---,---    (API 연결 후 표시)    ┃"
-echo "┃     미수금             ₩--,---,---    (API 연결 후 표시)    ┃"
+
+# Try to get eCount data
+cd "$WORKSPACE"
+source venv/bin/activate 2>/dev/null
+ECOUNT_DATA=$(python3 scripts/ecount-api.py --demo 2>/dev/null)
+
+if [ ! -z "$ECOUNT_DATA" ]; then
+    # Parse demo/sample data
+    SALES=$(echo "$ECOUNT_DATA" | grep -o '"total_sales":[0-9]*' | grep -o '[0-9]*')
+    PURCHASES=$(echo "$ECOUNT_DATA" | grep -o '"total_purchases":[0-9]*' | grep -o '[0-9]*')
+    RECEIVABLES=$(echo "$ECOUNT_DATA" | grep -o '"total_receivables":[0-9]*' | grep -o '[0-9]*')
+    
+    if [ ! -z "$SALES" ]; then
+        echo "┃  💰 재무 (eCount 데모 데이터)                                ┃"
+        printf "┃     매출               ₩%-'12d    (데모)           ┃\n" "$SALES"
+        printf "┃     매입               ₩%-'12d    (데모)           ┃\n" "$PURCHASES"
+        printf "┃     미수금             ₩%-'12d    (데모)           ┃\n" "$RECEIVABLES"
+    else
+        echo "┃  💰 재무 (eCount API 연결 예정)                              ┃"
+        echo "┃     매출               ₩--,---,---    (설정 중)             ┃"
+        echo "┃     매입               ₩--,---,---    (설정 중)             ┃"
+        echo "┃     미수금             ₩--,---,---    (설정 중)             ┃"
+    fi
+else
+    echo "┃  💰 재무 (eCount API 연결 예정)                              ┃"
+    echo "┃     매출               ₩--,---,---    (설정 중)             ┃"
+    echo "┃     매입               ₩--,---,---    (설정 중)             ┃"
+    echo "┃     미수금             ₩--,---,---    (설정 중)             ┃"
+fi
+
 echo "┃                                                              ┃"
 echo "┃  📦 물류 (Drive 기반)                                        ┃"
 echo "┃     입고               --건             (수동 업데이트)     ┃"

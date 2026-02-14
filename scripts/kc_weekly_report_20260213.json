@@ -1,0 +1,114 @@
+{
+  "report_date": "2026-02-13",
+  "period": {
+    "start": "2026-02-01",
+    "end": "2026-02-13"
+  },
+  "summary": {
+    "total_sales": 4950000.0,
+    "total_purchases": 6600000.0,
+    "total_receivables": 15000000.0
+  },
+  "details": {
+    "sales": [
+      {
+        "io_date": "20260208",
+        "io_no": 1001,
+        "cust_cd": "C001",
+        "cust_des": "Sample Customer A",
+        "prod_cd": "P001",
+        "prod_des": "Cryogenic Tank 100L",
+        "qty": 2.0,
+        "price": 1500000.0,
+        "supply_amt": 3000000.0,
+        "vat_amt": 300000.0,
+        "total_amt": 3300000.0,
+        "wh_cd": "W01",
+        "wh_des": "Main Warehouse",
+        "remark": "Sample sale"
+      },
+      {
+        "io_date": "20260210",
+        "io_no": 1002,
+        "cust_cd": "C002",
+        "cust_des": "Sample Customer B",
+        "prod_cd": "P002",
+        "prod_des": "Cryogenic Valve",
+        "qty": 10.0,
+        "price": 150000.0,
+        "supply_amt": 1500000.0,
+        "vat_amt": 150000.0,
+        "total_amt": 1650000.0,
+        "wh_cd": "W01",
+        "wh_des": "Main Warehouse",
+        "remark": "Sample sale"
+      }
+    ],
+    "purchases": [
+      {
+        "io_date": "20260206",
+        "io_no": 5001,
+        "cust_cd": "V001",
+        "cust_des": "Sample Vendor X",
+        "prod_cd": "RM001",
+        "prod_des": "Stainless Steel 304",
+        "qty": 100.0,
+        "price": 50000.0,
+        "supply_amt": 5000000.0,
+        "vat_amt": 500000.0,
+        "total_amt": 5500000.0,
+        "wh_cd": "W01",
+        "wh_des": "Main Warehouse",
+        "remark": "Raw material purchase"
+      },
+      {
+        "io_date": "20260209",
+        "io_no": 5002,
+        "cust_cd": "V002",
+        "cust_des": "Sample Vendor Y",
+        "prod_cd": "PKG001",
+        "prod_des": "Packaging Materials",
+        "qty": 500.0,
+        "price": 2000.0,
+        "supply_amt": 1000000.0,
+        "vat_amt": 100000.0,
+        "total_amt": 1100000.0,
+        "wh_cd": "W02",
+        "wh_des": "Materials Warehouse",
+        "remark": "Packaging purchase"
+      }
+    ],
+    "receivables": [
+      {
+        "cust_cd": "C001",
+        "cust_des": "Sample Customer A",
+        "balance_amt": 5000000.0,
+        "due_amt": 3000000.0,
+        "over_due_amt": 2000000.0,
+        "last_trx_date": "20260203",
+        "sales_amt": 15000000.0,
+        "collected_amt": 10000000.0
+      },
+      {
+        "cust_cd": "C002",
+        "cust_des": "Sample Customer B",
+        "balance_amt": 2000000.0,
+        "due_amt": 2000000.0,
+        "over_due_amt": 0.0,
+        "last_trx_date": "20260208",
+        "sales_amt": 8000000.0,
+        "collected_amt": 6000000.0
+      },
+      {
+        "cust_cd": "C003",
+        "cust_des": "Sample Customer C",
+        "balance_amt": 8000000.0,
+        "due_amt": 5000000.0,
+        "over_due_amt": 3000000.0,
+        "last_trx_date": "20260124",
+        "sales_amt": 20000000.0,
+        "collected_amt": 12000000.0
+      }
+    ]
+  }
+}
