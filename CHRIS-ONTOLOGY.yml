@@ -4,7 +4,7 @@
 # Evolution: Daily updates based on work patterns
 
 ---
-version: "0.2.0-alpha"
+version: "0.2.1-alpha"
 last_updated: "2026-02-14"
 
 # ===== PERSON =====
@@ -105,38 +105,53 @@ investment:
   # 포트폴리오 관리 패턴
   portfolio:
     snapshot_time: "18:00_KST_daily"
+    last_update: "2026-02-13"
+    total_value: 554754910
+    total_return: 151500000
+    return_pct: 37.6
     tracking_frequency: "daily"
     rebalance_threshold: "10%_deviation"
     
     current_structure:
       us_equities:
-        allocation_pct: 51
+        allocation_pct: 50.5
+        value_krw: 280043000
+        daily_change: -3.2
         focus: "AI_quantum_space"
         top_holdings:
-          - { symbol: "PLTR", shares: 609, conviction: "high" }
-          - { symbol: "TSLA", shares: 116, conviction: "medium" }
-          - { symbol: "IONQ", shares: 700, conviction: "high" }
-          - { symbol: "NVDA", shares: 120, conviction: "high" }
-          - { symbol: "RKLB", shares: 205, conviction: "medium" }
+          - { symbol: "PLTR", shares: 609, value_krw: 114600000, return_pct: 338, conviction: "high", daily_change: -3.1 }
+          - { symbol: "TSLA", shares: 116, value_krw: 69200000, return_pct: 116, conviction: "medium", daily_change: -2.6 }
+          - { symbol: "IONQ", shares: 700, value_krw: 34300000, return_pct: 125, conviction: "high", daily_change: 1.5 }
+          - { symbol: "NVDA", shares: 120, value_krw: 31500000, return_pct: 171, conviction: "high", daily_change: -3.8 }
+          - { symbol: "RKLB", shares: 205, value_krw: 19800000, return_pct: 179, conviction: "medium", daily_change: -3.3 }
       
       crypto:
-        allocation_pct: 33
+        allocation_pct: 34.2
+        value_krw: 189650000
+        daily_change: 0.8
         strategy: "BTC_ETH_concentration"
         target: { BTC: "primary", ETH: "secondary", alts: "liquidate_to_15M" }
         top_holdings:
-          - { coin: "BTC", amount: 1.35, target_increase: true }
-          - { coin: "ETH", amount: 16, target_increase: true }
-          - { coin: "XRP", amount: 1841, status: "liquidate" }
-          - { coin: "XLM", amount: 24000, status: "liquidate" }
-          - { coin: "ADA", amount: 9500, status: "liquidate" }
+          - { coin: "BTC", amount: 1.3474, value_krw: 130200000, return_pct: -19.7, target_increase: true }
+          - { coin: "ETH", amount: 16, value_krw: 48000000, return_pct: 38.7, target_increase: true }
+          - { coin: "XRP", amount: 1841, value_krw: 3700000, return_pct: -41.5, status: "liquidate" }
+          - { coin: "XLM", amount: 24000, value_krw: 5700000, return_pct: -77, status: "liquidate" }
+          - { coin: "ADA", amount: 9500, value_krw: 3300000, return_pct: -63.8, status: "liquidate" }
+        altcoin_liquidation:
+          current_value: 12700000
+          target_value: 15000000
+          needed_gain_pct: 17.9
+          status: "in_progress"
       
       korea_equities:
-        allocation_pct: 16
+        allocation_pct: 15.3
+        value_krw: 85061910
         focus: "semiconductor_power"
         top_holdings:
-          - { name: "삼성전자", shares: 123, avg_price: 161000 }
-          - { name: "SK하이닉스", shares: 10, avg_price: 858000 }
-          - { name: "현대차", shares: null, avg_price: null }
+          - { name: "삼성전자", symbol: "005930", shares: 123, value_krw: 22000000, avg_price: 161000, return_pct: 17 }
+          - { name: "SK하이닉스", symbol: "000660", shares: 10, value_krw: 8900000, avg_price: 858000, return_pct: 19 }
+          - { name: "현대차", symbol: "005380", shares: 20, value_krw: 10100000, avg_price: 506000, return_pct: 21 }
+          - { name: "ETF_모음", value_krw: 44100000, return_pct: 60 }
   
   # 의사결정 로직
   decision_rules:
@@ -159,6 +174,29 @@ investment:
     - trigger: "rebalance_signal"
       condition: "sector_allocation_deviation > 10%"
       action: "suggest_rebalance_plan"
+    
+    - trigger: "support_level_breach"
+      condition: "price < support_level"
+      action: "notify_and_suggest_trailing_stop"
+      example: "PLTR $130"
+
+  # 다음 주 모니터링 (2026-02-17 ~ 02-23)
+  weekly_monitoring:
+    week_of: "2026-02-17"
+    user_status: "태국_봉사활동"
+    critical_dates:
+      - date: "2026-02-17"
+        events: ["미국장_반등시도_여부", "PLTR_지지선_확인", "ETH_ETF_자금흐름"]
+        importance: "high"
+      - date: "2026-02-19"
+        events: ["미국_소매판매지표", "NVDA_실적발표_예상"]
+        importance: "critical"
+      - date: "2026-02-20"
+        events: ["주간_실업수당청구건수", "알트코인_반등_확인"]
+        importance: "medium"
+      - date: "2026-02-24"
+        events: ["한국복귀_및_정산", "SK하이닉스_매수타이밍_검토"]
+        importance: "high"
 
 # ===== DECISION RULES =====
 rules:
@@ -266,3 +304,19 @@ evolution:
       - "IB report dependency for entry decisions"
       - "High conviction: PLTR, IONQ, NVDA"
       - "Medium conviction: TSLA, RKLB"
+      
+  - date: "2026-02-14"
+    changes:
+      - "Updated portfolio with actual values (2026-02-13 close)"
+      - "Created weekend brief report"
+      - "Added weekly monitoring schedule (2026-02-17~23)"
+      - "Documented next week action items"
+    patterns_observed:
+      - "ETH strength offsetting US equity decline"
+      - "Altcoin liquidation resistance (ADA weakness)"
+      - "Weekly brief format: market summary + portfolio + actions"
+      - "Support level tracking: PLTR $130"
+    market_insights:
+      - "AI stocks correcting post-DeepSeek (CPI catalyst)"
+      - "Crypto showing sector rotation (ETH outperforming BTC)"
+      - "Korean semiconductors resilient vs US peers"
