@@ -20,7 +20,8 @@ send_alert() {
     [ "$priority" = "high" ] && emoji="🚨"
     [ "$priority" = "medium" ] && emoji="⚡"
     
-    local full_message="${emoji} <b>보안 알림</b>%0A%0A${message}%0A%0A<i>$(date '+%H:%M')</i>"
+    # 보안 알림은 구분되게
+    local full_message="${emoji} <b>[보안] 보안 알림</b>%0A%0A${message}%0A%0A<i>$(date '+%H:%M')</i>"
     
     curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
         -d "chat_id=${TELEGRAM_CHAT_ID}" \
