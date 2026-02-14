@@ -5,7 +5,7 @@
 
 ---
 version: "0.2.1-alpha"
-last_updated: "2026-02-14"
+last_updated: "2026-02-14 20:35"
 
 # ===== PERSON =====
 person:
@@ -50,6 +50,22 @@ companies:
     name_candidates:
       - "케이크라이오(주)"
       - "K-Cryo"
+    employees:
+      - { name: "정선희", dept: "영업팀", position: "책임매니저", email: "sjeong@koreacryo.com" }
+      - { name: "이회란", dept: "경영지원팀", position: "대표이사", email: "hrlee@koreacryo.com" }
+      - { name: "이혜용", dept: "경영지원팀", position: "책임매니저", email: "hylee@koreacryo.com" }
+      - { name: "김경세", dept: "경영지원팀", position: "책임매니저", email: "sskim@koreacryo.com" }
+      - { name: "정진숙", dept: "경영지원팀", position: "매니저", email: "jsjeong@koreacryo.com" }
+      - { name: "한승한", dept: "기술영업팀", position: "매니저", email: "shhan@koreacryo.com" }
+      - { name: "강정기", dept: "기술영업팀", position: "매니저", email: "jkkang@koreacryo.com" }
+      - { name: "김광수", dept: "기술영업팀", position: "책임매니저", email: "kskim@koreacryo.com" }
+      - { name: "권영건", dept: "기술영업팀", position: "매니저", email: "ygkwon@koreacryo.com" }
+      - { name: "엄태준", dept: "기술영업팀", position: "매니저", email: "tjeom@koreacryo.com" }
+      - { name: "이영동", dept: "기술영업팀", position: "매니저", email: "ydlee@koreacryo.com" }
+      - { name: "정성욱", dept: "기술영업팀", position: "매니저", email: "swjeong@koreacryo.com" }
+      - { name: "박창수", dept: "기술영업팀", position: "매니저", email: "csbak@koreacryo.com" }
+      - { name: "김해성", dept: "기술영업팀", position: "매니저", email: "hskim@koreacryo.com" }
+      - { name: "강대일", dept: "영업팀", position: "책임매니저", email: "" }
 
 # ===== DATA SOURCES =====
 sources:
@@ -63,6 +79,12 @@ sources:
     provider: "gmail"
     accounts:
       - chrispark@koreacryo.com
+    analysis_workflow:
+      - "발신자 도메인 자동 체크"
+      - "회사 정보 미리 리서치"
+      - "기존 관계 맥락 파악"
+      - "구조화된 프로필 저장"
+    auto_enrich: true
     
   erp:
     provider: "ecount"
@@ -153,6 +175,93 @@ investment:
           - { name: "현대차", symbol: "005380", shares: 20, value_krw: 10100000, avg_price: 506000, return_pct: 21 }
           - { name: "ETF_모음", value_krw: 44100000, return_pct: 60 }
   
+# ===== BUSINESS PARTNERS (Auto-tracked from Email Analysis) =====
+partners:
+  luxfer:
+    name: "Luxfer"
+    country: "UK/USA"
+    domain: "luxfer.com"
+    sector: "수소밸브/압력용기"
+    contact: "Alex Millward"
+    email_count: 53
+    relationship: "핵심 공급사"
+    status: "URGENT - 단종 위험"
+    last_contact: "2026-02-13"
+    
+  taylorwharton:
+    name: "Taylor-Wharton"
+    country: "USA"
+    domain: "taylorwharton.com"
+    sector: "초저온 저장탱크"
+    contact: "Tony Bazouni"
+    email_count: 59
+    relationship: "공식 파트너"
+    status: "KGSC Audit 완료"
+    last_contact: "2026-01-28"
+    
+  icbiomedical:
+    name: "ICBiomedical"
+    country: "USA"
+    domain: "icbiomedical.com"
+    sector: "초저온 생물학적 저장장비"
+    contact: "Chris Olsen"
+    email_count: 36
+    relationship: "공식 딜러"
+    status: "active"
+    last_contact: "2026-01-28"
+    
+  holycryogenics:
+    name: "Holy Cryogenics"
+    country: "China"
+    domain: "cdholy.com"
+    sector: "진공배관"
+    contact: "Yulia Karina"
+    email_count: 12
+    relationship: "신규 파트너"
+    status: "견적 진행 중"
+    notes: "2025년 12월 중국 미팅 완료, 2026년 주요 사업 아이템"
+    last_contact: "2026-02-09"
+    
+  hyundai_kia:
+    name: "현대/기아"
+    country: "Korea"
+    domain: "hyundai.com / kia.com"
+    sector: "자동차 OEM (수소전기차)"
+    contact: "강유석 책임매니저"
+    email_count: 46
+    relationship: "직접 공급사"
+    status: "CRITICAL"
+    last_contact: "2026-02-12"
+
+# ===== TRIPS & TRAVEL =====
+trips:
+  thailand_wish_project_2026:
+    name: "2026 소원프로젝트 태국 매솟 필드트립"
+    destination: "태국 매솟 (Mae Sot, Thailand-Myanmar border)"
+    type: "volunteer_work"
+    
+    departure:
+      date: "2026-02-17"
+      time: "18:45"
+      location: "인천공항"
+      flight: "Incheon → Chiang Mai"
+      
+    return:
+      date: "2026-02-23"
+      departure_time: "00:15"  # Chiang Mai
+      arrival_time: "07:05"    # Incheon
+      location: "인천공항"
+      
+    duration: "6박 7일"
+    status: "confirmed"
+    
+    post_trip_meetings:
+      - partner: "Luxfer (Alex Millward)"
+        topic: "수소밸브 단종 관련 화상회의"
+        status: "scheduled_after_return"
+      
+    notes: "난민학교 봉사활동, Holy Cryogenics 견적 진행 병행"
+
   # 의사결정 로직
   decision_rules:
     - trigger: "daily_snapshot"
