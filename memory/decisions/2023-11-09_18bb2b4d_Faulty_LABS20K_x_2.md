@@ -1,0 +1,23 @@
+# 이메일 분석 - MEDIUM
+
+## 메타데이터
+- **날짜**: 2023-11-09 15:11
+- **발신자**: Chris Olsen <colsen@icbiomedical.com>
+- **제목**: Faulty LABS20K x 2
+- **중요도**: MEDIUM
+- **카테고리**: 기타
+- **스레드ID**: 18bb2b4dafa59490
+- **메시지수**: 2
+
+## 라벨
+UNREAD, chrispark@koreacryo.com.pst/받은 편지함, CATEGORY_PERSONAL
+
+## 내용 요약
+Faulty LABS20K x 2
+
+## 액션 아이템
+- [ ] 내용 확인
+- [ ] 필요시 보관
+
+## 태그
+#기타 #이메일 #MEDIUM #자동수집

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦇 Chris's Portfolio Command Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(255,255,255,0.05);
+            --text-primary: #ffffff;
+            --accent-pink: #e94560;
+            --accent-blue: #667eea;
+            --accent-green: #00d4ff;
+            --accent-red: #ff4757;
+            --accent-gold: #ffd700;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s ease; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            z-index: -1;
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(233,69,96,0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+        
+        .header {
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: var(--accent-pink);
+            transform: translateY(-2px);
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-green);
+        }
+        
+        .live-dot {
+            width: 8px; height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero-card {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(102,126,234,0.4);
+        }
+        
+        .hero-amount {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .hero-change {
+            font-size: 1.5em;
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            display: inline-block;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: grab;
+        }
+        
+        .card.dragging { opacity: 0.5; transform: scale(1.05); }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 1.3em;
+            color: var(--accent-pink);
+        }
+        
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .stock-item:hover {
+            background: rgba(233,69,96,0.2);
+            transform: translateX(10px);
+        }
+        
+        .stock-change {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        
+        .positive { background: rgba(0,212,255,0.2); color: var(--accent-green); }
+        .negative { background: rgba(255,71,87,0.2); color: var(--accent-red); }
+        
+        .progress-bar {
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .simulator {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .simulator input, .simulator select {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal.show { display: flex; }
+        
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .alert {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 20px;
+            background: rgba(255,215,0,0.2);
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 15px;
+            transform: translateX(400px);
+            transition: transform 0.5s;
+            z-index: 1500;
+        }
+        
+        .alert.show { transform: translateX(0); }
+        
+        @media (max-width: 768px) {
+            .hero-amount { font-size: 2.5em; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🦇 Chris's Command Center</div>
+            <div class="controls">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span id="lastUpdate">방금 전</span>
+                </div>
+                <button class="btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> 새로고침
+                </button>
+                <button class="btn" onclick="toggleAutoRefresh()">
+                    <i class="fas fa-clock"></i> <span id="autoText">자동: ON</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Hero Card -->
+        <div class="hero-card">
+            <div style="font-size: 1.2em; opacity: 0.9;">💰 총 자산</div>
+            <div class="hero-amount" id="totalAsset">₩554,800,000</div>
+            <div class="hero-change negative">
+                <i class="fas fa-arrow-down"></i> <span id="totalChange">-₩7,900,000 (-1.4%)</span>
+            </div>
+        </div>
+        
+        <!-- Dashboard Grid -->
+        <div class="grid" id="dashboardGrid">
+            <!-- US Stocks -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">🇺🇸 미국 주식</div>
+                </div>
+                <div id="usStocks"></div>
+            </div>
+            
+            <!-- Crypto -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">₿ 암호화폐</div>
+                </div>
+                <div id="cryptoList"></div>
+            </div>
+            
+            <!-- Goal -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">🎯 잡코인 목표</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%">85% (₩12.72M / ₩15M)</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; text-align: center;">
+                    <div><div style="color: #888; font-size: 0.85em;">남은 금액</div><div style="color: var(--accent-green); font-weight: bold;">₩2.28M</div></div>
+                    <div><div style="color: #888; font-size: 0.85em;">필요 상승률</div><div style="color: var(--accent-gold); font-weight: bold;">+17.9%</div></div>
+                    <div><div style="color: #888; font-size: 0.85em;">전일대비</div><div style="color: var(--accent-red); font-weight: bold;">-₩45K</div></div>
+                </div>
+            </div>
+            
+            <!-- 10x Tracker -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">🚀 텐배거 추적</div>
+                </div>
+                <div id="trackerList"></div>
+            </div>
+            
+            <!-- Pie Chart -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">📊 포트폴리오 구성</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Bar Chart -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">📈 변동률</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Simulator -->
+            <div class="card" draggable="true">
+                <div class="card-header">
+                    <div class="card-title">🧮 수익 시뮬레이터</div>
+                </div>
+                <div class="simulator">
+                    <select id="simStock">
+                        <option>ETH (₩48M)</option>
+                        <option>PLTR (₩115M)</option>
+                        <option>ADA (₩3.3M)</option>
+                    </select>
+                    <input type="number" id="simPercent" placeholder="상승률 %" value="10">
+                    <button class="btn" onclick="runSimulation()">계산</button>
+                </div>
+                <div id="simResult" style="display: none; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="stockModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <h2 id="modalTitle">종목 상세</h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <!-- Alert -->
+    <div class="alert" id="alertBox">
+        <div style="font-weight: bold; margin-bottom: 5px;">🎯 알림</div>
+        <div id="alertMessage">잡코인 목표 90% 도달!</div>
+    </div>
+
+    <script>
+        // Data
+        const stocks = {
+            us: [
+                { name: 'Palantir', symbol: 'PLTR', value: 114600000, change: -3.1, shares: 609 },
+                { name: 'Tesla', symbol: 'TSLA', value: 69200000, change: -2.6, shares: 116 },
+                { name: 'NVIDIA', symbol: 'NVDA', value: 31500000, change: -3.8, shares: 120 },
+                { name: 'Rocket Lab', symbol: 'RKLB', value: 19800000, change: -3.3, shares: 205 },
+                { name: 'IonQ', symbol: 'IONQ', value: 34300000, change: 1.5, shares: 700 }
+            ],
+            crypto: [
+                { name: 'Bitcoin', symbol: 'BTC', value: 130200000, change: 0.5, shares: 1.3474 },
+                { name: 'Ethereum', symbol: 'ETH', value: 48000000, change: 6.4, shares: 16 },
+                { name: 'Ripple', symbol: 'XRP', value: 3700000, change: 0.7, shares: 1841 },
+                { name: 'Stellar', symbol: 'XLM', value: 5700000, change: 3.8, shares: 24000 },
+                { name: 'Cardano', symbol: 'ADA', value: 3300000, change: -7.7, shares: 9500 }
+            ],
+            tracker: [
+                { name: 'PLTR', current: 338, target: 1000, currentPrice: 131.41, targetPrice: 444.56 },
+                { name: 'IONQ', current: 125, target: 1000, currentPrice: 34.10, targetPrice: 214.49 },
+                { name: 'RKLB', current: 179, target: 1000, currentPrice: 67.34, targetPrice: 358.53 }
+            ]
+        };
+        
+        let autoRefreshInterval;
+        let isAutoRefresh = true;
+        
+        // Initialize
+        function init() {
+            renderStocks();
+            renderTracker();
+            initCharts();
+            startAutoRefresh();
+            setupDragAndDrop();
+            checkAlerts();
+        }
+        
+        // Render Stocks
+        function renderStocks() {
+            const usContainer = document.getElementById('usStocks');
+            const cryptoContainer = document.getElementById('cryptoList');
+            
+            usContainer.innerHTML = stocks.us.map(s => createStockItem(s)).join('');
+            cryptoContainer.innerHTML = stocks.crypto.map(s => createStockItem(s)).join('');
+        }
+        
+        function createStockItem(stock) {
+            const changeClass = stock.change >= 0 ? 'positive' : 'negative';
+            const arrow = stock.change >= 0 ? '↑' : '↓';
+            return `
+                <div class="stock-item" onclick="showStockDetail('${stock.symbol}')">
+                    <div>
+                        <div style="font-weight: bold;">${stock.name}</div>
+                        <div style="color: #888; font-size: 0.85em;">${stock.symbol}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: bold;">₩${(stock.value/1000000).toFixed(1)}M</div>
+                        <div class="stock-change ${changeClass}">${arrow} ${Math.abs(stock.change)}%</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Render Tracker
+        function renderTracker() {
+            const container = document.getElementById('trackerList');
+            container.innerHTML = stocks.tracker.map(t => `
+                <div style="margin: 15px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: bold;">${t.name}</span>
+                        <span style="color: var(--accent-gold);">${t.current / 10}x</span>
+                    </div>
+                    <div style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden;">
+                        <div style="width: ${t.current/10}%; height: 100%; background: linear-gradient(90deg, var(--accent-pink), var(--accent-gold)); border-radius: 5px;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.85em; color: #888;">
+                        <span>현재: $${t.currentPrice}</span>
+                        <span>10x: $${t.targetPrice}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Charts
+        function initCharts() {
+            // Pie Chart
+            new Chart(document.getElementById('pieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['미국 주식', '암호화폐', '한국'],
+                    datasets: [{
+                        data: [280, 189.7, 85.1],
+                        backgroundColor: ['#667eea', '#f093fb', '#4facfe']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#fff' } }
+                    }
+                }
+            });
+            
+            // Bar Chart
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['PLTR', 'TSLA', 'NVDA', 'IONQ', 'ETH', 'ADA'],
+                    datasets: [{
+                        label: '변동률 (%)',
+                        data: [-3.1, -2.6, -3.8, 1.5, 6.4, -7.7],
+                        backgroundColor: ['#ff4757', '#ff4757', '#ff4757', '#00d4ff', '#00d4ff', '#ff4757']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#fff' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Simulation
+        function runSimulation() {
+            const stock = document.getElementById('simStock').value.split(' ')[0];
+            const percent = parseFloat(document.getElementById('simPercent').value);
+            const resultDiv = document.getElementById('simResult');
+            
+            const currentValues = { 'ETH': 48000000, 'PLTR': 114600000, 'ADA': 3300000 };
+            const current = currentValues[stock] || 48000000;
+            const profit = current * (percent / 100);
+            const newValue = current + profit;
+            
+            resultDiv.innerHTML = `
+                <div style="font-size: 1.2em; margin-bottom: 10px;">
+                    <strong>${stock}</strong>이 <span style="color: var(--accent-green);">${percent}%</span> 상승하면:
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="text-align: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="color: #888; font-size: 0.85em;">현재</div>
+                        <div>₩${(current/1000000).toFixed(1)}M</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(0,212,255,0.2); border-radius: 10px;">
+                        <div style="color: #888; font-size: 0.85em;">상승 후</div>
+                        <div style="color: var(--accent-green); font-weight: bold;">₩${(newValue/1000000).toFixed(1)}M</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: rgba(255,215,0,0.1); border-radius: 10px; text-align: center;">
+                    <div style="color: #888; font-size: 0.85em;">예상 수익</div>
+                    <div style="color: var(--accent-gold); font-size: 1.5em; font-weight: bold;">+₩${(profit/1000000).toFixed(2)}M</div>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Modal
+        function showStockDetail(symbol) {
+            const modal = document.getElementById('stockModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const allStocks = [...stocks.us, ...stocks.crypto];
+            const stock = allStocks.find(s => s.symbol === symbol);
+            
+            if (stock) {
+                title.textContent = `${stock.name} (${symbol}) 상세 정보`;
+                content.innerHTML = `
+                    <div style="display: grid; gap: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: center;">
+                                <div style="color: #888;">평가액</div>
+                                <div style="font-size: 2em; font-weight: bold;">₩${(stock.value/1000000).toFixed(1)}M</div>
+                            </div>
+                            <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: center;">
+                                <div style="color: #888;">변동률</div>
+                                <div style="font-size: 2em; font-weight: bold; color: ${stock.change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${stock.change > 0 ? '+' : ''}${stock.change}%</div>
+                            </div>
+                        </div>
+                        <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+                            <div style="color: #888; margin-bottom: 10px;">보유 수량</div>
+                            <div style="font-size: 1.3em;">${stock.shares} ${symbol === 'BTC' || symbol === 'ETH' ? '개' : '주'}</div>
+                        </div>
+                        <div style="padding: 20px; background: rgba(102,126,234,0.2); border-radius: 15px; text-align: center; cursor: pointer;" onclick="window.open('https://finance.yahoo.com/quote/${symbol}', '_blank')">
+                            <i class="fas fa-external-link-alt"></i> Yahoo Finance에서 더 보기
+                        </div>
+                    </div>
+                `;
+                modal.classList.add('show');
+            }
+        }
+        
+        function closeModal(event) {
+            if (event.target.id === 'stockModal') {
+                document.getElementById('stockModal').classList.remove('show');
+            }
+        }
+        
+        // Auto Refresh
+        function startAutoRefresh() {
+            if (isAutoRefresh) {
+                autoRefreshInterval = setInterval(() => {
+                    refreshData();
+                }, 30000); // 30초마다
+            }
+        }
+        
+        function toggleAutoRefresh() {
+            isAutoRefresh = !isAutoRefresh;
+            document.getElementById('autoText').textContent = isAutoRefresh ? '자동: ON' : '자동: OFF';
+            
+            if (isAutoRefresh) {
+                startAutoRefresh();
+            } else {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+        
+        function refreshData() {
+            const icon = document.querySelector('.fa-sync-alt');
+            icon.style.animation = 'spin 1s linear';
+            
+            // Simulate data update
+            setTimeout(() => {
+                document.getElementById('lastUpdate').textContent = '방금 전';
+                icon.style.animation = '';
+                
+                // Random small changes for demo
+                stocks.us.forEach(s => s.change += (Math.random() - 0.5) * 0.2);
+                renderStocks();
+            }, 500);
+        }
+        
+        // Drag and Drop
+        function setupDragAndDrop() {
+            const grid = document.getElementById('dashboardGrid');
+            const cards = grid.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                card.addEventListener('dragstart', () => card.classList.add('dragging'));
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            });
+            
+            grid.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(grid, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                if (afterElement == null) {
+                    grid.appendChild(draggable);
+                } else {
+                    grid.insertBefore(draggable, afterElement);
+                }
+            });
+        }
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        // Alerts
+        function checkAlerts() {
+            // Goal 85% - close to 90%
+            if (Math.random() > 0.7) { // Demo alert
+                showAlert('🎯 잡코인 목표 90%에 근접 중!', 'ADA 반등 시 달성 가능');
+            }
+        }
+        
+        function showAlert(title, message) {
+            const alert = document.getElementById('alertBox');
+            document.querySelector('.alert div:first-child').textContent = title;
+            document.getElementById('alertMessage').textContent = message;
+            alert.classList.add('show');
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# 이메일 분석 - HIGH
+
+## 메타데이터
+- **날짜**: 2021-07-16 06:21
+- **발신자**: Mike Parsley <Mike.Parsley@metalimpact.com>
+- **제목**: docs for SO#213471 PO#kccluxus-210223
+- **중요도**: HIGH
+- **카테고리**: PO/주문
+- **스레드ID**: 17aac0bb697a0bb9
+- **메시지수**: 1
+
+## 라벨
+UNREAD, IMPORTANT, chrispark@koreacryo.com.pst/받은 편지함, CATEGORY_PERSONAL
+
+## 내용 요약
+docs for SO#213471 PO#kccluxus-210223
+
+## 액션 아이템
+- [ ] 즉시 확인 및 후속 조치 필요
+- [ ] 답변 또는 전달 검토
+
+## 태그
+#PO_주문 #이메일 #HIGH #자동수집

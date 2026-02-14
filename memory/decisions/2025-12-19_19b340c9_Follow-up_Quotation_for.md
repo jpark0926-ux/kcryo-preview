@@ -1,0 +1,23 @@
+# 이메일 분석 - MEDIUM
+
+## 메타데이터
+- **날짜**: 2025-12-19 09:40
+- **발신자**: <many@shunhetrucks.com>
+- **제목**: Follow-up: Quotation for FW-90TP / FW-90S with Gas Tanks & A Special Offer for You
+- **중요도**: MEDIUM
+- **카테고리**: 견적/제안
+- **스레드ID**: 19b340c9fc8ef4e3
+- **메시지수**: 1
+
+## 라벨
+UNREAD, chrispark@koreacryo.com.pst/받은 편지함, CATEGORY_PERSONAL
+
+## 내용 요약
+Follow-up: Quotation for FW-90TP / FW-90S with Gas Tanks & A Special Offer for You
+
+## 액션 아이템
+- [ ] 내용 확인
+- [ ] 필요시 보관
+
+## 태그
+#견적_제안 #이메일 #MEDIUM #자동수집

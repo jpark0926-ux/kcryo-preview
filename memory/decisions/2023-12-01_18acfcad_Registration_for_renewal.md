@@ -1,0 +1,23 @@
+# 이메일 분석 - HIGH
+
+## 메타데이터
+- **날짜**: 2023-12-01 17:54
+- **발신자**: "Murphy, Peter" <Peter.Murphy@luxfer.com>
+- **제목**: Registration for renewal of Certificate for Manufacture License for Korea
+- **중요도**: HIGH
+- **카테고리**: 기타
+- **스레드ID**: 18acfcad194352e9
+- **메시지수**: 6
+
+## 라벨
+IMPORTANT, chrispark@koreacryo.com.pst/받은 편지함, CATEGORY_PERSONAL
+
+## 내용 요약
+Registration for renewal of Certificate for Manufacture License for Korea
+
+## 액션 아이템
+- [ ] 즉시 확인 및 후속 조치 필요
+- [ ] 답변 또는 전달 검토
+
+## 태그
+#기타 #이메일 #HIGH #자동수집
