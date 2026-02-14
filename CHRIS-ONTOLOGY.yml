@@ -229,16 +229,37 @@ partners:
     last_contact: "2026-01-28"
     
   holycryogenics:
-    name: "Holy Cryogenics"
+    name: "Holy Cryogenic Equipment Co., Ltd."
+    legal_name: "Holy Cryogenic Equipment Co., Ltd."
     country: "China"
+    city: "Chengdu"
+    address: "No.8, East, 1st, Wuke Road, Wuhou Hi-Tech Zone, Chengdu, China"
+    website: "https://www.hlcryo.com/"
     domain: "cdholy.com"
-    sector: "진공배관"
-    contact: "Yulia Karina"
+    sector: "진공단열 배관 (VIP), 액질소 시스템"
+    key_products: ["Vacuum Insulated Piping", "Liquid Nitrogen System", "Cryogenic Valves"]
+    contacts:
+      primary: { name: "Yulia Karina", title: "Sales Manager", email: "yuliak@cdholy.com", phone: "+86-191-5039-4142", wechat_whatsapp: true }
+      secondary: { name: "Ethan Shen (沈泽华)", email: "ethan@cdholy.com" }
+      decision_maker: { name: "Mr. Zhang", title: "General Manager" }
     email_count: 12
-    relationship: "신규 파트너"
-    status: "견적 진행 중"
-    notes: "2025년 12월 중국 미팅 완료, 2026년 주요 사업 아이템"
+    relationship: "신규 파트너 (첫 프로젝트 진행 중)"
+    status: "active"
+    priority: "2026 Major Business Item"
+    projects:
+      current:
+        - name: "NIE Liquid Nitrogen System"
+          value_usd: 15000
+          status: "quotation_confirmed"
+          next_step: "NIE meeting approval"
+          discount: "significant (first project)"
+    history:
+      - date: "2025-12"
+        event: "Chris & Di Kang China visit - Chengdu factory tour"
+      - date: "2026-02-06"
+        event: "Final quotation $15,000 (discounted from original)"
     last_contact: "2026-02-09"
+    analysis_file: "memory/decisions/Holy_Cryogenics_Detailed_Analysis.md"
     
   hyundai_kia:
     name: "현대/기아"
