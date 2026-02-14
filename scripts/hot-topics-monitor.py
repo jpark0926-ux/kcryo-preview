@@ -19,8 +19,8 @@ from urllib.parse import urljoin, quote
 CONFIG = {
     "interval_minutes": 60,
     "top_n": 10,  # 각 사이트당 TOP N
-    "min_views": 1000,  # 최소 조회수 필터
-    "min_comments": 10,  # 최소 댓글수 필터
+    "min_views": 300,  # 최소 조회수 필터 (낮춤)
+    "min_comments": 5,  # 최소 댓글수 필터 (낮춤)
     "telegram_token": os.getenv('TELEGRAM_BOT_TOKEN'),
     "telegram_chat_id": os.getenv('TELEGRAM_CHAT_ID'),
     "seen_posts_file": "/Users/roturnjarvis/.openclaw/workspace/logs/hot_topics_seen.json",
@@ -173,12 +173,20 @@ class HotTopicsMonitor:
                     hit_elem = item.find('span', class_='hit')
                     comment_elem = item.find('span', class_='rSymph05')
                     like_elem = item.find('span', class_='recommend')
-
-                    views = int(hit_elem.get_text().replace(',', '')) if hit_elem else 0
+                    
+                    # 조회수 파싱 (1k = 1000 처리)
+                    import re
+                    views_text = hit_elem.get_text().replace(',', '') if hit_elem else '0'
+                    if 'k' in views_text.lower():
+                        views_match = re.search(r'([\d.]+)', views_text)
+                        views = int(float(views_match.group(1)) * 1000) if views_match else 0
+                    else:
+                        views = int(views_text) if views_text.isdigit() else 0
+                    
                     comments = int(comment_elem.get_text()) if comment_elem else 0
                     likes = int(like_elem.get_text()) if like_elem else 0
 
-                    if views >= CONFIG['min_views'] or comments >= CONFIG['min_comments']:
+                    if views >= 100 or comments >= 3 or likes >= 10:  # 클리앙은 추천수도 고려
                         posts.append({
                             'source': '클리앙',
                             'title': title,
@@ -476,13 +484,13 @@ class HotTopicsMonitor:
         self.save_trends()
 
         # 결과 출력 및 알림
-        if new_posts:
-            self.log(f"신규 핫토픽 {len(new_posts)}개 발견")
-            self.send_notification(new_posts)
+        if all_posts:
+            self.log(f"수집된 핫토픽 {len(all_posts)}개")
+            self.send_notification(all_posts)
         else:
-            self.log("신규 핫토픽 없음")
+            self.log("수집된 핫토픽 없음")
 
-        return new_posts
+        return all_posts
 
     def send_notification(self, posts):
         """알림 메시지 생성 및 전송 - 커뮤별 TOP 5"""
