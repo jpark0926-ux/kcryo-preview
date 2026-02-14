@@ -2,7 +2,7 @@
 """
 한국 커뮤니티 핫토픽 모니터링 시스템 (랭킹 기반)
 - 대상: 클리앙, 뽐뿌, 더쿠, 딴지일보
-- 주기: 15분
+- 주기: 1시간
 - 기준: 조회수/댓글수/추천수 TOP
 """
 
@@ -17,7 +17,7 @@ from urllib.parse import urljoin, quote
 
 # 설정
 CONFIG = {
-    "interval_minutes": 15,
+    "interval_minutes": 60,
     "top_n": 10,  # 각 사이트당 TOP N
     "min_views": 1000,  # 최소 조회수 필터
     "min_comments": 10,  # 최소 댓글수 필터
@@ -525,7 +525,7 @@ class HotTopicsMonitor:
         total_views = sum(sum(p['views'] for p in v) for v in by_source.values())
         
         message += f"<b>📊 전체:</b> {total_posts}개 게시물, 총 {total_views:,} 조회\n"
-        message += f"<i>15분마다 업데이트</i>"
+        message += f"<i>1시간마다 업데이트</i>"
         
         print("\n" + "="*70)
         print(message.replace('<b>', '').replace('</b>', '').replace('<a href=\'', '[').replace('\'>', '] ').replace('</a>', '').replace('<i>', '').replace('</i>', ''))

@@ -32,8 +32,8 @@ echo "✅ 환경변수 설정 완료: $SHELL_RC"
 
 # Cron 설정
 echo ""
-echo "⏰ Cron 설정 (15분마다)..."
-CRON_CMD="*/15 * * * * cd /Users/roturnjarvis/.openclaw/workspace && export TELEGRAM_BOT_TOKEN='8551723387:AAGbR3Sqg8SFFGw_16iIqQd1WjdkCTVcjAw' && export TELEGRAM_CHAT_ID='6948605509' && /usr/local/bin/python3 scripts/hot-topics-monitor.py >> logs/hot-topics-cron.log 2>&1"
+echo "⏰ Cron 설정 (1시간마다)..."
+CRON_CMD="0 * * * * cd /Users/roturnjarvis/.openclaw/workspace && export TELEGRAM_BOT_TOKEN='8551723387:AAGbR3Sqg8SFFGw_16iIqQd1WjdkCTVcjAw' && export TELEGRAM_CHAT_ID='6948605509' && /usr/local/bin/python3 scripts/hot-topics-monitor.py >> logs/hot-topics-cron.log 2>&1"
 
 # 기존 크론 제거 후 새로 추가
 (crontab -l 2>/dev/null | grep -v "hot-topics-monitor"; echo "$CRON_CMD") | crontab -
@@ -48,7 +48,7 @@ export TELEGRAM_CHAT_ID='6948605509'
 
 curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
   -d "chat_id=$TELEGRAM_CHAT_ID" \
-  -d "text=🔥 <b>핫토픽 알림 시스템 연결 완료!</b>%0A%0A15분마다 커뮤니티 핫토픽을 별사드립니다.%0A• 클리앙 TOP 5%0A• 뽐뿌 TOP 5%0A• 더쿠 TOP 5%0A• 딴지 TOP 5%0A%0A<i>처음 알림은 15분 내에 도착합니다.</i>" \
+  -d "text=🔥 <b>핫토픽 알림 시스템 연결 완료!</b>%0A%0A1시간마다 커뮤니티 핫토픽을 별사드립니다.%0A• 클리앙 TOP 5%0A• 뽐뿌 TOP 5%0A• 더쿠 TOP 5%0A• 딴지 TOP 5%0A%0A<i>처음 알림은 1시간 내에 도착합니다.</i>" \
   -d "parse_mode=HTML" \
   -d "disable_web_page_preview=true"
 EOF
@@ -65,8 +65,8 @@ echo ""
 echo "📋 요약:"
 echo "   • Bot: @ChrisJarvisHotTopicbot"
 echo "   • Chat ID: 6948605509"
-echo "   • 주기: 15분마다"
-echo "   • 첫 알림: 15분 내 도착"
+echo "   • 주기: 1시간마다"
+echo "   • 첫 알림: 1시간 내 도착"
 echo ""
 echo "💡 수동 테스트:"
 echo "   python3 scripts/hot-topics-monitor.py"

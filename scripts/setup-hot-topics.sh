@@ -26,8 +26,8 @@ echo "   export TELEGRAM_CHAT_ID='6948605509'"
 echo ""
 
 # Cron job 추가 (랭킹 기반)
-echo "⏰ Cron 설정 (15분마다)..."
-CRON_CMD="*/15 * * * * cd /Users/roturnjarvis/.openclaw/workspace && /usr/local/bin/python3 scripts/hot-topics-monitor.py >> logs/hot-topics-cron.log 2>&1"
+echo "⏰ Cron 설정 (1시간마다)..."
+CRON_CMD="0 * * * * cd /Users/roturnjarvis/.openclaw/workspace && /usr/local/bin/python3 scripts/hot-topics-monitor.py >> logs/hot-topics-cron.log 2>&1"
 
 (crontab -l 2>/dev/null | grep -v "hot-topics-monitor"; echo "$CRON_CMD") | crontab -
 
@@ -48,8 +48,8 @@ echo "   • 뽐뿌 (조회수 순)"
 echo "   • 더쿠 (인기글)"
 echo "   • 딴지일보 (조회수 순)"
 echo ""
-echo "🎯 기준: 조회수 1,000+ 또는 댓글 10+"
-echo "⏰ 주기: 15분마다"
+echo "🎯 기준: 조회수 500+ 또는 댓글 5+"
+echo "⏰ 주기: 1시간마다"
 echo "📝 로그: logs/hot_topics_monitor.log"
 echo ""
 echo "📋 수동 실행:"
