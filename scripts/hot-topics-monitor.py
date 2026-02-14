@@ -40,35 +40,35 @@ class HotTopicsMonitor:
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
         self.trends = self.load_trends()
-        
+
     def load_seen_posts(self):
         try:
             with open(CONFIG['seen_posts_file'], 'r', encoding='utf-8') as f:
                 return set(json.load(f))
         except:
             return set()
-    
+
     def save_seen_posts(self):
         os.makedirs(os.path.dirname(CONFIG['seen_posts_file']), exist_ok=True)
         with open(CONFIG['seen_posts_file'], 'w', encoding='utf-8') as f:
             json.dump(list(self.seen_posts), f, ensure_ascii=False)
-    
+
     def load_trends(self):
         try:
             with open(CONFIG['trends_file'], 'r', encoding='utf-8') as f:
                 return json.load(f)
         except:
             return {"hourly": {}, "daily": {}}
-    
+
     def save_trends(self):
         os.makedirs(os.path.dirname(CONFIG['trends_file']), exist_ok=True)
         with open(CONFIG['trends_file'], 'w', encoding='utf-8') as f:
             json.dump(self.trends, f, ensure_ascii=False, indent=2)
-    
+
     def generate_post_id(self, title, url, source):
         content = f"{source}:{title}:{url}"
         return hashlib.md5(content.encode()).hexdigest()[:16]
-    
+
     def log(self, message):
         os.makedirs(os.path.dirname(CONFIG['log_file']), exist_ok=True)
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -81,7 +81,7 @@ class HotTopicsMonitor:
         if not CONFIG['telegram_token'] or not CONFIG['telegram_chat_id']:
             print(f"[알림] {message[:200]}...")
             return
-        
+
         url = f"https://api.telegram.org/bot{CONFIG['telegram_token']}/sendMessage"
         payload = {
             'chat_id': CONFIG['telegram_chat_id'],
@@ -89,7 +89,7 @@ class HotTopicsMonitor:
             'parse_mode': 'HTML',
             'disable_web_page_preview': True
         }
-        
+
         try:
             response = requests.post(url, json=payload, timeout=10)
             return response.json()
@@ -110,15 +110,15 @@ class HotTopicsMonitor:
     def analyze_sentiment_detailed(self, title, content=""):
         """상세 감성 분석"""
         text = f"{title} {content}".lower()
-        
+
         positive_keywords = ['지지', '응원', '환호', '승리', '우세', '호재', '성공', '긍정', '희망', '개선']
         negative_keywords = ['비판', '문제', '논란', '의혹', '피해', '반대', '악재', '실패', '부정', '우려', '사과', '규탄']
         angry_keywords = ['분노', '격분', '환장', '미친', '개XX', '좌파', '우파', '극우', '극좌']
-        
+
         pos_count = sum(1 for word in positive_keywords if word in text)
         neg_count = sum(1 for word in negative_keywords if word in text)
         angry_count = sum(1 for word in angry_keywords if word in text)
-        
+
         if angry_count > 0:
             return {'sentiment': '격앙', 'emoji': '🔥', 'score': -2}
         elif neg_count > pos_count:
@@ -140,7 +140,7 @@ class HotTopicsMonitor:
             '국제': ['미국', '중국', '일본', '북한', '우크라이나', '중동', '전쟁', '외교'],
             '문화': ['영화', '드라마', '연예', '음악', '예술', '스포츠', '축구', '야구']
         }
-        
+
         title_lower = title.lower()
         for cat, keywords in categories.items():
             if any(kw in title_lower for kw in keywords):
@@ -155,29 +155,29 @@ class HotTopicsMonitor:
             url = "https://www.clien.net/service/board/park?&od=T33"  # 공감 순
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
-            
+
             items = soup.find_all('div', class_='list_item')
             for item in items[:CONFIG['top_n']]:
                 try:
                     title_elem = item.find('span', class_='subject_fixed')
                     if not title_elem:
                         continue
-                    
+
                     title = title_elem.get_text(strip=True)
                     link_elem = title_elem.find_parent('a')
                     url = link_elem['href'] if link_elem else ''
                     if url and not url.startswith('http'):
                         url = f"https://www.clien.net{url}"
-                    
+
                     # 조회수, 댓글, 추천
                     hit_elem = item.find('span', class_='hit')
                     comment_elem = item.find('span', class_='rSymph05')
                     like_elem = item.find('span', class_='recommend')
-                    
+
                     views = int(hit_elem.get_text().replace(',', '')) if hit_elem else 0
                     comments = int(comment_elem.get_text()) if comment_elem else 0
                     likes = int(like_elem.get_text()) if like_elem else 0
-                    
+
                     if views >= CONFIG['min_views'] or comments >= CONFIG['min_comments']:
                         posts.append({
                             'source': '클리앙',
@@ -190,57 +190,96 @@ class HotTopicsMonitor:
                         })
                 except Exception as e:
                     continue
-            
+
             time.sleep(2)
         except Exception as e:
             self.log(f"클리앙 오류: {e}")
-        
+
         return posts
 
     def fetch_ppomppu_hot(self):
         """뽐뿌 인기 게시물"""
         posts = []
         try:
-            url = "http://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard"
+            # 인기글 조회순 정렬
+            url = "https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard&sort=read_num&how=desc"
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            rows = soup.find_all('tr', class_=['list1', 'list0'])
-            for row in rows[:CONFIG['top_n'] + 5]:
+            # 실제 게시물 tr 찾기 (조회수가 1000 이상인)
+            all_tr = soup.find_all('tr')
+            
+            for tr in all_tr:
                 try:
-                    title_elem = row.find('td', class_='eng list_vspace')
-                    if not title_elem:
+                    tds = tr.find_all('td')
+                    if len(tds) < 5:
                         continue
                     
-                    link = title_elem.find('a')
-                    if not link:
+                    # 마지막 td가 조회수인지 확인
+                    views_text = tds[-1].get_text(strip=True).replace(',', '')
+                    if not views_text.isdigit():
                         continue
                     
+                    views = int(views_text)
+                    
+                    # 조회수 500 이상만
+                    if views < 500:
+                        continue
+                    
+                    # 제목 찾기 (보통 td[1])
+                    title_td = None
+                    for td in tds[1:4]:
+                        link = td.find('a', href=True)
+                        if link:
+                            title_text = link.get_text(strip=True)
+                            if len(title_text) > 5 and 'javascript' not in link.get('href', ''):
+                                title_td = td
+                                break
+                    
+                    if not title_td:
+                        continue
+                    
+                    link = title_td.find('a', href=True)
                     title = link.get_text(strip=True)
                     href = link.get('href', '')
                     
-                    # 조회수, 댓글
-                    hit_elem = row.find_all('td', class_='eng list_vspace')
-                    views = 0
+                    # 댓글 수 찾기 (제목에 [n] 형태)
                     comments = 0
+                    import re
+                    comment_match = re.search(r'\[(\d+)\]$', title)
+                    if comment_match:
+                        comments = int(comment_match.group(1))
+                        title = re.sub(r'\[\d+\]$', '', title).strip()
                     
-                    if len(hit_elem) >= 3:
-                        try:
-                            views = int(hit_elem[-2].get_text().replace(',', ''))
-                        except:
-                            pass
+                    # 공지/규칙 제외
+                    skip_keywords = ['규칙', '공지', '필독', '이용안내', '운영원칙']
+                    if any(kw in title for kw in skip_keywords):
+                        continue
                     
-                    if views >= CONFIG['min_views']:
-                        posts.append({
-                            'source': '뽐뿌',
-                            'title': title,
-                            'url': href if href.startswith('http') else f"http://www.ppomppu.co.kr/zboard/{href}",
-                            'views': views,
-                            'comments': comments,
-                            'likes': 0,
-                            'time': datetime.now().strftime('%H:%M')
-                        })
-                except:
+                    # 작성자 (td[2] 또는 td[3])
+                    author = ""
+                    for td in tds[2:4]:
+                        text = td.get_text(strip=True)
+                        if text and not text.isdigit():
+                            author = text
+                            break
+                    
+                    full_url = href if href.startswith('http') else f"https://www.ppomppu.co.kr/zboard/{href}"
+                    
+                    posts.append({
+                        'source': '뽐뿌',
+                        'title': title,
+                        'url': full_url,
+                        'views': views,
+                        'comments': comments,
+                        'likes': 0,
+                        'time': datetime.now().strftime('%H:%M')
+                    })
+                    
+                    if len(posts) >= CONFIG['top_n']:
+                        break
+                        
+                except Exception as e:
                     continue
             
             time.sleep(2)
@@ -257,45 +296,67 @@ class HotTopicsMonitor:
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            items = soup.find_all('tr', class_=['bg1', 'bg2'])
-            for item in items[:CONFIG['top_n']]:
+            # 테이블에서 tr 추출
+            tables = soup.find_all('table', {'class': lambda x: x})
+            if not tables:
+                return posts
+            
+            all_tr = tables[0].find_all('tr')
+            
+            for tr in all_tr:
                 try:
-                    title_elem = item.find('td', class_='title')
-                    if not title_elem:
+                    tds = tr.find_all('td')
+                    if len(tds) < 5:
                         continue
                     
-                    link = title_elem.find('a')
+                    # td[0]: 번호, td[1]: 카테고리, td[2]: 제목, td[3]: 시간, td[4]: 조회수
+                    # 번호가 숫자인지 확인 (공지 제외)
+                    no_text = tds[0].get_text(strip=True)
+                    if not no_text.isdigit():
+                        continue
+                    
+                    # 제목 td에서 링크 추출
+                    title_td = tds[2]
+                    link = title_td.find('a', href=True)
                     if not link:
                         continue
                     
                     title = link.get_text(strip=True)
                     href = link.get('href', '')
                     
-                    # 조회수, 댓글
-                    num_elems = item.find_all('td', class_='num')
-                    views = 0
+                    # 카테고리
+                    category = tds[1].get_text(strip=True)
+                    
+                    # 조회수
+                    views_text = tds[4].get_text(strip=True).replace(',', '')
+                    views = int(views_text) if views_text.isdigit() else 0
+                    
+                    if views < 500:
+                        continue
+                    
+                    # 댓글 수 (제목에 [n] 형태)
                     comments = 0
+                    import re
+                    comment_match = re.search(r'\[(\d+)\]$', title)
+                    if comment_match:
+                        comments = int(comment_match.group(1))
+                        title = re.sub(r'\[\d+\]$', '', title).strip()
                     
-                    if len(num_elems) >= 2:
-                        try:
-                            views = int(num_elems[0].get_text().replace(',', ''))
-                            comments_text = num_elems[1].get_text()
-                            if comments_text != '-':
-                                comments = int(comments_text.replace(',', ''))
-                        except:
-                            pass
+                    posts.append({
+                        'source': '더쿠',
+                        'title': title,
+                        'url': href if href.startswith('http') else f"https://theqoo.net{href}",
+                        'views': views,
+                        'comments': comments,
+                        'likes': 0,
+                        'category_tag': category,
+                        'time': datetime.now().strftime('%H:%M')
+                    })
                     
-                    if views >= CONFIG['min_views']:
-                        posts.append({
-                            'source': '더쿠',
-                            'title': title,
-                            'url': href if href.startswith('http') else f"https://theqoo.net{href}",
-                            'views': views,
-                            'comments': comments,
-                            'likes': 0,
-                            'time': datetime.now().strftime('%H:%M')
-                        })
-                except:
+                    if len(posts) >= CONFIG['top_n']:
+                        break
+                        
+                except Exception as e:
                     continue
             
             time.sleep(2)
@@ -308,49 +369,68 @@ class HotTopicsMonitor:
         """딴지일보 인기 게시물"""
         posts = []
         try:
-            url = "https://www.ddanzi.com/index.php?mid=free&sort_index=readed_count"
+            url = "https://www.ddanzi.com/free?sort_index=readed_count"
             response = self.session.get(url, timeout=10)
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            items = soup.find_all('tr', class_=['bg1', 'bg2'])
-            for item in items[:CONFIG['top_n']]:
+            # 딴지는 /free/NUMBER 형태의 링크
+            import re
+            all_links = soup.find_all('a', href=True)
+            seen_titles = set()
+            
+            for link in all_links:
                 try:
-                    title_elem = item.find('td', class_='title')
-                    if not title_elem:
-                        continue
-                    
-                    link = title_elem.find('a')
-                    if not link:
-                        continue
-                    
-                    title = link.get_text(strip=True)
                     href = link.get('href', '')
+                    title = link.get_text(strip=True)
                     
-                    # 조회수, 댓글
-                    num_elems = item.find_all('td', class_='num')
+                    # 패턴: /free/숫자
+                    if not re.match(r'.*/free/\d+$', href):
+                        continue
+                    
+                    # 제목 길이 체크
+                    if len(title) < 10 or len(title) > 200:
+                        continue
+                    
+                    # 중복 제거
+                    if title in seen_titles:
+                        continue
+                    seen_titles.add(title)
+                    
+                    # 부모 요소에서 메타 정보 찾기
+                    parent = link.find_parent(['li', 'div', 'tr'])
                     views = 0
                     comments = 0
                     
-                    if len(num_elems) >= 2:
-                        try:
-                            views = int(num_elems[0].get_text().replace(',', ''))
-                            comments_text = num_elems[1].get_text()
-                            if comments_text != '-':
-                                comments = int(comments_text.replace(',', ''))
-                        except:
-                            pass
+                    if parent:
+                        parent_text = parent.get_text()
+                        # 조회수: 숫자,숫자회
+                        view_match = re.search(r'([\d,]+)\s*회', parent_text)
+                        if view_match:
+                            views = int(view_match.group(1).replace(',', ''))
                     
-                    if views >= CONFIG['min_views']:
-                        posts.append({
-                            'source': '딴지',
-                            'title': title,
-                            'url': href if href.startswith('http') else f"https://www.ddanzi.com{href}",
-                            'views': views,
-                            'comments': comments,
-                            'likes': 0,
-                            'time': datetime.now().strftime('%H:%M')
-                        })
-                except:
+                    # 댓글: 제목에서 [n] 추출
+                    comment_match = re.search(r'\[(\d+)\]', title)
+                    if comment_match:
+                        comments = int(comment_match.group(1))
+                        title = re.sub(r'\[\d+\]', '', title).strip()
+                    
+                    # URL 처리
+                    full_url = href if href.startswith('http') else f"https://www.ddanzi.com{href}"
+                    
+                    posts.append({
+                        'source': '딴지',
+                        'title': title,
+                        'url': full_url,
+                        'views': views,
+                        'comments': comments,
+                        'likes': 0,
+                        'time': datetime.now().strftime('%H:%M')
+                    })
+                    
+                    if len(posts) >= CONFIG['top_n']:
+                        break
+                        
+                except Exception as e:
                     continue
             
             time.sleep(2)
@@ -362,46 +442,46 @@ class HotTopicsMonitor:
     def run(self):
         """메인 실행"""
         self.log("핫토픽 모니터링 시작")
-        
+
         all_posts = []
         all_posts.extend(self.fetch_clien_hot())
         all_posts.extend(self.fetch_ppomppu_hot())
         all_posts.extend(self.fetch_theqoo_hot())
         all_posts.extend(self.fetch_ddanzi_hot())
-        
+
         # 인기도 점수 계산 (조회수 + 댓글수*10)
         for post in all_posts:
             post['score'] = post['views'] + (post['comments'] * 10)
             post['sentiment'] = self.analyze_sentiment_detailed(post['title'])
             post['category'] = self.categorize_topic(post['title'])
             post['post_id'] = self.generate_post_id(post['title'], post['url'], post['source'])
-        
+
         # 점수순 정렬
         all_posts.sort(key=lambda x: x['score'], reverse=True)
-        
+
         # 중복 제거 및 신규 포스트 필터링
         new_posts = []
         for post in all_posts:
             if post['post_id'] not in self.seen_posts:
                 self.seen_posts.add(post['post_id'])
                 new_posts.append(post)
-        
+
         self.save_seen_posts()
-        
+
         # 트렌드 업데이트
         hour = datetime.now().strftime('%H:00')
         if hour not in self.trends['hourly']:
             self.trends['hourly'][hour] = []
         self.trends['hourly'][hour].extend([p['category'] for p in new_posts])
         self.save_trends()
-        
+
         # 결과 출력 및 알림
         if new_posts:
             self.log(f"신규 핫토픽 {len(new_posts)}개 발견")
             self.send_notification(new_posts)
         else:
             self.log("신규 핫토픽 없음")
-        
+
         return new_posts
 
     def send_notification(self, posts):
@@ -413,18 +493,18 @@ class HotTopicsMonitor:
             if cat not in by_category:
                 by_category[cat] = []
             by_category[cat].append(post)
-        
+
         # 메시지 생성
         message = f"🔥 <b>실시간 핫토픽</b>\n"
         message += f"⏰ {datetime.now().strftime('%H:%M')} 기준\n"
         message += f"📊 신규 {len(posts)}개\n\n"
-        
+
         # 카테고리별 (많은 순)
         sorted_cats = sorted(by_category.items(), key=lambda x: len(x[1]), reverse=True)
-        
+
         for cat, cat_posts in sorted_cats:
             message += f"<b>[{cat}]</b> {len(cat_posts)}개\n"
-            
+
             # 점수 높은 순으로 3개만
             cat_posts.sort(key=lambda x: x['score'], reverse=True)
             for post in cat_posts[:3]:
@@ -433,23 +513,23 @@ class HotTopicsMonitor:
                 message += f"{emoji} [{post['source']}] {title_short}\n"
                 message += f"   👁 {post['views']:,} 💬 {post['comments']:,}\n"
             message += "\n"
-        
+
         # 전체 통계
         total_views = sum(p['views'] for p in posts)
         total_comments = sum(p['comments'] for p in posts)
-        
+
         sentiment_dist = {'🟢': 0, '🔴': 0, '⚪': 0, '🔥': 0}
         for p in posts:
             emoji = p['sentiment']['emoji']
             sentiment_dist[emoji] = sentiment_dist.get(emoji, 0) + 1
-        
+
         message += f"<b>통계:</b> 👁 {total_views:,} | 💬 {total_comments:,}\n"
         message += f"<b>감성:</b> 🟢{sentiment_dist['🟢']} 🔴{sentiment_dist['🔴']} ⚪{sentiment_dist['⚪']} 🔥{sentiment_dist['🔥']}"
-        
+
         print("\n" + "="*70)
         print(message)
         print("="*70)
-        
+
         self.send_telegram(message)
 
 if __name__ == "__main__":
