@@ -692,50 +692,73 @@
     }
 
     function activateAuroraMode() {
-      if (document.body.classList.contains('aurora-mode')) return;
+      // Check if already frozen - then unfreeze
+      if (document.body.classList.contains('aurora-mode')) {
+        deactivateFreezeMode();
+        return;
+      }
 
       document.body.classList.add('aurora-mode');
 
       // Show dramatic freeze notification
       const notification = document.createElement('div');
-      notification.innerHTML = '🧊 절대영도 도달! 완전 동결 모드!';
+      notification.id = 'freeze-notification';
+      notification.innerHTML = '🧊 동결 모드 ON';
       notification.style.cssText = `
         position: fixed;
         top: 20px;
         left: 50%;
         transform: translateX(-50%) scale(0);
-        background: linear-gradient(135deg, rgba(200,230,255,0.95), rgba(0,150,255,0.95));
-        color: #001a33;
-        padding: 20px 40px;
-        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(220,240,255,1), rgba(180,220,255,1));
+        color: #003366;
+        padding: 16px 32px;
+        border-radius: 12px;
         font-weight: 900;
-        font-size: 1.2rem;
+        font-size: 1rem;
         z-index: 10001;
-        border: 3px solid rgba(255,255,255,0.8);
-        box-shadow: 0 0 40px rgba(0,200,255,0.6), inset 0 0 20px rgba(255,255,255,0.3);
-        animation: freeze-notification 4s ease-out forwards;
-        text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+        border: 2px solid rgba(255,255,255,0.9);
+        box-shadow: 0 0 30px rgba(200,230,255,0.8), inset 0 0 10px rgba(255,255,255,0.5);
+        animation: freeze-notification 2s ease-out forwards;
+        text-shadow: 0 1px 2px rgba(255,255,255,0.8);
       `;
       document.body.appendChild(notification);
-      setTimeout(() => notification.remove(), 4000);
+      setTimeout(() => notification.remove(), 2500);
 
-      // Create ice overlay that spreads from corners
-      const freezeOverlay = document.createElement('div');
-      freezeOverlay.id = 'freeze-overlay';
-      freezeOverlay.style.cssText = `
+      // Create heavy frost overlay
+      const frostOverlay = document.createElement('div');
+      frostOverlay.id = 'frost-overlay';
+      frostOverlay.style.cssText = `
         position: fixed;
         inset: 0;
         pointer-events: none;
         z-index: 9998;
-        background: linear-gradient(135deg, 
-          rgba(200,240,255,0) 40%,
-          rgba(200,240,255,0.1) 50%,
-          rgba(200,240,255,0) 60%);
-        animation: freeze-spread 3s ease-out forwards;
+        background: 
+          radial-gradient(ellipse at 0% 0%, rgba(255,255,255,0.4) 0%, transparent 40%),
+          radial-gradient(ellipse at 100% 0%, rgba(255,255,255,0.3) 0%, transparent 35%),
+          radial-gradient(ellipse at 0% 100%, rgba(255,255,255,0.3) 0%, transparent 35%),
+          radial-gradient(ellipse at 100% 100%, rgba(255,255,255,0.4) 0%, transparent 40%);
+        opacity: 0;
+        animation: frost-overlay-appear 1.5s ease-out forwards;
       `;
-      document.body.appendChild(freezeOverlay);
+      document.body.appendChild(frostOverlay);
 
-      // Add ice crystal border
+      // Add ice texture overlay
+      const iceTexture = document.createElement('div');
+      iceTexture.id = 'ice-texture';
+      iceTexture.style.cssText = `
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9996;
+        background-image: 
+          repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+          repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+        opacity: 0;
+        animation: ice-texture-appear 1s ease-out 0.5s forwards;
+      `;
+      document.body.appendChild(iceTexture);
+
+      // Add heavy ice border
       const iceBorder = document.createElement('div');
       iceBorder.id = 'ice-border';
       iceBorder.style.cssText = `
@@ -743,19 +766,47 @@
         inset: 0;
         pointer-events: none;
         z-index: 9999;
-        border: 20px solid transparent;
-        border-image: repeating-linear-gradient(
-          45deg,
-          rgba(200,240,255,0.8),
-          rgba(200,240,255,0.8) 10px,
-          rgba(255,255,255,0.9) 10px,
-          rgba(255,255,255,0.9) 20px,
-          rgba(180,220,255,0.7) 20px,
-          rgba(180,220,255,0.7) 30px
-        ) 20;
-        animation: ice-border-form 2s ease-out forwards;
+        border: 30px solid transparent;
+        border-image: 
+          linear-gradient(135deg, 
+            rgba(255,255,255,0.9) 0%,
+            rgba(200,230,255,0.8) 25%,
+            rgba(255,255,255,0.9) 50%,
+            rgba(180,220,255,0.8) 75%,
+            rgba(255,255,255,0.9) 100%
+          ) 1;
+        box-shadow: 
+          inset 0 0 50px rgba(200,240,255,0.3),
+          0 0 30px rgba(200,240,255,0.2);
+        opacity: 0;
+        animation: ice-border-heavy 1s ease-out forwards;
       `;
       document.body.appendChild(iceBorder);
+
+      // Add corner ice crystals
+      const corners = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+      corners.forEach((corner, i) => {
+        const cornerIce = document.createElement('div');
+        cornerIce.className = `corner-ice ${corner}`;
+        const [v, h] = corner.split('-');
+        cornerIce.style.cssText = `
+          position: fixed;
+          ${v}: 0;
+          ${h}: 0;
+          width: 150px;
+          height: 150px;
+          pointer-events: none;
+          z-index: 9997;
+          background: radial-gradient(circle at ${h === 'left' ? '0%' : '100%'} ${v === 'top' ? '0%' : '100%'}, 
+            rgba(255,255,255,0.9) 0%, 
+            rgba(220,240,255,0.6) 30%,
+            rgba(200,230,255,0.3) 60%,
+            transparent 70%);
+          opacity: 0;
+          animation: corner-ice-appear 0.8s ease-out ${i * 0.15}s forwards;
+        `;
+        document.body.appendChild(cornerIce);
+      });
 
       // Add frost particles
       const frostCanvas = document.createElement('canvas');
@@ -764,62 +815,56 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        z-index: 9997;
+        z-index: 9995;
         opacity: 0;
-        animation: frost-appear 1s ease-out forwards;
+        animation: frost-canvas-appear 1s ease-out 0.3s forwards;
       `;
       document.body.appendChild(frostCanvas);
 
       // Initialize frost animation
       initFrostAnimation(frostCanvas);
 
-      // Change color scheme to icy
-      const icyStyle = document.createElement('style');
-      icyStyle.textContent = `
+      // Add heavy freeze CSS
+      const freezeStyle = document.createElement('style');
+      freezeStyle.id = 'freeze-mode-style';
+      freezeStyle.textContent = `
         @keyframes freeze-notification {
           0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-          20% { opacity: 1; transform: translateX(-50%) scale(1.1); }
-          30% { transform: translateX(-50%) scale(1); }
-          80% { opacity: 1; }
-          100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-30px); }
+          50% { transform: translateX(-50%) scale(1.05); }
+          100% { opacity: 1; transform: translateX(-50%) scale(1); }
         }
 
-        @keyframes freeze-spread {
-          0% { 
-            background: radial-gradient(circle at 50% 50%, rgba(200,240,255,0) 0%, rgba(200,240,255,0) 100%);
-          }
-          50% {
-            background: radial-gradient(circle at 50% 50%, rgba(200,240,255,0.3) 0%, rgba(200,240,255,0.1) 50%, rgba(200,240,255,0) 100%);
-          }
-          100% {
-            background: radial-gradient(circle at 50% 50%, rgba(200,240,255,0.15) 0%, rgba(200,240,255,0.05) 70%, rgba(200,240,255,0) 100%);
-          }
+        @keyframes frost-overlay-appear {
+          to { opacity: 1; }
         }
 
-        @keyframes ice-border-form {
-          0% { 
-            opacity: 0;
-            border-width: 0px;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0.6;
-            border-width: 20px;
-          }
+        @keyframes ice-texture-appear {
+          to { opacity: 1; }
         }
 
-        @keyframes frost-appear {
-          to { opacity: 0.4; }
+        @keyframes ice-border-heavy {
+          0% { opacity: 0; transform: scale(1.1); }
+          100% { opacity: 0.85; transform: scale(1); }
         }
 
-        /* Icy color scheme */
+        @keyframes corner-ice-appear {
+          0% { opacity: 0; transform: scale(0.5); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes frost-canvas-appear {
+          to { opacity: 0.6; }
+        }
+
+        /* Heavy freeze effects */
         body.aurora-mode {
-          filter: hue-rotate(180deg) saturate(0.7);
+          filter: saturate(0.3) brightness(1.1);
         }
 
-        body.aurora-mode #hero,
+        body.aurora-mode #hero {
+          filter: contrast(1.2) brightness(0.95);
+        }
+
         body.aurora-mode section {
           filter: contrast(1.1);
         }
@@ -827,23 +872,100 @@
         body.aurora-mode h1, 
         body.aurora-mode h2,
         body.aurora-mode h3 {
-          text-shadow: 0 0 20px rgba(200,240,255,0.5), 2px 2px 4px rgba(0,100,200,0.3);
+          color: #e8f4f8 !important;
+          text-shadow: 
+            0 0 10px rgba(255,255,255,0.8),
+            0 0 20px rgba(200,240,255,0.6),
+            0 0 30px rgba(180,220,255,0.4),
+            2px 2px 4px rgba(0,50,100,0.3) !important;
+        }
+
+        body.aurora-mode p,
+        body.aurora-mode span:not(.temp-c):not(.temp-f):not(.temp-k) {
+          color: #c8e0e8 !important;
         }
 
         body.aurora-mode .product-card,
         body.aurora-mode .spec-card {
-          border-color: rgba(200,230,255,0.6);
-          box-shadow: 0 4px 30px rgba(200,240,255,0.2), inset 0 0 20px rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.05) !important;
+          border: 2px solid rgba(255,255,255,0.3) !important;
+          box-shadow: 
+            0 0 20px rgba(200,240,255,0.15),
+            inset 0 0 20px rgba(255,255,255,0.05) !important;
         }
 
         body.aurora-mode button {
-          background: linear-gradient(135deg, rgba(200,230,255,0.9), rgba(100,180,255,0.9));
-          border: 2px solid rgba(255,255,255,0.8);
+          background: linear-gradient(135deg, rgba(240,248,255,0.95), rgba(200,230,255,0.9)) !important;
+          color: #003366 !important;
+          border: 2px solid rgba(255,255,255,0.9) !important;
+          box-shadow: 0 0 15px rgba(200,240,255,0.4) !important;
+        }
+
+        /* Exit button */
+        #freeze-exit-btn {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 10002;
+          background: rgba(255,255,255,0.9);
+          color: #003366;
+          border: 2px solid rgba(200,240,255,0.8);
+          padding: 10px 20px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: bold;
+          box-shadow: 0 0 20px rgba(200,240,255,0.5);
+          animation: fade-in 0.5s ease-out;
+        }
+        #freeze-exit-btn:hover {
+          background: rgba(255,255,255,1);
+          transform: scale(1.05);
         }
       `;
-      document.head.appendChild(icyStyle);
+      document.head.appendChild(freezeStyle);
 
-      console.log('🧊 Deep Freeze Mode Activated!');
+      // Add exit button
+      const exitBtn = document.createElement('button');
+      exitBtn.id = 'freeze-exit-btn';
+      exitBtn.textContent = '❄️ 동결 해제';
+      exitBtn.onclick = deactivateFreezeMode;
+      document.body.appendChild(exitBtn);
+
+      console.log('🧊 Freeze Mode Activated!');
+    }
+
+    function deactivateFreezeMode() {
+      document.body.classList.remove('aurora-mode');
+
+      // Show unfreeze notification
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, rgba(255,200,150,1), rgba(255,150,100,1));
+        color: #331100;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-weight: 900;
+        font-size: 1rem;
+        z-index: 10001;
+        border: 2px solid rgba(255,255,255,0.9);
+        box-shadow: 0 0 30px rgba(255,200,150,0.6);
+        animation: fade-in 0.5s ease-out;
+      `;
+      notification.textContent = '🔥 동결 해제 완료';
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 2000);
+
+      // Remove all freeze elements
+      ['#frost-overlay', '#ice-texture', '#ice-border', '#frost-canvas', '#freeze-exit-btn', '#freeze-mode-style', '.corner-ice'].forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => el.remove());
+      });
+
+      console.log('🔥 Freeze Mode Deactivated!');
     }
 
     function initFrostAnimation(canvas) {
@@ -1028,36 +1150,30 @@
   }
 
   // ========================================
-  // 7. Typing Hero Title
+  // 7. Typing Hero Title (Looping)
   // ========================================
   function initTypingHero() {
     const heroTitle = document.querySelector('#hero h1, .hero-title');
     if (!heroTitle) return;
 
-    const originalText = heroTitle.textContent;
-    const koText = heroTitle.dataset.ko || originalText;
+    // Multiple texts to cycle through
+    const texts = [
+      '극한의 온도',
+      '무한한 가능성',
+      '초저온 기술의',
+      '선구자 KC'
+    ];
+
+    let currentIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingSpeed = 100;
+    const deleteSpeed = 50;
+    const pauseTime = 2000;
+
     heroTitle.textContent = '';
     heroTitle.style.borderRight = '3px solid #00d4ff';
     heroTitle.style.paddingRight = '8px';
-    heroTitle.style.animation = 'cursor-blink 1s infinite';
-
-    let charIndex = 0;
-    const typingSpeed = 100;
-
-    function typeChar() {
-      if (charIndex < koText.length) {
-        heroTitle.textContent += koText[charIndex];
-        charIndex++;
-        setTimeout(typeChar, typingSpeed);
-      } else {
-        heroTitle.style.borderRight = 'none';
-        heroTitle.style.animation = 'none';
-        heroTitle.style.paddingRight = '0';
-      }
-    }
-
-    // Start typing after a short delay
-    setTimeout(typeChar, 500);
 
     // Add cursor blink animation
     const style = document.createElement('style');
@@ -1066,8 +1182,45 @@
         0%, 100% { border-color: #00d4ff; }
         50% { border-color: transparent; }
       }
+      .typing-cursor {
+        animation: cursor-blink 1s infinite;
+      }
     `;
     document.head.appendChild(style);
+
+    heroTitle.classList.add('typing-cursor');
+
+    function typeLoop() {
+      const currentText = texts[currentIndex];
+
+      if (isDeleting) {
+        // Deleting
+        heroTitle.textContent = currentText.substring(0, charIndex - 1);
+        charIndex--;
+
+        if (charIndex === 0) {
+          isDeleting = false;
+          currentIndex = (currentIndex + 1) % texts.length;
+          setTimeout(typeLoop, 300);
+        } else {
+          setTimeout(typeLoop, deleteSpeed);
+        }
+      } else {
+        // Typing
+        heroTitle.textContent = currentText.substring(0, charIndex + 1);
+        charIndex++;
+
+        if (charIndex === currentText.length) {
+          isDeleting = true;
+          setTimeout(typeLoop, pauseTime);
+        } else {
+          setTimeout(typeLoop, typingSpeed);
+        }
+      }
+    }
+
+    // Start typing loop after delay
+    setTimeout(typeLoop, 800);
   }
 
   // ========================================
