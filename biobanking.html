@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>바이오뱅킹 | 한국초저온용기(주)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cryo: {
+          950: '#060d1b',
+          900: '#0a1628',
+          800: '#0f2240',
+          700: '#143060',
+          600: '#1a4080',
+          500: '#10b981', /* Emerald 500 */
+          400: '#34d399', /* Emerald 400 */
+          300: '#6ee7b7', /* Emerald 300 */
+          200: '#a7f3d0', /* Emerald 200 */
+          100: '#d1fae5', /* Emerald 100 */
+          50: '#ecfdf5',   /* Emerald 50 */
+        },
+        emerald: {
+          500: '#10b981',
+          600: '#059669',
+          glow: 'rgba(16, 185, 129, 0.6)',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+body { font-family: 'Noto Sans KR', sans-serif; background: #060d1b; color: white; }
+
+/* ===== SCROLL PROGRESS BAR ===== */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #10b981, #34d399, #059669);
+  z-index: 9999;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  transition: width 0.05s linear;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+#custom-cursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.8);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  mix-blend-mode: screen;
+}
+#cursor-trail {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  transition: left 0.15s ease-out, top 0.15s ease-out;
+  mix-blend-mode: screen;
+}
+
+/* ===== NAV BLUR ===== */
+.nav-blur {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ===== HERO ANIMATION ===== */
+@keyframes hero-in {
+  0% { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.hero-anim { animation: hero-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* ===== REVEAL ON SCROLL ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== GRADIENT TEXT ===== */
+.gradient-emerald {
+  background: linear-gradient(135deg, #34d399, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== PRODUCT CARD ===== */
+.product-card {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* ===== INFRASTRUCTURE STEP ===== */
+.infra-step::after {
+  content: '→';
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(16, 185, 129, 0.3);
+  font-size: 1.5rem;
+}
+@media (max-width: 1024px) {
+  .infra-step::after { content: '↓'; right: 50%; top: auto; bottom: -2rem; transform: translateX(50%); }
+}
+.infra-step:last-child::after { display: none; }
+
+</style>
+</head>
+<body class="bg-cryo-950 overflow-x-hidden">
+
+<div id="scroll-progress"></div>
+<div id="cursor-trail"></div>
+<div id="custom-cursor"></div>
+
+<!-- Navigation (Matched with index.html) -->
+<nav id="nav" class="fixed top-0 w-full z-50 transition-all duration-500 bg-cryo-950/70 backdrop-blur-md border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      <a href="index.html" class="flex items-center gap-2 sm:gap-3">
+        <img src="logo-kc.png" alt="KC Logo" class="h-14 sm:h-20 w-auto">
+      </a>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="index.html#brand-story" class="text-sm text-gray-300 hover:text-emerald-400 transition" data-ko="브랜드" data-en="Brand">브랜드</a>
+        <div class="relative group">
+          <a href="index.html#products" class="text-sm text-emerald-400 font-bold transition" data-ko="제품" data-en="Products">제품</a>
+          <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div class="w-56 backdrop-blur-xl bg-cryo-950/90 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+              <a href="cryo-equipment.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="🧊 초저온장비" data-en="🧊 Cryo Equipment">🧊 초저온장비</a>
+              <a href="biobanking.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-emerald-400 bg-emerald-500/10 font-medium" data-ko="🧬 바이오뱅킹" data-en="🧬 Biobanking">🧬 바이오뱅킹</a>
+              <a href="liquid-helium.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="💜 액체헬륨" data-en="💜 Liquid Helium">💜 액체헬륨</a>
+              <a href="specialty-gas.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="⚡ 특수가스" data-en="⚡ Specialty Gas">⚡ 특수가스</a>
+              <a href="healthcare.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="🏥 헬스케어" data-en="🏥 Healthcare">🏥 헬스케어</a>
+              <a href="gas-engineering.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="🏭 가스엔지니어링" data-en="🏭 Gas Engineering">🏭 가스엔지니어링</a>
+            </div>
+          </div>
+        </div>
+        <a href="index.html#solutions" class="text-sm text-gray-300 hover:text-emerald-400 transition" data-ko="솔루션" data-en="Solutions">솔루션</a>
+        <a href="index.html#about" class="text-sm text-gray-300 hover:text-emerald-400 transition" data-ko="회사소개" data-en="About Us">회사소개</a>
+        <span id="lang-toggle" class="cursor-pointer hover:scale-110 transition">🇰🇷</span>
+        <a href="index.html#contact" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-full text-sm font-medium transition text-white" data-ko="견적 문의" data-en="Get a Quote">견적 문의</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 overflow-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-500/10 blur-[120px] rounded-full -z-10"></div>
+  <div class="max-w-7xl mx-auto px-4 text-center">
+    <div class="hero-anim">
+        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            <span class="text-white" data-ko="저장을 넘어 엔지니어링으로," data-en="Beyond Storage, We Engineer Safety">저장을 넘어 엔지니어링으로,</span><br>
+            <span class="gradient-emerald" data-ko="토탈 바이오 인프라" data-en="Total Bio-Preservation Infrastructure">토탈 바이오 인프라</span>
+        </h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-10" data-ko="단순한 장비 판매를 넘어, 설계부터 자동 질소 공급, 실시간 모니터링까지 완벽한 바이오뱅크 엔지니어링 솔루션을 제공합니다." data-en="More than just equipment sales, we provide a complete biobank engineering solution from design to automated LN2 filling and real-time monitoring.">
+            단순한 장비 판매를 넘어, 설계부터 자동 질소 공급, 실시간 모니터링까지 완벽한 바이오뱅크 엔지니어링 솔루션을 제공합니다.
+        </p>
+    </div>
+  </div>
+</section>
+
+<!-- End-to-End Infrastructure Section -->
+<section class="py-24 bg-black/30">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-20 reveal">
+            <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm">Our Core Engineering</span>
+            <h2 class="text-4xl md:text-6xl font-black mt-2 mb-6" data-ko="Engineering Powerhouse" data-en="Engineering Powerhouse">Engineering Powerhouse</h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto" data-ko="한국초저온용기는 단순한 유통사가 아닌, 고도의 엔지니어링 역량을 기반으로 가장 안전한 연구 환경을 구축하는 기술 파트너입니다." data-en="Korea Cryogenics is not a mere distributor, but a technical partner that builds the safest research environment based on advanced engineering capabilities.">한국초저온용기는 단순한 유통사가 아닌, 고도의 엔지니어링 역량을 기반으로 가장 안전한 연구 환경을 구축하는 기술 파트너입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Step 1 -->
+            <div class="infra-step relative p-8 bg-cryo-900 border border-emerald-500/10 rounded-2xl reveal hover:border-emerald-500/30 transition-colors">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" data-ko="컨설팅 & 시스템 설계" data-en="Consulting & System Design">컨설팅 & 시스템 설계</h3>
+                <p class="text-gray-400 text-sm leading-relaxed" data-ko="전문 엔지니어가 시설의 규모와 동선, 가스 안전을 고려하여 최적의 바이오뱅크 레이아웃을 직접 설계합니다." data-en="Expert engineers directly design the optimal biobank layout, considering facility scale, workflow, and gas safety.">전문 엔지니어가 시설의 규모와 동선, 가스 안전을 고려하여 최적의 바이오뱅크 레이아웃을 직접 설계합니다.</p>
+            </div>
+            <!-- Step 2 -->
+            <div class="infra-step relative p-8 bg-cryo-900 border border-emerald-500/10 rounded-2xl reveal hover:border-emerald-500/30 transition-colors" style="transition-delay: 0.1s;">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" data-ko="자동 질소 충전 시스템" data-en="Automated LN2 Filling">자동 질소 충전 시스템</h3>
+                <p class="text-gray-400 text-sm leading-relaxed" data-ko="사람의 개입 없이 24시간 일정한 수위를 유지하는 고효율 진공배관 및 자동 충전 제어 시스템을 구축합니다." data-en="We build high-efficiency vacuum piping and automated filling control systems that maintain a constant level 24/7 without human intervention.">사람의 개입 없이 24시간 일정한 수위를 유지하는 고효율 진공배관 및 자동 충전 제어 시스템을 구축합니다.</p>
+            </div>
+            <!-- Step 3 -->
+            <div class="infra-step relative p-8 bg-cryo-900 border border-emerald-500/10 rounded-2xl reveal hover:border-emerald-500/30 transition-colors" style="transition-delay: 0.2s;">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" data-ko="모니터링 & 안전 시스템" data-en="Monitoring & Safety">모니터링 & 안전 시스템</h3>
+                <p class="text-gray-400 text-sm leading-relaxed" data-ko="산소 농도 감지 및 비상 경보, 실시간 원격 모니터링을 통해 연구자와 소중한 샘플을 다각도로 보호합니다." data-en="We protect researchers and valuable samples through oxygen concentration sensing, emergency alarms, and real-time remote monitoring.">산소 농도 감지 및 비상 경보, 실시간 원격 모니터링을 통해 연구자와 소중한 샘플을 다각도로 보호합니다.</p>
+            </div>
+            <!-- Step 4 -->
+            <div class="infra-step relative p-8 bg-cryo-900 border border-emerald-500/10 rounded-2xl reveal hover:border-emerald-500/30 transition-colors" style="transition-delay: 0.3s;">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" data-ko="안정적 가스 공급" data-en="Continuous Gas Supply">안정적 가스 공급</h3>
+                <p class="text-gray-400 text-sm leading-relaxed" data-ko="축적된 물류 인프라를 통해 중단 없는 액체질소 공급과 정기적인 예방 정비 서비스를 제공합니다." data-en="We provide uninterrupted LN2 supply and regular preventive maintenance through our accumulated logistics infrastructure.">축적된 물류 인프라를 통해 중단 없는 액체질소 공급과 정기적인 예방 정비 서비스를 제공합니다.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section 1: Revolution Series -->
+<section class="py-24 max-w-7xl mx-auto px-4">
+    <div class="flex flex-col lg:flex-row items-center gap-12 mb-20">
+        <div class="lg:w-1/2 reveal">
+            <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm">IC BIOMEDICAL</span>
+            <h2 class="text-4xl font-bold mt-2 mb-6">Revolution Series</h2>
+            <p class="text-gray-400 leading-relaxed mb-6" data-ko="Revolution 시리즈는 최신 단열 기술을 적용하여 액체질소 증발을 최소화하고 보관 용량을 극대화한 고효율 저장 시스템입니다. 생명공학 연구소 및 대학 병원에 최적화된 선택입니다." data-en="The Revolution Series is a high-efficiency storage system that minimizes LN2 evaporation and maximizes storage capacity using the latest insulation technology. Perfect for biotech labs and university hospitals.">
+                Revolution 시리즈는 최신 단열 기술을 적용하여 액체질소 증발을 최소화하고 보관 용량을 극대화한 고효율 저장 시스템입니다. 생명공학 연구소 및 대학 병원에 최적화된 선택입니다.
+            </p>
+            <ul class="space-y-3">
+                <li class="flex items-center gap-2 text-emerald-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span data-ko="Revolution 12 / 20 / 32 / 40" data-en="Revolution 12 / 20 / 32 / 40">Revolution 12 / 20 / 32 / 40</span>
+                </li>
+                <li class="flex items-center gap-2 text-emerald-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span data-ko="업계 최저 수준의 LN₂ 소모량" data-en="Industry-leading low LN2 consumption">업계 최저 수준의 LN₂ 소모량</span>
+                </li>
+                <li class="flex items-center gap-2 text-emerald-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span data-ko="사용자 중심의 인체공학적 디자인" data-en="User-centric ergonomic design">사용자 중심의 인체공학적 디자인</span>
+                </li>
+            </ul>
+        </div>
+        <div class="lg:w-1/2 reveal">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative bg-cryo-900 border border-white/10 rounded-2xl overflow-hidden aspect-[4/3] flex items-center justify-center p-8">
+                    <img src="ppt-images/image57.png" alt="Revolution Series" class="max-h-full object-contain">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section 2: LABS Series -->
+<section class="py-24 bg-cryo-900/50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col lg:flex-row-reverse items-center gap-12">
+            <div class="lg:w-1/2 reveal">
+                <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm">GOLD STANDARD</span>
+                <h2 class="text-4xl font-bold mt-2 mb-6">LABS Series</h2>
+                <p class="text-gray-400 leading-relaxed mb-6" data-ko="대규모 샘플 보관을 위한 업계 표준. LABS 시리즈는 최대 94,000개의 2ml 바이알을 보관할 수 있는 압도적인 용량과 Vapor-phase 보관 시에도 완벽한 온도 균일성을 보장합니다." data-en="The industry standard for large-scale storage. The LABS series offers overwhelming capacity for up to 94,000 2ml vials and guarantees perfect temperature uniformity even in vapor-phase storage.">
+                    대규모 샘플 보관을 위한 업계 표준. LABS 시리즈는 최대 94,000개의 2ml 바이알을 보관할 수 있는 압도적인 용량과 Vapor-phase 보관 시에도 완벽한 온도 균일성을 보장합니다.
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-black/40 border border-emerald-500/20 rounded-xl text-center">
+                        <div class="text-emerald-400 font-bold text-xl">LABS-20K</div>
+                    </div>
+                    <div class="p-4 bg-black/40 border border-emerald-500/20 rounded-xl text-center">
+                        <div class="text-emerald-400 font-bold text-xl">LABS-40K</div>
+                    </div>
+                    <div class="p-4 bg-black/40 border border-emerald-500/20 rounded-xl text-center">
+                        <div class="text-emerald-400 font-bold text-xl">LABS-80K</div>
+                    </div>
+                    <div class="p-4 bg-black/40 border border-emerald-500/20 rounded-xl text-center">
+                        <div class="text-emerald-400 font-bold text-xl">LABS-94K</div>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 reveal">
+                <div class="bg-cryo-950 border border-white/5 rounded-3xl overflow-hidden">
+                    <img src="ppt-images/image58.png" alt="LABS Series Installation" class="w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section 3: Animal Husbandry -->
+<section class="py-24 max-w-7xl mx-auto px-4">
+    <div class="text-center mb-16 reveal">
+        <h2 class="text-4xl font-bold mb-4" data-ko="축산 AI & 가축 유전자원" data-en="Animal Husbandry & Genetic Resources">축산 AI & 가축 유전자원</h2>
+        <p class="text-gray-400" data-ko="축산업의 미래를 위한 정밀한 냉동 보존 및 운송 솔루션" data-en="Precision cryopreservation and transport solutions for the future of livestock.">축산업의 미래를 위한 정밀한 냉동 보존 및 운송 솔루션</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="product-card p-8 bg-cryo-900 border border-white/10 rounded-2xl reveal">
+            <h3 class="text-2xl font-bold mb-4 text-emerald-400">Revolution-Q</h3>
+            <p class="text-sm text-gray-400 mb-6" data-ko="정액 및 배아 보관에 특화된 고성능 인공수정 전용 용기" data-en="High-performance AI containers specialized for semen and embryo storage">정액 및 배아 보관에 특화된 고성능 인공수정 전용 용기</p>
+            <img src="ppt-images/image59.png" alt="Revolution-Q" class="w-full h-48 object-contain mb-4">
+        </div>
+        <div class="product-card p-8 bg-cryo-900 border border-white/10 rounded-2xl reveal" style="transition-delay: 0.1s;">
+            <h3 class="text-2xl font-bold mb-4 text-emerald-400">Dewars</h3>
+            <p class="text-sm text-gray-400 mb-6" data-ko="액체질소의 안전한 보관과 효율적인 사용을 위한 소형 저장 용기" data-en="Compact storage vessels for safe LN2 storage and efficient use">액체질소의 안전한 보관과 효율적인 사용을 위한 소형 저장 용기</p>
+            <div class="h-48 flex items-center justify-center text-emerald-500/20">
+                <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z"/></svg>
+            </div>
+        </div>
+        <div class="product-card p-8 bg-cryo-900 border border-white/10 rounded-2xl reveal" style="transition-delay: 0.2s;">
+            <h3 class="text-2xl font-bold mb-4 text-emerald-400">Dry Vapor Shippers</h3>
+            <p class="text-sm text-gray-400 mb-6" data-ko="기화 방식을 이용한 안전한 샘플 항공 및 육상 운송 시스템" data-en="Safe sample air and land transport system using dry vapor technology">기화 방식을 이용한 안전한 샘플 항공 및 육상 운송 시스템</p>
+            <div class="h-48 flex items-center justify-center text-emerald-500/20">
+                <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.97 4.19c-.32.17-.69.17-1 0l-7.97-4.19c-.32-.17-.53-.5-.53-.88V7.5c0-.38.21-.71.53-.88l7.97-4.19c.32-.17.69-.17 1 0l7.97 4.19c.32.17.53.5.53.88v9z"/></svg>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-black py-20 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12">
+        <div class="col-span-2">
+            <img src="logo-kc.png" alt="KC Logo" class="h-16 mb-6">
+            <p class="text-gray-500 text-sm leading-relaxed max-w-md">
+                한국초저온용기(주)는 1990년 설립 이후 극저온 분야의 한 길만을 걸어왔습니다. <br>
+                Taylor-Wharton, IC Biomedical의 한국 공식 파트너로서 최고의 솔루션을 제공합니다.
+            </p>
+        </div>
+        <div>
+            <h4 class="font-bold mb-6">Quick Links</h4>
+            <ul class="space-y-3 text-sm text-gray-500">
+                <li><a href="index.html#brand-story" class="hover:text-emerald-400 transition">브랜드 스토리</a></li>
+                <li><a href="cryo-equipment.html" class="hover:text-emerald-400 transition">초저온 용기</a></li>
+                <li><a href="biobanking.html" class="hover:text-emerald-400 transition">바이오뱅킹</a></li>
+                <li><a href="index.html#contact" class="hover:text-emerald-400 transition">고객 지원</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold mb-6">Contact</h4>
+            <p class="text-sm text-gray-500 mb-2">경기도 시흥시 마유로 10번길 66</p>
+            <p class="text-sm text-gray-500 mb-2">T. 031-432-2500</p>
+            <p class="text-sm text-gray-500">F. 031-432-2501</p>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-gray-600">© 2026 Korea Cryogenics Co., Ltd. All rights reserved.</p>
+        <div class="flex gap-6">
+            <a href="#" class="text-gray-600 hover:text-white transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+            <a href="#" class="text-gray-600 hover:text-white transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Language Support
+const langToggle = document.getElementById('lang-toggle');
+let currentLang = 'ko';
+
+function updateLang() {
+  document.querySelectorAll('[data-ko]').forEach(el => {
+    el.textContent = el.getAttribute(`data-${currentLang}`);
+  });
+  langToggle.textContent = currentLang === 'ko' ? '🇰🇷' : '🇺🇸';
+}
+
+langToggle.addEventListener('click', () => {
+  currentLang = currentLang === 'ko' ? 'en' : 'ko';
+  updateLang();
+});
+
+// Scroll Progress
+window.addEventListener('scroll', () => {
+  const scroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const percentage = (scroll / height) * 100;
+  document.getElementById('scroll-progress').style.width = percentage + '%';
+});
+
+// Custom Cursor
+const cursor = document.getElementById('custom-cursor');
+const trail = document.getElementById('cursor-trail');
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    trail.style.left = e.clientX + 'px';
+    trail.style.top = e.clientY + 'px';
+  }, 50);
+});
+
+// Reveal on Scroll
+const revealCallback = (entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+};
+const observer = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+</script>
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KC · 가스엔지니어링</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cryo: {
+          950: '#060d1b', 900: '#0a1628', 800: '#0f2240', 700: '#143060',
+          600: '#1a4080', 500: '#00d4ff', 400: '#00e5ff', 300: '#80f0ff',
+          200: '#b3f5ff', 100: '#d9faff', 50: '#f0fdff',
+        },
+        ice: { 500: '#00BFFF', 400: '#33ccff', 300: '#66d9ff' }
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+body { font-family: 'Noto Sans KR', sans-serif; background: #060d1b; color: #b3f5ff; }
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.accent { color: #f59e0b; }
+.accent-orange { color: #ea580c; }
+.glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(16px); border: 1px solid rgba(245,158,11,0.15); }
+.glass:hover { background: rgba(255,255,255,0.06); border-color: rgba(245,158,11,0.3); }
+.glass-strong { background: rgba(245,158,11,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(245,158,11,0.2); }
+
+/* Pipeline animation */
+@keyframes flowRight { 0%{stroke-dashoffset:40} 100%{stroke-dashoffset:0} }
+@keyframes flowDown { 0%{stroke-dashoffset:40} 100%{stroke-dashoffset:0} }
+@keyframes pulse-amber { 0%,100%{opacity:0.4} 50%{opacity:1} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes counter-fill { 0%{width:0} 100%{width:100%} }
+@keyframes dash { to { stroke-dashoffset: 0; } }
+@keyframes particle-float {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+}
+
+.flow-line { stroke-dasharray: 8 4; animation: flowRight 1.5s linear infinite; }
+.pulse-amber { animation: pulse-amber 2s ease-in-out infinite; }
+.float-anim { animation: float 3s ease-in-out infinite; }
+
+/* Timeline */
+.timeline-line { position: absolute; left: 50%; width: 2px; top: 0; bottom: 0; background: linear-gradient(to bottom, #f59e0b, #ea580c); transform: translateX(-50%); }
+.timeline-dot { width: 16px; height: 16px; border-radius: 50%; background: #f59e0b; border: 3px solid #060d1b; box-shadow: 0 0 20px #f59e0b66; position: absolute; left: 50%; transform: translateX(-50%); z-index: 10; }
+
+/* Particle */
+.particle {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: #f59e0b; opacity: 0;
+  animation: particle-float linear infinite;
+}
+
+/* Counter animation */
+.counter-num { font-variant-numeric: tabular-nums; }
+
+/* Glow cards */
+.glow-card { transition: all 0.4s ease; }
+.glow-card:hover { box-shadow: 0 0 40px rgba(245,158,11,0.15), 0 20px 60px rgba(0,0,0,0.3); transform: translateY(-4px); }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- Nav -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-xl bg-cryo-950/80 border-b border-cryo-700/30">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2"><img src="extracted-images/gas-engineering-img1.png" alt="KC Logo" class="h-10 w-auto"></a>
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="index.html#brand-story" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="브랜드" data-en="Brand">브랜드</a>
+      <div class="relative group">
+        <a href="index.html#products" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="제품" data-en="Products">제품</a>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+          <div class="w-56 backdrop-blur-xl bg-cryo-950/90 border border-cryo-700/40 rounded-xl shadow-2xl overflow-hidden">
+            <a href="cryo-equipment.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-cryo-500/10 hover:text-cyan-400 transition" data-ko="🧊 초저온장비" data-en="🧊 Cryo Equipment">🧊 초저온장비</a>
+            <a href="biobanking.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-emerald-500/10 hover:text-emerald-400 transition" data-ko="🧬 바이오뱅킹" data-en="🧬 Biobanking">🧬 바이오뱅킹</a>
+            <a href="liquid-helium.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-purple-500/10 hover:text-purple-400 transition" data-ko="💜 액체헬륨" data-en="💜 Liquid Helium">💜 액체헬륨</a>
+            <a href="specialty-gas.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-amber-500/10 hover:text-amber-400 transition" data-ko="⚡ 특수가스" data-en="⚡ Specialty Gas">⚡ 특수가스</a>
+            <a href="healthcare.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-blue-500/10 hover:text-blue-400 transition" data-ko="🏥 헬스케어" data-en="🏥 Healthcare">🏥 헬스케어</a>
+            <a href="gas-engineering.html" class="flex items-center gap-2 px-4 py-2.5 text-sm text-cryo-200 hover:bg-orange-500/10 hover:text-orange-400 transition" data-ko="🏭 가스엔지니어링" data-en="🏭 Gas Engineering">🏭 가스엔지니어링</a>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#solutions" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="솔루션" data-en="Solutions">솔루션</a>
+      <a href="index.html#about" class="text-sm text-cryo-200 hover:text-cryo-400 transition" data-ko="회사소개" data-en="About Us">회사소개</a>
+      <span id="lang-toggle" style="cursor:pointer;font-size:18px;user-select:none;" title="Switch Language">🇰🇷</span>
+      <a href="index.html#contact" class="px-5 py-2 bg-gradient-to-r from-cryo-500 to-ice-500 rounded-full text-sm font-medium text-cryo-950" data-ko="견적 문의" data-en="Get a Quote">견적 문의</a>
+    </div>
+    <div class="flex items-center gap-3 lg:hidden">
+      <span id="lang-toggle-mobile" style="cursor:pointer;font-size:18px;user-select:none;">🇰🇷</span>
+      <button id="menu-btn" class="p-2 flex flex-col gap-[6px]" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+        <span class="w-6 h-0.5 bg-cryo-200"></span><span class="w-6 h-0.5 bg-cryo-200"></span><span class="w-6 h-0.5 bg-cryo-200"></span>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden lg:hidden bg-cryo-950/95 border-t border-cryo-700/30 px-4 py-4 space-y-3">
+    <a href="index.html#brand-story" class="block text-cryo-200" data-ko="브랜드" data-en="Brand">브랜드</a>
+    <div>
+      <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full flex items-center justify-between text-cryo-200" data-ko="제품" data-en="Products"><span>제품</span><span class="text-xs">▸</span></button>
+      <div class="hidden ml-4 mt-1 space-y-1 border-l border-cryo-700/40 pl-3">
+        <a href="cryo-equipment.html" class="block py-1.5 text-sm text-cryo-300 hover:text-cyan-400" data-ko="🧊 초저온장비" data-en="🧊 Cryo Equipment">🧊 초저온장비</a>
+        <a href="biobanking.html" class="block py-1.5 text-sm text-cryo-300 hover:text-emerald-400" data-ko="🧬 바이오뱅킹" data-en="🧬 Biobanking">🧬 바이오뱅킹</a>
+        <a href="liquid-helium.html" class="block py-1.5 text-sm text-cryo-300 hover:text-purple-400" data-ko="💜 액체헬륨" data-en="💜 Liquid Helium">💜 액체헬륨</a>
+        <a href="specialty-gas.html" class="block py-1.5 text-sm text-cryo-300 hover:text-amber-400" data-ko="⚡ 특수가스" data-en="⚡ Specialty Gas">⚡ 특수가스</a>
+        <a href="healthcare.html" class="block py-1.5 text-sm text-cryo-300 hover:text-blue-400" data-ko="🏥 헬스케어" data-en="🏥 Healthcare">🏥 헬스케어</a>
+        <a href="gas-engineering.html" class="block py-1.5 text-sm text-cryo-300 hover:text-orange-400" data-ko="🏭 가스엔지니어링" data-en="🏭 Gas Engineering">🏭 가스엔지니어링</a>
+      </div>
+    </div>
+    <a href="index.html#solutions" class="block text-cryo-200" data-ko="솔루션" data-en="Solutions">솔루션</a>
+    <a href="index.html#about" class="block text-cryo-200" data-ko="회사소개" data-en="About Us">회사소개</a>
+    <a href="index.html#contact" class="block px-5 py-2 bg-gradient-to-r from-cryo-500 to-ice-500 rounded-full text-center font-medium text-cryo-950" data-ko="견적 문의" data-en="Get a Quote">견적 문의</a>
+  </div>
+</nav>
+
+<!-- ============================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+  <!-- Animated Background -->
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-cryo-950 to-orange-900/20"></div>
+    <!-- Particle container -->
+    <div id="particles" class="absolute inset-0 overflow-hidden"></div>
+    <!-- Pipeline SVG Background -->
+    <svg class="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1200 800" fill="none">
+      <path d="M0 400 H300 Q350 400 350 350 V200 Q350 150 400 150 H800 Q850 150 850 200 V500 Q850 550 900 550 H1200" stroke="#f59e0b" stroke-width="2" class="flow-line"/>
+      <path d="M0 600 H200 Q250 600 250 550 V300 Q250 250 300 250 H600 Q650 250 650 300 V650 Q650 700 700 700 H1200" stroke="#ea580c" stroke-width="1.5" class="flow-line" style="animation-delay:0.5s"/>
+      <path d="M0 200 H150 Q200 200 200 250 V450 Q200 500 250 500 H500 Q550 500 550 450 V100 Q550 50 600 50 H1200" stroke="#f59e0b" stroke-width="1" class="flow-line" style="animation-delay:1s"/>
+      <!-- Nodes -->
+      <circle cx="350" cy="400" r="6" fill="#f59e0b" class="pulse-amber"/>
+      <circle cx="850" cy="550" r="6" fill="#ea580c" class="pulse-amber" style="animation-delay:0.7s"/>
+      <circle cx="250" cy="600" r="6" fill="#f59e0b" class="pulse-amber" style="animation-delay:1.4s"/>
+      <circle cx="550" cy="500" r="6" fill="#ea580c" class="pulse-amber" style="animation-delay:0.3s"/>
+    </svg>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
+    <div class="reveal">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+        <span class="text-sm text-amber-400" data-ko="Gas Engineering Division" data-en="Gas Engineering Division">Gas Engineering Division</span>
+      </div>
+    </div>
+    <h1 class="reveal text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+      <span class="text-cryo-100" data-ko="삼성 P1부터" data-en="From Samsung P1">삼성 P1부터</span><br>
+      <span class="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent" data-ko="미국 Taylor까지" data-en="To Taylor, Texas">미국 Taylor까지</span>
+    </h1>
+    <p class="reveal text-lg md:text-xl text-cryo-300 max-w-3xl mx-auto mb-12" data-ko="반도체 팹의 심장, 특수가스 공급 시스템을 설계하고 시공합니다. 20년 이상의 엔지니어링 경험으로 세계 최대 반도체 단지의 가스 인프라를 완성했습니다." data-en="We design and build the heart of semiconductor fabs — specialty gas supply systems. With 20+ years of engineering experience, we've completed gas infrastructure for the world's largest semiconductor complex.">반도체 팹의 심장, 특수가스 공급 시스템을 설계하고 시공합니다. 20년 이상의 엔지니어링 경험으로 세계 최대 반도체 단지의 가스 인프라를 완성했습니다.</p>
+
+    <!-- Hero Stats -->
+    <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+      <div class="glass rounded-2xl p-6 glow-card">
+        <div class="text-3xl md:text-4xl font-black accent counter-num" data-target="20">0</div>
+        <div class="text-xs text-cryo-400 mt-1" data-ko="년+ 엔지니어링" data-en="Years+ Engineering">년+ 엔지니어링</div>
+      </div>
+      <div class="glass rounded-2xl p-6 glow-card">
+        <div class="text-3xl md:text-4xl font-black accent counter-num" data-target="4">0</div>
+        <div class="text-xs text-cryo-400 mt-1" data-ko="삼성 팹 (P1~P4)" data-en="Samsung Fabs (P1-P4)">삼성 팹 (P1~P4)</div>
+      </div>
+      <div class="glass rounded-2xl p-6 glow-card">
+        <div class="text-3xl md:text-4xl font-black accent counter-num" data-target="17">0</div>
+        <div class="text-xs text-cryo-400 mt-1" data-ko="$B 해외 프로젝트" data-en="$B Overseas Project">$B 해외 프로젝트</div>
+      </div>
+      <div class="glass rounded-2xl p-6 glow-card">
+        <div class="text-3xl md:text-4xl font-black accent counter-num" data-target="500">0</div>
+        <div class="text-xs text-cryo-400 mt-1" data-ko="+ 가스 공급 포인트" data-en="+ Gas Supply Points">+ 가스 공급 포인트</div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="reveal mt-16 animate-bounce">
+      <svg class="w-6 h-6 mx-auto text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- KC 역할 Overview -->
+<!-- ============================================ -->
+<section class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="reveal text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-bold mb-4">
+        <span class="accent" data-ko="KC의 역할" data-en="What KC Does">KC의 역할</span>
+      </h2>
+      <p class="text-cryo-400 max-w-2xl mx-auto" data-ko="반도체 팹에서 가스는 혈액과 같습니다. KC는 이 가스가 안전하고 정확하게 흐르도록 모든 시스템을 설계·시공합니다." data-en="In a semiconductor fab, gas is like blood. KC designs and builds every system to ensure gas flows safely and precisely.">반도체 팹에서 가스는 혈액과 같습니다. KC는 이 가스가 안전하고 정확하게 흐르도록 모든 시스템을 설계·시공합니다.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="reveal glass rounded-2xl p-8 glow-card text-center group">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition">
+          <svg class="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="배관 설계" data-en="Piping Design">배관 설계</h3>
+        <p class="text-sm text-cryo-400" data-ko="특수가스 공급을 위한 고순도 배관 설계 및 라우팅" data-en="High-purity piping design and routing for specialty gas supply">특수가스 공급을 위한 고순도 배관 설계 및 라우팅</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-8 glow-card text-center group" style="transition-delay:0.1s">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-orange-500/10 flex items-center justify-center group-hover:bg-orange-500/20 transition">
+          <svg class="w-8 h-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="가스 캐비넷" data-en="Gas Cabinets">가스 캐비넷</h3>
+        <p class="text-sm text-cryo-400" data-ko="유해가스 안전 공급을 위한 자동 교체 캐비넷 시스템" data-en="Auto-switching cabinet systems for safe hazardous gas supply">유해가스 안전 공급을 위한 자동 교체 캐비넷 시스템</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-8 glow-card text-center group" style="transition-delay:0.2s">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-500/10 flex items-center justify-center group-hover:bg-red-500/20 transition">
+          <svg class="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="배기 시스템" data-en="Exhaust Systems">배기 시스템</h3>
+        <p class="text-sm text-cryo-400" data-ko="유해 배기가스 처리 스크러버 및 배기 덕트 설치" data-en="Hazardous exhaust gas scrubbers and duct installation">유해 배기가스 처리 스크러버 및 배기 덕트 설치</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-8 glow-card text-center group" style="transition-delay:0.3s">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-yellow-500/10 flex items-center justify-center group-hover:bg-yellow-500/20 transition">
+          <svg class="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="시공·유지보수" data-en="Construction & Maintenance">시공·유지보수</h3>
+        <p class="text-sm text-cryo-400" data-ko="현장 시공부터 운영 후 유지보수까지 원스톱 서비스" data-en="One-stop service from on-site construction to post-operation maintenance">현장 시공부터 운영 후 유지보수까지 원스톱 서비스</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Photo removed -->
+
+<!-- ============================================ -->
+<!-- 삼성 반도체 프로젝트 타임라인 -->
+<!-- ============================================ -->
+<section class="py-24 relative overflow-hidden">
+  <!-- Background accent -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl"></div>
+
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="reveal text-center mb-6">
+      <span class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-4" data-ko="주요 프로젝트" data-en="Key Projects">주요 프로젝트</span>
+      <h2 class="text-3xl md:text-5xl font-bold text-cryo-100 mb-4" data-ko="삼성 평택캠퍼스" data-en="Samsung Pyeongtaek Campus">삼성 평택캠퍼스</h2>
+      <p class="text-cryo-400 max-w-2xl mx-auto" data-ko="세계 최대 반도체 단지. KC는 P1부터 P4까지 모든 팹의 특수가스 인프라를 담당했습니다." data-en="The world's largest semiconductor complex. KC handled specialty gas infrastructure for all fabs from P1 to P4.">세계 최대 반도체 단지. KC는 P1부터 P4까지 모든 팹의 특수가스 인프라를 담당했습니다.</p>
+    </div>
+
+    <!-- Campus Scale Stat -->
+    <div class="reveal flex flex-wrap justify-center gap-6 mb-16">
+      <div class="glass-strong rounded-xl px-6 py-3 text-center">
+        <span class="text-2xl font-black accent">289</span>
+        <span class="text-sm text-cryo-400 ml-1" data-ko="만㎡ 부지" data-en="㎡ x10K Site">만㎡ 부지</span>
+      </div>
+      <div class="glass-strong rounded-xl px-6 py-3 text-center">
+        <span class="text-2xl font-black accent">4</span>
+        <span class="text-sm text-cryo-400 ml-1" data-ko="개 메가팹" data-en="Mega Fabs">개 메가팹</span>
+      </div>
+      <div class="glass-strong rounded-xl px-6 py-3 text-center">
+        <span class="text-2xl font-black accent">100+</span>
+        <span class="text-sm text-cryo-400 ml-1" data-ko="조원 투자" data-en="Trillion KRW Invested">조원 투자</span>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative">
+      <!-- Desktop Timeline -->
+      <div class="hidden md:block">
+        <div class="grid grid-cols-4 gap-8">
+          <!-- P1 -->
+          <div class="reveal glow-card">
+            <div class="glass rounded-2xl p-6 relative overflow-hidden h-full">
+              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-amber-400"></div>
+              <div class="text-5xl font-black bg-gradient-to-b from-amber-400 to-amber-600 bg-clip-text text-transparent mb-3">P1</div>
+              <div class="text-xs text-amber-400 font-semibold mb-3">2017</div>
+              <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="평택 1공장" data-en="Pyeongtaek Fab 1">평택 1공장</h3>
+              <p class="text-sm text-cryo-400 mb-3" data-ko="삼성 평택캠퍼스의 첫 번째 팹. V-NAND 플래시 메모리 양산 라인." data-en="First fab of Samsung Pyeongtaek campus. V-NAND flash memory mass production line.">삼성 평택캠퍼스의 첫 번째 팹. V-NAND 플래시 메모리 양산 라인.</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-300" data-ko="V-NAND" data-en="V-NAND">V-NAND</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-300" data-ko="가동중" data-en="Operating">가동중</span>
+              </div>
+            </div>
+          </div>
+          <!-- P2 -->
+          <div class="reveal glow-card" style="transition-delay:0.15s">
+            <div class="glass rounded-2xl p-6 relative overflow-hidden h-full">
+              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+              <div class="text-5xl font-black bg-gradient-to-b from-amber-400 to-orange-500 bg-clip-text text-transparent mb-3">P2</div>
+              <div class="text-xs text-orange-400 font-semibold mb-3">2021</div>
+              <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="평택 2공장" data-en="Pyeongtaek Fab 2">평택 2공장</h3>
+              <p class="text-sm text-cryo-400 mb-3" data-ko="3D NAND 및 파운드리 라인. 극자외선(EUV) 장비 최초 도입." data-en="3D NAND and foundry line. First introduction of EUV lithography equipment.">3D NAND 및 파운드리 라인. 극자외선(EUV) 장비 최초 도입.</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-orange-500/10 text-orange-300" data-ko="3D NAND" data-en="3D NAND">3D NAND</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-orange-500/10 text-orange-300" data-ko="EUV" data-en="EUV">EUV</span>
+              </div>
+            </div>
+          </div>
+          <!-- P3 -->
+          <div class="reveal glow-card" style="transition-delay:0.3s">
+            <div class="glass rounded-2xl p-6 relative overflow-hidden h-full">
+              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-red-500"></div>
+              <div class="text-5xl font-black bg-gradient-to-b from-orange-500 to-red-500 bg-clip-text text-transparent mb-3">P3</div>
+              <div class="text-xs text-red-400 font-semibold mb-3">2023</div>
+              <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="평택 3공장" data-en="Pyeongtaek Fab 3">평택 3공장</h3>
+              <p class="text-sm text-cryo-400 mb-3" data-ko="최첨단 EUV 기반 파운드리 전용 라인. 3nm 이하 공정." data-en="Cutting-edge EUV-based foundry-only line. Sub-3nm process.">최첨단 EUV 기반 파운드리 전용 라인. 3nm 이하 공정.</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-red-500/10 text-red-300" data-ko="최첨단 EUV" data-en="Advanced EUV">최첨단 EUV</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-red-500/10 text-red-300" data-ko="3nm" data-en="3nm">3nm</span>
+              </div>
+            </div>
+          </div>
+          <!-- P4 -->
+          <div class="reveal glow-card" style="transition-delay:0.45s">
+            <div class="glass rounded-2xl p-6 relative overflow-hidden h-full">
+              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-rose-500"></div>
+              <div class="text-5xl font-black bg-gradient-to-b from-red-500 to-rose-500 bg-clip-text text-transparent mb-3">P4</div>
+              <div class="text-xs text-rose-400 font-semibold mb-3">2025~</div>
+              <h3 class="text-lg font-bold text-cryo-100 mb-2" data-ko="평택 4공장" data-en="Pyeongtaek Fab 4">평택 4공장</h3>
+              <p class="text-sm text-cryo-400 mb-3" data-ko="건설 진행중. 차세대 반도체 양산을 위한 메가팹 확장." data-en="Under construction. Mega fab expansion for next-gen semiconductor mass production.">건설 진행중. 차세대 반도체 양산을 위한 메가팹 확장.</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="px-2 py-0.5 text-xs rounded-full bg-rose-500/10 text-rose-300" data-ko="건설중" data-en="Under Construction">건설중</span>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-rose-500/10 text-rose-300 animate-pulse" data-ko="진행중" data-en="In Progress">진행중</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Progress bar under timeline -->
+        <div class="mt-8 relative h-2 rounded-full bg-cryo-800 overflow-hidden">
+          <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-full" style="width:85%"></div>
+          <div class="absolute inset-y-0 right-0 w-[15%] bg-gradient-to-r from-red-500/50 to-rose-500/30 rounded-full animate-pulse"></div>
+        </div>
+        <div class="flex justify-between mt-2 text-xs text-cryo-600">
+          <span>2017</span><span>2021</span><span>2023</span><span data-ko="2025~" data-en="2025~">2025~</span>
+        </div>
+      </div>
+
+      <!-- Mobile Timeline (stacked) -->
+      <div class="md:hidden space-y-6">
+        <div class="reveal glass rounded-2xl p-6 relative overflow-hidden border-l-4 border-amber-500">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl font-black accent">P1</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300">2017</span>
+          </div>
+          <h3 class="font-bold text-cryo-100" data-ko="평택 1공장 · V-NAND 플래시 메모리" data-en="Pyeongtaek Fab 1 · V-NAND Flash">평택 1공장 · V-NAND 플래시 메모리</h3>
+        </div>
+        <div class="reveal glass rounded-2xl p-6 relative overflow-hidden border-l-4 border-orange-500">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl font-black text-orange-500">P2</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-300">2021</span>
+          </div>
+          <h3 class="font-bold text-cryo-100" data-ko="평택 2공장 · 3D NAND + EUV 도입" data-en="Pyeongtaek Fab 2 · 3D NAND + EUV">평택 2공장 · 3D NAND + EUV 도입</h3>
+        </div>
+        <div class="reveal glass rounded-2xl p-6 relative overflow-hidden border-l-4 border-red-500">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl font-black text-red-500">P3</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-300">2023</span>
+          </div>
+          <h3 class="font-bold text-cryo-100" data-ko="평택 3공장 · 최첨단 EUV 3nm 파운드리" data-en="Pyeongtaek Fab 3 · Advanced EUV Sub-3nm">평택 3공장 · 최첨단 EUV 3nm 파운드리</h3>
+        </div>
+        <div class="reveal glass rounded-2xl p-6 relative overflow-hidden border-l-4 border-rose-500">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl font-black text-rose-500">P4</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 animate-pulse">건설중</span>
+          </div>
+          <h3 class="font-bold text-cryo-100" data-ko="평택 4공장 · 차세대 메가팹 (건설중)" data-en="Pyeongtaek Fab 4 · Next-gen Mega Fab (Under Construction)">평택 4공장 · 차세대 메가팹 (건설중)</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- KC 역할 in Samsung -->
+    <div class="reveal mt-16 glass-strong rounded-3xl p-8 md:p-12">
+      <div class="flex flex-col md:flex-row items-start gap-8">
+        <div class="flex-shrink-0">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+            <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold text-cryo-100 mb-4" data-ko="삼성 팹에서의 KC" data-en="KC in Samsung Fabs">삼성 팹에서의 KC</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="flex items-start gap-3">
+              <span class="text-amber-500 mt-1">●</span>
+              <span class="text-sm text-cryo-300" data-ko="특수가스(SiH₄, NF₃, WF₆ 등) 공급 배관 설계 및 시공" data-en="Design & construction of specialty gas (SiH₄, NF₃, WF₆) supply piping">특수가스(SiH₄, NF₃, WF₆ 등) 공급 배관 설계 및 시공</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-orange-500 mt-1">●</span>
+              <span class="text-sm text-cryo-300" data-ko="가스 캐비넷 및 VMB(Valve Manifold Box) 설치" data-en="Gas cabinet and VMB (Valve Manifold Box) installation">가스 캐비넷 및 VMB(Valve Manifold Box) 설치</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-red-500 mt-1">●</span>
+              <span class="text-sm text-cryo-300" data-ko="배기가스 처리(Scrubber) 시스템 구축" data-en="Exhaust gas treatment (Scrubber) system construction">배기가스 처리(Scrubber) 시스템 구축</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-yellow-500 mt-1">●</span>
+              <span class="text-sm text-cryo-300" data-ko="가스 누출 감지 및 비상 차단 시스템(GDS/EGSS)" data-en="Gas leak detection & emergency shut-off system (GDS/EGSS)">가스 누출 감지 및 비상 차단 시스템(GDS/EGSS)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Photo removed -->
+
+
+<!-- Photo removed -->
+
+<!-- ============================================ -->
+<!-- 미국 Taylor T-Project -->
+<!-- ============================================ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/5 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-4 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="reveal">
+        <span class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4" data-ko="글로벌 프로젝트" data-en="Global Project">글로벌 프로젝트</span>
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">
+          <span class="text-cryo-100" data-ko="미국 Texas" data-en="Texas, USA">미국 Texas</span><br>
+          <span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent" data-ko="Taylor T-Project" data-en="Taylor T-Project">Taylor T-Project</span>
+        </h2>
+        <p class="text-cryo-300 mb-6 leading-relaxed" data-ko="삼성전자의 미국 텍사스주 Taylor시 반도체 파운드리 신설 프로젝트. $17B(약 20조원) 규모의 초대형 투자로, 미국 내 첨단 반도체 생산 거점을 구축합니다." data-en="Samsung's new semiconductor foundry project in Taylor, Texas. A mega-scale $17B investment to establish an advanced semiconductor production base in the US.">삼성전자의 미국 텍사스주 Taylor시 반도체 파운드리 신설 프로젝트. $17B(약 20조원) 규모의 초대형 투자로, 미국 내 첨단 반도체 생산 거점을 구축합니다.</p>
+        <p class="text-cryo-400 mb-8 leading-relaxed" data-ko="KC는 한국 평택캠퍼스에서 축적한 가스 엔지니어링 노하우를 미국 현장에 그대로 적용합니다. 특수가스 배관 설계, 시공, 안전 시스템까지 — 글로벌 수준의 품질을 보증합니다." data-en="KC applies the gas engineering expertise accumulated at Korea's Pyeongtaek campus directly to the US site. From specialty gas piping design and construction to safety systems — we guarantee global-grade quality.">KC는 한국 평택캠퍼스에서 축적한 가스 엔지니어링 노하우를 미국 현장에 그대로 적용합니다. 특수가스 배관 설계, 시공, 안전 시스템까지 — 글로벌 수준의 품질을 보증합니다.</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="glass rounded-xl px-5 py-3 text-center">
+            <div class="text-2xl font-black text-blue-400">$17B</div>
+            <div class="text-xs text-cryo-500" data-ko="총 투자규모" data-en="Total Investment">총 투자규모</div>
+          </div>
+          <div class="glass rounded-xl px-5 py-3 text-center">
+            <div class="text-2xl font-black text-cyan-400" data-ko="5nm↓" data-en="Sub-5nm">5nm↓</div>
+            <div class="text-xs text-cryo-500" data-ko="첨단 공정" data-en="Advanced Process">첨단 공정</div>
+          </div>
+          <div class="glass rounded-xl px-5 py-3 text-center">
+            <div class="text-2xl font-black text-amber-400" data-ko="2,000+" data-en="2,000+">2,000+</div>
+            <div class="text-xs text-cryo-500" data-ko="일자리 창출" data-en="Jobs Created">일자리 창출</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map/Globe Illustration SVG -->
+      <div class="reveal">
+        <div class="glass-strong rounded-3xl p-8 relative overflow-hidden">
+          <svg viewBox="0 0 400 300" fill="none" class="w-full">
+            <!-- Simplified world map outline -->
+            <rect x="0" y="0" width="400" height="300" fill="none"/>
+            <!-- Korea marker -->
+            <circle cx="330" cy="120" r="8" fill="#f59e0b" class="pulse-amber"/>
+            <text x="330" y="108" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="bold">평택</text>
+            <!-- US marker -->
+            <circle cx="100" cy="130" r="8" fill="#3b82f6" class="pulse-amber" style="animation-delay:1s"/>
+            <text x="100" y="118" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="bold">Taylor, TX</text>
+            <!-- Connection arc -->
+            <path d="M108 130 Q 220 40 322 120" stroke="url(#grad-line)" stroke-width="2" stroke-dasharray="6 3" fill="none" class="flow-line"/>
+            <!-- Arrow particles along path -->
+            <circle r="4" fill="#f59e0b">
+              <animateMotion dur="3s" repeatCount="indefinite" path="M108 130 Q 220 40 322 120"/>
+            </circle>
+            <circle r="3" fill="#3b82f6">
+              <animateMotion dur="3s" repeatCount="indefinite" path="M322 120 Q 220 40 108 130"/>
+            </circle>
+            <defs>
+              <linearGradient id="grad-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#f59e0b"/>
+              </linearGradient>
+            </defs>
+            <!-- Labels -->
+            <text x="215" y="60" text-anchor="middle" fill="#94a3b8" font-size="9" data-ko="기술 이전 · 노하우 적용" data-en="Technology Transfer · Expertise Applied">기술 이전 · 노하우 적용</text>
+            <!-- Korea outline hint -->
+            <path d="M320 125 L325 135 L330 140 L328 148 L322 145 L318 138 L315 130 Z" stroke="#f59e0b" stroke-width="0.5" fill="#f59e0b" fill-opacity="0.1"/>
+            <!-- US outline hint -->
+            <path d="M60 115 L140 110 L155 120 L150 140 L130 150 L100 155 L70 145 L55 130 Z" stroke="#3b82f6" stroke-width="0.5" fill="#3b82f6" fill-opacity="0.05"/>
+          </svg>
+          <div class="mt-4 text-center">
+            <p class="text-sm text-cryo-400" data-ko="한국의 경험 → 미국의 현장" data-en="Korean Experience → American Sites">한국의 경험 → 미국의 현장</p>
+            <p class="text-xs text-cryo-600 mt-1" data-ko="KC 글로벌 가스 엔지니어링 역량" data-en="KC Global Gas Engineering Capability">KC 글로벌 가스 엔지니어링 역량</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CO₂ 공급 시스템 -->
+<!-- ============================================ -->
+<section class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="reveal text-center mb-16">
+      <span class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-4" data-ko="CO₂ 솔루션" data-en="CO₂ Solutions">CO₂ 솔루션</span>
+      <h2 class="text-3xl md:text-5xl font-bold text-cryo-100 mb-4" data-ko="CO₂ 공급 시스템" data-en="CO₂ Supply System">CO₂ 공급 시스템</h2>
+      <p class="text-cryo-400 max-w-2xl mx-auto" data-ko="TOMCO₂ Systems와의 파트너십을 통해 다양한 산업 분야에 고순도 CO₂를 안정적으로 공급합니다." data-en="Through our partnership with TOMCO₂ Systems, we provide stable high-purity CO₂ supply across diverse industries.">TOMCO₂ Systems와의 파트너십을 통해 다양한 산업 분야에 고순도 CO₂를 안정적으로 공급합니다.</p>
+    </div>
+
+    <!-- CO₂ Flow Diagram -->
+    <div class="reveal glass-strong rounded-3xl p-8 mb-12">
+      <h3 class="text-lg font-bold text-cryo-100 mb-6 text-center" data-ko="시스템 구성도" data-en="System Configuration">시스템 구성도</h3>
+      <svg viewBox="0 0 800 200" fill="none" class="w-full max-w-4xl mx-auto">
+        <!-- Storage Tank -->
+        <rect x="20" y="50" width="120" height="100" rx="12" stroke="#f59e0b" stroke-width="1.5" fill="#f59e0b" fill-opacity="0.05"/>
+        <rect x="40" y="30" width="80" height="30" rx="6" stroke="#f59e0b" stroke-width="1" fill="#f59e0b" fill-opacity="0.1"/>
+        <text x="80" y="105" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="bold" data-ko="저장탱크" data-en="Storage Tank">저장탱크</text>
+        <text x="80" y="120" text-anchor="middle" fill="#94a3b8" font-size="8">CO₂ (Liquid)</text>
+
+        <!-- Arrow 1 -->
+        <line x1="150" y1="100" x2="230" y2="100" stroke="#f59e0b" stroke-width="1.5" class="flow-line"/>
+        <polygon points="225,95 235,100 225,105" fill="#f59e0b"/>
+
+        <!-- Vaporizer -->
+        <rect x="240" y="50" width="120" height="100" rx="12" stroke="#ea580c" stroke-width="1.5" fill="#ea580c" fill-opacity="0.05"/>
+        <text x="300" y="95" text-anchor="middle" fill="#ea580c" font-size="11" font-weight="bold" data-ko="기화기" data-en="Vaporizer">기화기</text>
+        <text x="300" y="115" text-anchor="middle" fill="#94a3b8" font-size="8" data-ko="Liquid → Gas" data-en="Liquid → Gas">Liquid → Gas</text>
+        <!-- Heat waves -->
+        <path d="M260 70 Q270 60 280 70" stroke="#ea580c" stroke-width="1" fill="none" opacity="0.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></path>
+        <path d="M300 65 Q310 55 320 65" stroke="#ea580c" stroke-width="1" fill="none" opacity="0.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" begin="0.5s" repeatCount="indefinite"/></path>
+
+        <!-- Arrow 2 -->
+        <line x1="370" y1="100" x2="450" y2="100" stroke="#ea580c" stroke-width="1.5" class="flow-line" style="animation-delay:0.5s"/>
+        <polygon points="445,95 455,100 445,105" fill="#ea580c"/>
+
+        <!-- Piping/Regulation -->
+        <rect x="460" y="50" width="120" height="100" rx="12" stroke="#f59e0b" stroke-width="1.5" fill="#f59e0b" fill-opacity="0.05"/>
+        <text x="520" y="95" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="bold" data-ko="배관/조절" data-en="Piping/Reg">배관/조절</text>
+        <text x="520" y="115" text-anchor="middle" fill="#94a3b8" font-size="8" data-ko="압력·유량 제어" data-en="Pressure & Flow">압력·유량 제어</text>
+
+        <!-- Arrow 3 -->
+        <line x1="590" y1="100" x2="670" y2="100" stroke="#f59e0b" stroke-width="1.5" class="flow-line" style="animation-delay:1s"/>
+        <polygon points="665,95 675,100 665,105" fill="#f59e0b"/>
+
+        <!-- Supply Point -->
+        <rect x="680" y="50" width="100" height="100" rx="12" stroke="#10b981" stroke-width="1.5" fill="#10b981" fill-opacity="0.05"/>
+        <text x="730" y="95" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold" data-ko="공급" data-en="Supply">공급</text>
+        <text x="730" y="115" text-anchor="middle" fill="#94a3b8" font-size="8" data-ko="사용처" data-en="End Use">사용처</text>
+      </svg>
+    </div>
+
+    <!-- Industry Applications -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="reveal glass rounded-2xl p-6 glow-card">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+        </div>
+        <h3 class="font-bold text-cryo-100 mb-2" data-ko="반도체 세정" data-en="Semiconductor Cleaning">반도체 세정</h3>
+        <p class="text-sm text-cryo-400" data-ko="초순수 CO₂를 이용한 웨이퍼 세정 공정. 잔류물 없는 클린 프로세스." data-en="Wafer cleaning using ultra-pure CO₂. Residue-free clean process.">초순수 CO₂를 이용한 웨이퍼 세정 공정. 잔류물 없는 클린 프로세스.</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card" style="transition-delay:0.1s">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        </div>
+        <h3 class="font-bold text-cryo-100 mb-2" data-ko="식품 냉각" data-en="Food Cooling">식품 냉각</h3>
+        <p class="text-sm text-cryo-400" data-ko="급속 냉각 및 냉동을 위한 식품등급 CO₂ 공급. 신선도 극대화." data-en="Food-grade CO₂ supply for rapid cooling and freezing. Maximizing freshness.">급속 냉각 및 냉동을 위한 식품등급 CO₂ 공급. 신선도 극대화.</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card" style="transition-delay:0.2s">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+        </div>
+        <h3 class="font-bold text-cryo-100 mb-2" data-ko="산업 용접" data-en="Industrial Welding">산업 용접</h3>
+        <p class="text-sm text-cryo-400" data-ko="용접 보호가스로서의 CO₂ 공급. 안정적 아크 유지 및 품질 향상." data-en="CO₂ supply as shielding gas for welding. Stable arc maintenance and quality improvement.">용접 보호가스로서의 CO₂ 공급. 안정적 아크 유지 및 품질 향상.</p>
+      </div>
+    </div>
+
+    <!-- TOMCO2 Partnership -->
+    <div class="reveal mt-8 text-center">
+      <div class="inline-flex items-center gap-3 glass rounded-full px-6 py-3">
+        <span class="text-sm text-cryo-300" data-ko="🤝 공식 파트너:" data-en="🤝 Official Partner:">🤝 공식 파트너:</span>
+        <span class="font-bold text-amber-400">TOMCO₂ Systems</span>
+        <span class="text-xs text-cryo-500">(USA)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Photo removed -->
+
+<!-- ============================================ -->
+<!-- Turbines, Inc. 유량계 -->
+<!-- ============================================ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-4 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- SVG Animation -->
+      <div class="reveal order-2 lg:order-1">
+        <div class="glass-strong rounded-3xl p-8">
+          <svg viewBox="0 0 400 300" fill="none" class="w-full">
+            <!-- Flow meter body -->
+            <rect x="100" y="80" width="200" height="140" rx="20" stroke="#f59e0b" stroke-width="2" fill="#f59e0b" fill-opacity="0.03"/>
+            <!-- Inlet pipe -->
+            <rect x="10" y="130" width="90" height="40" rx="4" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+            <text x="55" y="155" text-anchor="middle" fill="#94a3b8" font-size="8" data-ko="입구" data-en="Inlet">입구</text>
+            <!-- Outlet pipe -->
+            <rect x="300" y="130" width="90" height="40" rx="4" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+            <text x="345" y="155" text-anchor="middle" fill="#94a3b8" font-size="8" data-ko="출구" data-en="Outlet">출구</text>
+            <!-- Internal rotors -->
+            <ellipse cx="170" cy="150" rx="25" ry="25" stroke="#f59e0b" stroke-width="1" fill="none" stroke-dasharray="4 2">
+              <animateTransform attributeName="transform" type="rotate" from="0 170 150" to="360 170 150" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="230" cy="150" rx="25" ry="25" stroke="#ea580c" stroke-width="1" fill="none" stroke-dasharray="4 2">
+              <animateTransform attributeName="transform" type="rotate" from="360 230 150" to="0 230 150" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
+            <!-- Center marks -->
+            <circle cx="170" cy="150" r="3" fill="#f59e0b"/>
+            <circle cx="230" cy="150" r="3" fill="#ea580c"/>
+            <!-- Flow particles -->
+            <circle r="3" fill="#f59e0b" opacity="0.7">
+              <animateMotion dur="2s" repeatCount="indefinite" path="M20 150 L380 150"/>
+            </circle>
+            <circle r="2" fill="#ea580c" opacity="0.5">
+              <animateMotion dur="2s" repeatCount="indefinite" path="M20 150 L380 150" begin="0.7s"/>
+            </circle>
+            <!-- Digital display -->
+            <rect x="150" y="85" width="100" height="30" rx="4" fill="#0a1628" stroke="#f59e0b" stroke-width="1"/>
+            <text x="200" y="105" text-anchor="middle" fill="#f59e0b" font-size="12" font-family="monospace">1,247.3 L/h</text>
+            <!-- Label -->
+            <text x="200" y="240" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="bold">Turbines, Inc. PD Meter</text>
+            <text x="200" y="258" text-anchor="middle" fill="#94a3b8" font-size="9" data-ko="양변위 유량계 작동 원리" data-en="Positive Displacement Flow Meter">양변위 유량계 작동 원리</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="reveal order-1 lg:order-2">
+        <span class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-4" data-ko="정밀 계량" data-en="Precision Metering">정밀 계량</span>
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">
+          <span class="text-cryo-100" data-ko="Turbines, Inc." data-en="Turbines, Inc.">Turbines, Inc.</span><br>
+          <span class="accent" data-ko="유량계" data-en="Flow Meters">유량계</span>
+        </h2>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cryo-800/50 text-xs text-cryo-400 mb-6">
+          <span data-ko="Turbines, Inc. 자회사" data-en="A subsidiary of Turbines, Inc.">Turbines, Inc. 자회사</span>
+        </div>
+        <p class="text-cryo-300 mb-6 leading-relaxed" data-ko="극저온 유체(-196°C LN₂, -269°C LHe)부터 LPG, LNG까지 — 정밀한 유량 계량이 필요한 모든 곳에 Turbines, Inc. 양변위(PD) 유량계를 공급합니다." data-en="From cryogenic fluids (-196°C LN₂, -269°C LHe) to LPG, LNG — we supply Turbines, Inc. positive displacement (PD) flow meters wherever precise flow metering is needed.">극저온 유체(-196°C LN₂, -269°C LHe)부터 LPG, LNG까지 — 정밀한 유량 계량이 필요한 모든 곳에 Turbines, Inc. 양변위(PD) 유량계를 공급합니다.</p>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-amber-500 text-sm">✓</span>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-cryo-100" data-ko="극저온 대응" data-en="Cryogenic Compatible">극저온 대응</span>
+              <p class="text-xs text-cryo-500" data-ko="-269°C 액체헬륨까지 측정 가능" data-en="Measurable down to -269°C liquid helium">-269°C 액체헬륨까지 측정 가능</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-amber-500 text-sm">✓</span>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-cryo-100" data-ko="±0.15% 정밀도" data-en="±0.15% Accuracy">±0.15% 정밀도</span>
+              <p class="text-xs text-cryo-500" data-ko="업계 최고 수준의 계량 정확도" data-en="Industry-leading metering accuracy">업계 최고 수준의 계량 정확도</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-amber-500 text-sm">✓</span>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-cryo-100" data-ko="KC 기술영업팀 전담" data-en="Dedicated KC Technical Sales Team">KC 기술영업팀 전담</span>
+              <p class="text-xs text-cryo-500" data-ko="선정부터 설치, A/S까지 원스톱 지원" data-en="One-stop support from selection to installation and after-service">선정부터 설치, A/S까지 원스톱 지원</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- 주요 레퍼런스 -->
+<!-- ============================================ -->
+<section class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="reveal text-center mb-16">
+      <span class="inline-block px-4 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-4" data-ko="신뢰의 파트너" data-en="Trusted Partners">신뢰의 파트너</span>
+      <h2 class="text-3xl md:text-5xl font-bold text-cryo-100 mb-4" data-ko="주요 레퍼런스" data-en="Key References">주요 레퍼런스</h2>
+      <p class="text-cryo-400 max-w-2xl mx-auto" data-ko="대한민국 최고의 반도체·디스플레이·연구기관과 함께합니다." data-en="We work with Korea's top semiconductor, display, and research institutions.">대한민국 최고의 반도체·디스플레이·연구기관과 함께합니다.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="삼성전자" data-en="Samsung Electronics">삼성전자</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="반도체 팹" data-en="Semiconductor Fab">반도체 팹</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center" style="transition-delay:0.05s">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="삼성디스플레이" data-en="Samsung Display">삼성디스플레이</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="OLED 라인" data-en="OLED Line">OLED 라인</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center" style="transition-delay:0.1s">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-red-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="SK하이닉스" data-en="SK hynix">SK하이닉스</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="메모리 반도체" data-en="Memory Semiconductor">메모리 반도체</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center" style="transition-delay:0.15s">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="포항가속기연구소" data-en="Pohang Accelerator Lab">포항가속기연구소</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="입자가속기" data-en="Particle Accelerator">입자가속기</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center" style="transition-delay:0.2s">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-green-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="한국핵융합에너지연구원" data-en="Korea Institute of Fusion Energy">한국핵융합에너지연구원</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="KSTAR" data-en="KSTAR">KSTAR</p>
+      </div>
+      <div class="reveal glass rounded-2xl p-6 glow-card text-center" style="transition-delay:0.25s">
+        <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+          <svg class="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h4 class="text-sm font-bold text-cryo-100" data-ko="국방과학연구소" data-en="ADD (Defense R&D)">국방과학연구소</h4>
+        <p class="text-xs text-cryo-500 mt-1" data-ko="특수 프로젝트" data-en="Special Projects">특수 프로젝트</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CTA Section -->
+<!-- ============================================ -->
+<section class="py-24 relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-cryo-950 to-orange-900/20"></div>
+  <!-- Decorative pipeline -->
+  <svg class="absolute inset-0 w-full h-full opacity-5" viewBox="0 0 1200 400" fill="none">
+    <path d="M0 200 H400 Q450 200 450 150 V100 Q450 50 500 50 H1200" stroke="#f59e0b" stroke-width="3" class="flow-line"/>
+    <path d="M0 300 H300 Q350 300 350 250 V200 Q350 150 400 150 H1200" stroke="#ea580c" stroke-width="2" class="flow-line" style="animation-delay:0.7s"/>
+  </svg>
+
+  <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+    <div class="reveal">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 mb-8">
+        <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+      </div>
+    </div>
+    <h2 class="reveal text-3xl md:text-5xl font-bold text-cryo-100 mb-6" data-ko="프로젝트를 함께 시작하세요" data-en="Start Your Project With Us">프로젝트를 함께 시작하세요</h2>
+    <p class="reveal text-lg text-cryo-400 mb-4" data-ko="반도체 팹, 산업 가스, CO₂ 시스템 — 어떤 규모의 프로젝트든 KC 기술영업팀이 함께합니다." data-en="Semiconductor fabs, industrial gas, CO₂ systems — KC's technical sales team is with you for projects of any scale.">반도체 팹, 산업 가스, CO₂ 시스템 — 어떤 규모의 프로젝트든 KC 기술영업팀이 함께합니다.</p>
+    <p class="reveal text-sm text-cryo-500 mb-10" data-ko="기술영업팀에 문의하세요. 최적의 솔루션을 제안드립니다." data-en="Contact our technical sales team. We'll propose the optimal solution.">기술영업팀에 문의하세요. 최적의 솔루션을 제안드립니다.</p>
+    <div class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="index.html#contact" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full text-lg font-bold text-white hover:shadow-lg hover:shadow-amber-500/25 transition-all hover:-translate-y-1" data-ko="🏭 프로젝트 문의" data-en="🏭 Project Inquiry">🏭 프로젝트 문의</a>
+      <a href="index.html" class="px-8 py-4 glass rounded-full text-lg font-medium text-cryo-200 hover:text-amber-400 transition-all hover:-translate-y-1" data-ko="← KC 메인으로" data-en="← Back to KC Main">← KC 메인으로</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-cryo-700/30 py-12 mt-20">
+  <div class="max-w-7xl mx-auto px-4 text-center">
+    <p class="text-cryo-400 text-sm" data-ko="© 2025 KC (Korea Cryo). All rights reserved." data-en="© 2025 KC (Korea Cryo). All rights reserved.">© 2025 KC (Korea Cryo). All rights reserved.</p>
+    <p class="text-cryo-600 text-xs mt-2" data-ko="서울특별시 · Since 1990" data-en="Seoul, Korea · Since 1990">서울특별시 · Since 1990</p>
+  </div>
+</footer>
+
+<script>
+// Reveal animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Language toggle
+let lang = 'ko';
+function toggleLang() {
+  lang = lang === 'ko' ? 'en' : 'ko';
+  const flag = lang === 'ko' ? '🇰🇷' : '🇺🇸';
+  document.querySelectorAll('#lang-toggle, #lang-toggle-mobile').forEach(el => el.textContent = flag);
+  document.querySelectorAll('[data-ko]').forEach(el => {
+    const txt = el.getAttribute('data-' + lang);
+    if (txt) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = txt;
+      else el.textContent = txt;
+    }
+  });
+}
+document.querySelectorAll('#lang-toggle, #lang-toggle-mobile').forEach(el => el.addEventListener('click', toggleLang));
+
+// Counter animation
+function animateCounters() {
+  document.querySelectorAll('.counter-num').forEach(el => {
+    const target = parseInt(el.getAttribute('data-target'));
+    if (!target || el.dataset.counted) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top > window.innerHeight || rect.bottom < 0) return;
+    el.dataset.counted = 'true';
+    let current = 0;
+    const step = Math.max(1, Math.floor(target / 60));
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = current.toLocaleString();
+    }, 30);
+  });
+}
+window.addEventListener('scroll', animateCounters);
+animateCounters();
+
+// Particles
+(function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (5 + Math.random() * 10) + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    p.style.width = (2 + Math.random() * 4) + 'px';
+    p.style.height = p.style.width;
+    container.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>
