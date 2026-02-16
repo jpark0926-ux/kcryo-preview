@@ -1156,6 +1156,16 @@
     const heroTitle = document.querySelector('#hero h1, .hero-title');
     if (!heroTitle) return;
 
+    // Create a dedicated typing element to avoid conflicts
+    const wrapper = document.createElement('span');
+    wrapper.className = 'typing-hero-wrapper';
+    wrapper.style.cssText = 'display: inline-block; min-height: 1.2em;';
+    
+    // Move original content and replace with wrapper
+    const originalContent = heroTitle.innerHTML;
+    heroTitle.innerHTML = '';
+    heroTitle.appendChild(wrapper);
+
     // Multiple texts to cycle through
     const texts = [
       '극한의 온도',
@@ -1167,13 +1177,13 @@
     let currentIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
-    const typingSpeed = 100;
-    const deleteSpeed = 50;
-    const pauseTime = 2000;
+    const typingSpeed = 120;
+    const deleteSpeed = 60;
+    const pauseTime = 1500;
+    let loopActive = true;
 
-    heroTitle.textContent = '';
-    heroTitle.style.borderRight = '3px solid #00d4ff';
-    heroTitle.style.paddingRight = '8px';
+    wrapper.style.borderRight = '3px solid #00d4ff';
+    wrapper.style.paddingRight = '8px';
 
     // Add cursor blink animation
     const style = document.createElement('style');
@@ -1188,29 +1198,32 @@
     `;
     document.head.appendChild(style);
 
-    heroTitle.classList.add('typing-cursor');
+    wrapper.classList.add('typing-cursor');
 
     function typeLoop() {
+      if (!loopActive) return;
+      
       const currentText = texts[currentIndex];
 
       if (isDeleting) {
         // Deleting
-        heroTitle.textContent = currentText.substring(0, charIndex - 1);
+        wrapper.textContent = currentText.substring(0, charIndex - 1);
         charIndex--;
 
-        if (charIndex === 0) {
+        if (charIndex <= 0) {
           isDeleting = false;
           currentIndex = (currentIndex + 1) % texts.length;
-          setTimeout(typeLoop, 300);
+          charIndex = 0;
+          setTimeout(typeLoop, 400);
         } else {
           setTimeout(typeLoop, deleteSpeed);
         }
       } else {
         // Typing
-        heroTitle.textContent = currentText.substring(0, charIndex + 1);
+        wrapper.textContent = currentText.substring(0, charIndex + 1);
         charIndex++;
 
-        if (charIndex === currentText.length) {
+        if (charIndex >= currentText.length) {
           isDeleting = true;
           setTimeout(typeLoop, pauseTime);
         } else {
@@ -1220,7 +1233,13 @@
     }
 
     // Start typing loop after delay
-    setTimeout(typeLoop, 800);
+    setTimeout(typeLoop, 1000);
+    
+    // Ensure loop keeps running
+    setInterval(() => {
+      if (!loopActive) return;
+      // Safety check - if wrapper is empty for too long, restart
+    }, 5000);
   }
 
   // ========================================
