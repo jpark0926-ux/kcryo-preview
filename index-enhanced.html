@@ -898,8 +898,13 @@ body.loading { overflow: hidden; }
   50% { filter: drop-shadow(0 0 12px currentColor); }
 }
 </style>
+<!-- Design Enhancements -->
+<link rel="stylesheet" href="enhancements.css">
 </head>
 <body class="bg-cryo-950 text-white overflow-x-hidden loading">
+
+<!-- Ice Particle Effect Canvas -->
+<canvas id="ice-particles"></canvas>
 
 <!-- Scroll Progress Bar -->
 <div id="scroll-progress"></div>
@@ -998,16 +1003,6 @@ body.loading { overflow: hidden; }
   <div class="absolute inset-0 bg-gradient-to-b from-[#060d1b] via-[#080e22] to-[#060d1b]"></div>
   <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(0,212,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,1) 1px, transparent 1px); background-size: 80px 80px;"></div>
   <div class="scanlines"></div>
-  <!-- Abstract Cryo Tank Silhouette -->
-  <div class="absolute right-[-10%] top-[10%] md:right-[5%] md:top-[15%] w-[300px] h-[500px] md:w-[400px] md:h-[600px] opacity-[0.03] pointer-events-none rotate-12">
-    <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="50" y="50" width="100" height="300" rx="50" stroke="#00d4ff" stroke-width="2"/>
-      <path d="M50 150H150" stroke="#00d4ff" stroke-width="2"/>
-      <path d="M50 250H150" stroke="#00d4ff" stroke-width="2"/>
-      <circle cx="100" cy="100" r="20" stroke="#00d4ff" stroke-width="2"/>
-    </svg>
-  </div>
-
   <div id="parallax-orb-1" class="parallax-slow absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cryo-500/8 rounded-full blur-[150px]"></div>
   <div id="parallax-orb-2" class="parallax-slow absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-ice-500/6 rounded-full blur-[120px]"></div>
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#0040ff]/5 rounded-full blur-[100px]"></div>
@@ -1019,26 +1014,26 @@ body.loading { overflow: hidden; }
   <div id="crystals" class="absolute inset-0 pointer-events-none"></div>
 
   <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
-    <div class="hero-anim hero-anim-d1 inline-block mb-4 sm:mb-6 px-4 py-1.5 border border-cryo-500/30 bg-cryo-500/5 rounded-full text-cryo-300 text-xs sm:text-sm tracking-wider font-medium">
-      <span class="inline-block w-2 h-2 rounded-full bg-cryo-400 mr-2 animate-pulse"></span>SINCE 1990 · 대한민국 초저온 장비의 표준
+    <div class="hero-anim hero-anim-d1 inline-block mb-4 sm:mb-6 px-4 py-1.5 border border-cryo-500/30 rounded-full text-cryo-300 text-xs sm:text-sm tracking-wider" data-ko="SINCE 1990 · 초저온 솔루션 전문기업" data-en="SINCE 1990 · Cryogenic Solutions Expert">
+      <span data-ko="SINCE 1990 · 초저온 솔루션 전문기업" data-en="SINCE 1990 · Cryogenic Solutions Expert">SINCE 1990 · 초저온 솔루션 전문기업</span>
     </div>
     <div class="hero-anim hero-anim-d2 min-h-[120px] sm:min-h-[160px] md:min-h-[200px] flex items-center justify-center mb-4 sm:mb-6">
-      <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-center tracking-tight">
-        <span class="glitch text-white" data-text="극한의 온도," id="hero-line1">극한의 온도,</span><br>
-        <span class="gradient-text" id="hero-line2">산업의 한계를 넘다</span>
+      <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-7xl font-black leading-tight text-center">
+        <span class="glitch" data-text="극한의 온도" id="hero-line1">극한의 온도</span><br>
+        <span class="gradient-text" id="hero-line2">무한한 가능성</span>
       </h1>
     </div>
     <div class="hero-anim hero-anim-d3 min-h-[60px] sm:min-h-[70px] flex items-center justify-center mb-8 sm:mb-10">
-      <p id="hero-subtitle" class="text-base sm:text-lg md:text-xl text-cryo-200/80 max-w-2xl mx-auto leading-relaxed px-4 text-center font-medium">
-      반도체, 바이오, 의료를 아우르는 초저온 솔루션.<br class="hidden sm:block"> 35년의 기술력으로 완벽한 극저온 인프라를 구축합니다.
+      <p id="hero-subtitle" class="text-base sm:text-lg md:text-xl text-cryo-300 max-w-2xl mx-auto leading-relaxed px-4 text-center">
+      초저온 용기, 바이오 장비, 헬스케어까지<br class="hidden sm:block">한국초저온용기가 산업의 미래를 냉각합니다
     </p>
     </div>
     <div class="hero-anim hero-anim-d3 flex flex-col sm:flex-row gap-4 justify-center px-4">
-      <a href="#products" class="relative group px-8 py-4 bg-gradient-to-r from-cryo-600 to-cryo-800 border border-cryo-500/50 hover:border-cryo-400 rounded-full font-bold transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] text-white text-center">
-        <span class="relative z-10">솔루션 전체보기</span>
+      <a href="#products" class="px-8 py-3.5 bg-gradient-to-r from-cryo-500 to-ice-500 hover:from-cryo-400 hover:to-ice-400 rounded-full font-semibold transition transform hover:scale-105 shadow-lg shadow-cryo-500/30 text-cryo-950" data-ko="제품 둘러보기 →" data-en="View Products →">
+        <span data-ko="제품 둘러보기 →" data-en="Explore Products →">제품 둘러보기 →</span>
       </a>
-      <a href="#contact" class="relative group px-8 py-4 bg-gradient-to-r from-ice-500 to-cryo-500 hover:from-ice-400 hover:to-cryo-400 rounded-full font-bold transition-all duration-300 shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:shadow-[0_0_40px_rgba(0,212,255,0.6)] hover:-translate-y-1 text-cryo-950 text-center">
-        <span class="relative z-10 flex items-center justify-center gap-2">빠른 도입 문의 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></span>
+      <a href="#contact" class="px-8 py-3.5 border border-cryo-500/40 hover:border-cryo-400 rounded-full font-semibold transition hover:bg-cryo-500/10 hover:shadow-lg hover:shadow-cryo-500/10" data-ko="견적 문의" data-en="Get a Quote">
+        <span data-ko="견적 문의" data-en="Get a Quote">견적 문의</span>
       </a>
     </div>
     <div class="hero-anim hero-anim-d3 mt-12 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 max-w-3xl mx-auto px-4">
@@ -1068,108 +1063,65 @@ body.loading { overflow: hidden; }
 </section>
 
 <!-- Brand Story Section — Cinematic -->
-<div id="brand-story" class="relative">
-  <!-- Decorative Background lines/glows -->
-  <div class="absolute inset-0 pointer-events-none overflow-hidden">
-    <div class="absolute top-[10%] left-[5%] w-[400px] h-[400px] bg-cryo-500/10 rounded-full blur-[100px]"></div>
-    <div class="absolute top-[50%] right-[5%] w-[500px] h-[500px] bg-ice-500/10 rounded-full blur-[120px]"></div>
-    <div class="absolute bottom-[20%] left-[10%] w-[600px] h-[600px] bg-cryo-800/10 rounded-full blur-[150px]"></div>
-  </div>
-
-  <section class="bx-section bx-k-sec relative z-10 py-32">
-    <div class="bx-grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6">
-      <div class="bx-reveal flex justify-center lg:justify-end order-1 lg:order-1 relative">
-        <div class="absolute inset-0 bg-cryo-500/5 blur-3xl rounded-full scale-150"></div>
-        <div class="bx-k-visual relative z-10 drop-shadow-[0_0_50px_rgba(0,212,255,0.4)]" aria-hidden="true" style="font-size: clamp(8rem, 20vw, 16rem);">K</div>
+<div id="brand-story">
+  <section class="bx-section bx-k-sec">
+    <div class="bx-grid">
+      <div class="bx-reveal flex items-center justify-center">
+        <div class="bx-k-visual" aria-hidden="true">K</div>
       </div>
-      <div class="order-2 lg:order-2 lg:pl-12">
-        <div class="inline-block px-3 py-1 bg-cryo-500/10 border border-cryo-500/30 rounded-full mb-6">
-          <span class="bx-reveal bx-tag text-xs font-semibold">ELEMENT 01 — THE LETTER</span>
-        </div>
-        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6 tracking-tight">K — 압축하다</h3>
-        <div class="bx-reveal bx-reveal-delay-2 p-6 rounded-2xl bg-cryo-900/40 border border-cryo-800/60 backdrop-blur-sm">
-          <p class="bx-body text-cryo-100/90 leading-loose">
-            K의 내부에 새겨진 화살촉. 그것은 가스가 응축되는 순간을 포착한 형상입니다. <br><br>한국초저온용기의 K는 단순한 이니셜이 아닙니다. 극저온이라는 극한의 영역으로 수렴하는 방향성 — 기술의 정점을 향한 의지를 담았습니다.
-          </p>
-        </div>
+      <div>
+        <span class="bx-reveal bx-tag">ELEMENT 01 — THE LETTER</span>
+        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6" data-ko="K — 압축하다" data-en="K — Compress">K — 압축하다</h3>
+        <p class="bx-reveal bx-reveal-delay-2 bx-body" data-ko="K의 내부에 새겨진 화살촉. 그것은 가스가 응축되는 순간을 포착한 형상입니다. 한국초저온용기의 K는 단순한 이니셜이 아닙니다. 극저온이라는 극한의 영역으로 수렴하는 방향성 — 기술의 정점을 향한 의지를 담았습니다." data-en="The arrowhead etched within K captures the moment gas condenses. K is not merely an initial — it embodies the convergence toward the extreme realm of cryogenics, a commitment to the pinnacle of technology.">K의 내부에 새겨진 화살촉. 그것은 가스가 응축되는 순간을 포착한 형상입니다. 한국초저온용기의 K는 단순한 이니셜이 아닙니다. 극저온이라는 극한의 영역으로 수렴하는 방향성 — 기술의 정점을 향한 의지를 담았습니다.</p>
       </div>
     </div>
   </section>
-
-  <section class="bx-section bx-c-sec relative z-10 py-32">
-    <div class="bx-grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6">
-      <div class="bx-reveal flex justify-center lg:justify-start order-1 lg:order-2 relative">
-        <div class="absolute inset-0 bg-ice-500/5 blur-3xl rounded-full scale-150"></div>
-        <div class="bx-c-visual relative z-10 w-64 h-64 sm:w-80 sm:h-80">
-          <div class="bx-ring bx-ring-outer absolute inset-0 border-2 border-cryo-400/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
-          <div class="bx-ring bx-ring-mid absolute inset-8 border-2 border-dashed border-cryo-500/40 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
-          <div class="bx-ring bx-ring-inner absolute inset-16 border-4 border-cryo-300/80 rounded-full shadow-[0_0_40px_rgba(0,212,255,0.5)] bg-gradient-to-br from-cryo-900 to-cryo-800"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-white text-5xl font-black opacity-40">VACUUM</span>
-          </div>
+  <section class="bx-section bx-c-sec">
+    <div class="bx-grid">
+      <div class="bx-reveal flex items-center justify-center">
+        <div class="bx-c-visual">
+          <div class="bx-ring bx-ring-outer"></div>
+          <div class="bx-ring bx-ring-mid"></div>
+          <div class="bx-ring bx-ring-inner"></div>
         </div>
       </div>
-      <div class="order-2 lg:order-1 lg:pr-12 lg:text-right flex flex-col items-start lg:items-end">
-        <div class="inline-block px-3 py-1 bg-cryo-500/10 border border-cryo-500/30 rounded-full mb-6">
-          <span class="bx-reveal bx-tag text-xs font-semibold">ELEMENT 02 — THE VESSEL</span>
-        </div>
-        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6 tracking-tight">C — 완벽히 보호하다</h3>
-        <div class="bx-reveal bx-reveal-delay-2 p-6 rounded-2xl bg-cryo-900/40 border border-cryo-800/60 backdrop-blur-sm text-left lg:text-right">
-          <p class="bx-body text-cryo-100/90 leading-loose">
-            C는 원입니다. 초저온 저장용기의 단면 — 외벽과 내벽, 그 사이의 진공.<br><br>바깥의 원은 외부의 열을 차단하는 쉘, 안쪽의 원은 내벽을, 그리고 중심 공간은 극저온 상태를 온전히 보존하는 핵심 코어를 상징합니다.
-          </p>
-        </div>
+      <div>
+        <span class="bx-reveal bx-tag">ELEMENT 02 — THE VESSEL</span>
+        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6" data-ko="C — 담다" data-en="C — Contain">C — 담다</h3>
+        <p class="bx-reveal bx-reveal-delay-2 bx-body" data-ko="C는 원입니다. 초저온 저장용기의 단면 — 외벽과 내벽, 그 사이의 진공. 바깥의 원은 외벽을, 안쪽의 원은 내벽을, 그리고 중심의 빛나는 코어는 극저온 상태의 액화가스를 상징합니다." data-en="C is a circle — the cross-section of a cryogenic vessel. The outer ring is the shell, the inner ring the vacuum insulation, and the glowing core at the center symbolizes liquefied gas at cryogenic temperatures.">C는 원입니다. 초저온 저장용기의 단면 — 외벽과 내벽, 그 사이의 진공. 바깥의 원은 외벽을, 안쪽의 원은 내벽을, 그리고 중심의 빛나는 코어는 극저온 상태의 액화가스를 상징합니다.</p>
       </div>
     </div>
   </section>
-
-  <section class="bx-section bx-deg-sec relative z-10 py-32">
-    <div class="bx-grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto px-6">
-      <div class="bx-reveal flex justify-center lg:justify-end order-1 lg:order-1 relative">
-        <div class="absolute inset-0 bg-cryo-600/5 blur-3xl rounded-full scale-150"></div>
-        <div class="bx-deg-visual relative z-10 w-48 h-48 sm:w-64 sm:h-64 border border-cryo-500/20 rounded-full flex items-center justify-center shadow-[inset_0_0_50px_rgba(0,212,255,0.1)]">
-          <div class="absolute inset-0 animate-spin" style="animation-duration: 4s;">
-            <div class="w-4 h-4 bg-cryo-400 rounded-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_20px_rgba(0,212,255,0.8)]"></div>
-          </div>
-          <div class="absolute inset-10 border border-cryo-600/30 rounded-full animate-spin" style="animation-duration: 7s; animation-direction: reverse;">
-            <div class="w-3 h-3 bg-ice-300 rounded-full absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_15px_rgba(102,217,255,0.8)]"></div>
-          </div>
-          <div class="absolute inset-20 bg-gradient-to-r from-cryo-500 to-ice-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,212,255,0.5)]">
-             <span class="text-cryo-950 font-black text-2xl">°</span>
-          </div>
+  <section class="bx-section bx-deg-sec">
+    <div class="bx-grid">
+      <div class="bx-reveal flex items-center justify-center">
+        <div class="bx-deg-visual">
+          <div class="bx-orbit"><div class="bx-orbit-dot"></div></div>
+          <div class="bx-orbit"><div class="bx-orbit-dot"></div></div>
+          <div class="bx-orbit"><div class="bx-orbit-dot"></div></div>
         </div>
       </div>
-      <div class="order-2 lg:order-2 lg:pl-12">
-        <div class="inline-block px-3 py-1 bg-cryo-500/10 border border-cryo-500/30 rounded-full mb-6">
-          <span class="bx-reveal bx-tag text-xs font-semibold">ELEMENT 03 — THE DEGREE</span>
-        </div>
-        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6 tracking-tight">° — 온도를 통제하다</h3>
-        <div class="bx-reveal bx-reveal-delay-2 p-6 rounded-2xl bg-cryo-900/40 border border-cryo-800/60 backdrop-blur-sm">
-          <p class="bx-body text-cryo-100/90 leading-loose">
-            C 옆의 작은 원. 가스 분자이자, 온도의 단위.<br><br>끊임없이 궤도를 도는 이 점은, 분자 운동이 거의 멈추는 −196°C 극저온의 세계를 상징합니다. 절대온도에 도전하며 열을 완벽히 다루는 기업의 정체성 그 자체입니다.
-          </p>
-        </div>
+      <div>
+        <span class="bx-reveal bx-tag">ELEMENT 03 — THE DEGREE</span>
+        <h3 class="bx-reveal bx-reveal-delay-1 bx-title mt-3 mb-6" data-ko="° — 온도를 다루다" data-en="° — Master Temperature">° — 온도를 다루다</h3>
+        <p class="bx-reveal bx-reveal-delay-2 bx-body" data-ko="C 옆의 작은 원. 가스 분자이자, 온도의 단위. 끊임없이 궤도를 도는 이 점은, 분자 운동이 거의 멈추는 극저온의 세계를 상징합니다. 온도를 다루는 기업의 정체성 그 자체." data-en="The small circle beside C — a gas molecule and the degree symbol. This orbiting dot symbolizes the cryogenic realm where molecular motion nearly ceases. The very identity of a company that masters temperature.">C 옆의 작은 원. 가스 분자이자, 온도의 단위. 끊임없이 궤도를 도는 이 점은, 분자 운동이 거의 멈추는 극저온의 세계를 상징합니다. 온도를 다루는 기업의 정체성 그 자체.</p>
       </div>
     </div>
   </section>
-
-  <section class="bx-section bx-color-sec relative z-10 py-32 border-b border-cryo-800/30">
-    <div class="max-w-4xl mx-auto text-center px-6">
-      <div class="inline-block px-3 py-1 bg-cryo-500/10 border border-cryo-500/30 rounded-full mb-10">
-          <span class="bx-reveal bx-tag text-xs font-semibold">BRAND COLORS</span>
+  <section class="bx-section bx-color-sec">
+    <div class="text-center px-6">
+      <div class="bx-reveal mb-12">
+        <div class="bx-orb bx-orb-cyan"></div>
+        <div class="bx-orb bx-orb-gray"></div>
       </div>
-      <div class="bx-reveal flex flex-col sm:flex-row justify-center gap-8 sm:gap-16">
-        <div class="flex-1 p-8 rounded-3xl bg-gradient-to-br from-cryo-900/80 to-cryo-950/90 border border-cryo-700/50 hover:border-cryo-400/50 transition-colors group relative overflow-hidden">
-          <div class="absolute inset-0 bg-cryo-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-cryo-400 to-[#0055ff] shadow-[0_0_40px_rgba(0,212,255,0.6)] mb-6"></div>
-          <div class="text-white font-bold text-2xl mb-2 tracking-tight">Cryo Cyan</div>
-          <div class="text-cryo-400/70 text-sm">첨단. 신뢰. 투명성.</div>
+      <div class="bx-reveal bx-reveal-delay-1 flex justify-center gap-16 flex-wrap">
+        <div class="text-center">
+          <div class="text-cryo-300 font-bold mb-1" data-ko="극저온" data-en="Cryogenic">극저온</div>
+          <div class="text-xs" style="color:rgba(0,212,255,0.4);">Cyan</div>
         </div>
-        <div class="flex-1 p-8 rounded-3xl bg-gradient-to-br from-cryo-900/80 to-cryo-950/90 border border-cryo-700/50 hover:border-gray-400/50 transition-colors group relative overflow-hidden">
-          <div class="absolute inset-0 bg-gray-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-gray-300 to-gray-600 shadow-[0_0_40px_rgba(150,150,150,0.4)] mb-6"></div>
-          <div class="text-white font-bold text-2xl mb-2 tracking-tight">Steel Gray</div>
-          <div class="text-gray-400/70 text-sm">견고함. 내구성. 장비의 본질.</div>
+        <div class="text-center">
+          <div class="text-cryo-300 font-bold mb-1" data-ko="스테인리스" data-en="Stainless Steel">스테인리스</div>
+          <div class="text-xs" style="color:rgba(150,150,150,0.5);">Gray</div>
         </div>
       </div>
     </div>
@@ -2454,19 +2406,19 @@ body.loading { overflow: hidden; }
           </div>
           <div class="relative z-10 grid grid-cols-2 gap-6">
             <div class="bg-cryo-800/30 border border-cryo-700/20 rounded-2xl p-6 text-center">
-              <div class="text-3xl font-black gradient-text mb-2">5만+</div>
+              <div class="text-3xl font-black gradient-text mb-2 stat-number">5만+</div>
               <div class="text-xs text-cryo-400" data-ko="용기 판매" data-en="Cylinders Sold">용기 판매</div>
             </div>
             <div class="bg-cryo-800/30 border border-cryo-700/20 rounded-2xl p-6 text-center">
-              <div class="text-3xl font-black gradient-text mb-2">500+</div>
+              <div class="text-3xl font-black gradient-text mb-2 stat-number">500+</div>
               <div class="text-xs text-cryo-400" data-ko="거래 고객사" data-en="Clients">거래 고객사</div>
             </div>
             <div class="bg-cryo-800/30 border border-cryo-700/20 rounded-2xl p-6 text-center">
-              <div class="text-3xl font-black gradient-text mb-2">15기</div>
+              <div class="text-3xl font-black gradient-text mb-2 stat-number">15기</div>
               <div class="text-xs text-cryo-400" data-ko="LH₂ 벌크탱크" data-en="LH₂ Bulk Tanks">LH₂ 벌크탱크</div>
             </div>
             <div class="bg-cryo-800/30 border border-cryo-700/20 rounded-2xl p-6 text-center">
-              <div class="text-3xl font-black gradient-text mb-2">35년+</div>
+              <div class="text-3xl font-black gradient-text mb-2 stat-number">35년+</div>
               <div class="text-xs text-cryo-400" data-ko="업력" data-en="Years in Business">업력</div>
             </div>
           </div>
@@ -2564,8 +2516,37 @@ body.loading { overflow: hidden; }
       <span class="text-cryo-400 text-sm tracking-widest uppercase">Temperature Journey</span>
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-4" data-ko="온도의 여행 🌡️" data-en="Temperature Journey 🌡️">온도의 여행 🌡️</h2>
       <p class="text-cryo-300 max-w-xl mx-auto" data-ko="뜨거운 커피에서 절대영도 근처까지 — KC가 활약하는 온도의 세계" data-en="From hot coffee to near absolute zero — the temperature world where KC operates">뜨거운 커피에서 절대영도 근처까지 — KC가 활약하는 온도의 세계</p>
+
+      <!-- Temperature Converter Widget -->
+      <div class="temp-converter mt-8">
+        <h3>🌡️ 온도 변환기</h3>
+        <div class="temp-inputs">
+          <div class="temp-input-group">
+            <label>섭씨 (°C)</label>
+            <input type="number" class="temp-c" value="-196" step="1">
+          </div>
+          <div class="temp-input-group">
+            <label>화씨 (°F)</label>
+            <input type="number" class="temp-f" value="-320" step="1">
+          </div>
+          <div class="temp-input-group">
+            <label>켈빈 (K)</label>
+            <input type="number" class="temp-k" value="77" step="1">
+          </div>
+        </div>
+        <div class="temp-slider-container">
+          <input type="range" class="temp-slider" min="-273" max="100" value="-196" step="1">
+          <div class="temp-scale-labels">
+            <span>절대영도</span>
+            <span>액체 질소</span>
+            <span>얼음</span>
+            <span>실온</span>
+            <span>끓는물</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="temp-journey-steps" class="space-y-6 sm:space-y-8">
+    <div id="temp-journey-steps" class="space-y-6 sm:space-y-8 mt-12">
       <div class="temp-journey-step" data-threshold="60">
         <div class="step-temp" style="color:#ff6b35;">60°C</div>
         <div class="step-dot" style="border-color:#ff6b35;"></div>
@@ -2643,69 +2624,34 @@ body.loading { overflow: hidden; }
       <span class="text-cryo-400 text-sm tracking-widest uppercase">Partners & Clients</span>
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-4" data-ko="거래선" data-en="Partners">거래선</h2>
     </div>
-    
-    <div class="relative overflow-hidden py-10">
-      <!-- Gradient overlay for smooth fade -->
-      <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-cryo-950 to-transparent z-10 pointer-events-none"></div>
-      <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-cryo-950 to-transparent z-10 pointer-events-none"></div>
-      
-      <div class="flex marquee-track whitespace-nowrap gap-6 items-center">
-        <!-- Partner Cards -->
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Taylor-Wharton</span>
-          <span class="text-cryo-400/80 text-xs">Since 1742 · 283년 역사</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Luxfer</span>
-          <span class="text-cryo-400/80 text-xs">6N+ 순도 · 반도체용</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Cryofab</span>
-          <span class="text-cryo-400/80 text-xs">극저온 장인의 기술력</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">IC Biomedical</span>
-          <span class="text-cryo-400/80 text-xs">글로벌 바이오 장비</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Thunderbird</span>
-          <span class="text-cryo-400/80 text-xs">고품질 알루미늄 실린더</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">삼성전자</span>
-          <span class="text-cryo-400/80 text-xs">주요 거래선</span>
-        </div>
-         <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">SK E&S</span>
-          <span class="text-cryo-400/80 text-xs">액화수소 파트너십</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">포항가속기연구소</span>
-          <span class="text-cryo-400/80 text-xs">연구 인프라 구축</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">PureAire</span>
-          <span class="text-cryo-400/80 text-xs">안전 모니터링 시스템</span>
-        </div>
-        <!-- Duplicated for Marquee effect -->
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Taylor-Wharton</span>
-          <span class="text-cryo-400/80 text-xs">Since 1742 · 283년 역사</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Luxfer</span>
-          <span class="text-cryo-400/80 text-xs">6N+ 순도 · 반도체용</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">Cryofab</span>
-          <span class="text-cryo-400/80 text-xs">극저온 장인의 기술력</span>
-        </div>
-        <div class="flex flex-col items-center justify-center min-w-[200px] h-[100px] bg-cryo-900/50 border border-cryo-800 rounded-xl hover:border-cryo-500/50 transition-colors">
-          <span class="text-white font-bold text-xl mb-1">IC Biomedical</span>
-          <span class="text-cryo-400/80 text-xs">글로벌 바이오 장비</span>
-        </div>
+    <div class="relative overflow-hidden">
+      <div class="flex marquee-track whitespace-nowrap gap-12">
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Taylor-Wharton<span class="partner-tooltip" data-ko="Since 1742 🇺🇸 · 283년 역사" data-en="Since 1742 🇺🇸 · 283 Years of History">Since 1742 🇺🇸 · 283년 역사</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Luxfer<span class="partner-tooltip" data-ko="6N+ 순도 💎 · 반도체 가스의 수호자" data-en="6N+ Purity 💎 · Guardian of Semiconductor Gases">6N+ 순도 💎 · 반도체 가스의 수호자</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Cryofab<span class="partner-tooltip" data-ko="18명의 장인 🔩 · Since 1971" data-en="18 Craftspeople 🔩 · Since 1971">18명의 장인 🔩 · Since 1971</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">IC Biomedical<span class="partner-tooltip" data-ko="구 TW CryoScience 🧬 · Revolution Series" data-en="Formerly TW CryoScience 🧬 · Revolution Series">구 TW CryoScience 🧬 · Revolution Series</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Thunderbird<span class="partner-tooltip" data-ko="미국 최대 알루미늄 실린더 🦅" data-en="America's Largest Aluminum Cylinders 🦅">미국 최대 알루미늄 실린더 🦅</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">TOMCO₂<span class="partner-tooltip" data-ko="CO₂ 시스템 전문 🫧" data-en="CO₂ System Specialist 🫧">CO₂ 시스템 전문 🫧</span></span>
+        <span class="text-cryo-500/60 text-lg font-semibold">삼성전자</span>
+        <span class="text-cryo-500/60 text-lg font-semibold">SK E&S</span>
+        <span class="text-cryo-500/60 text-lg font-semibold">포항가속기연구소</span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">PureAire<span class="partner-tooltip" data-ko="가스 모니터링 전문 📊" data-en="Gas Monitoring Specialist 📊">가스 모니터링 전문 📊</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Sponsler<span class="partner-tooltip" data-ko="유량계 전문 🔄" data-en="Flow Meters 🔄">유량계 전문 🔄</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Turbines, Inc.<span class="partner-tooltip" data-ko="극저온 유량계 · 1975년 설립 🔄" data-en="Cryogenic Flow Meters · Since 1975 🔄">극저온 유량계 · 1975년 설립 🔄</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Taylor-Wharton<span class="partner-tooltip" data-ko="Since 1742 🇺🇸 · 283년 역사" data-en="Since 1742 🇺🇸 · 283 Years of History">Since 1742 🇺🇸 · 283년 역사</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Luxfer<span class="partner-tooltip" data-ko="6N+ 순도 💎 · 반도체 가스의 수호자" data-en="6N+ Purity 💎 · Guardian of Semiconductor Gases">6N+ 순도 💎 · 반도체 가스의 수호자</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Cryofab<span class="partner-tooltip" data-ko="18명의 장인 🔩 · Since 1971" data-en="18 Craftspeople 🔩 · Since 1971">18명의 장인 🔩 · Since 1971</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">IC Biomedical<span class="partner-tooltip" data-ko="구 TW CryoScience 🧬 · Revolution Series" data-en="Formerly TW CryoScience 🧬 · Revolution Series">구 TW CryoScience 🧬 · Revolution Series</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Thunderbird<span class="partner-tooltip" data-ko="미국 최대 알루미늄 실린더 🦅" data-en="America's Largest Aluminum Cylinders 🦅">미국 최대 알루미늄 실린더 🦅</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">TOMCO₂<span class="partner-tooltip" data-ko="CO₂ 시스템 전문 🫧" data-en="CO₂ System Specialist 🫧">CO₂ 시스템 전문 🫧</span></span>
+        <span class="text-cryo-500/60 text-lg font-semibold">삼성전자</span>
+        <span class="text-cryo-500/60 text-lg font-semibold">SK E&S</span>
+        <span class="text-cryo-500/60 text-lg font-semibold">포항가속기연구소</span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">PureAire<span class="partner-tooltip" data-ko="가스 모니터링 전문 📊" data-en="Gas Monitoring Specialist 📊">가스 모니터링 전문 📊</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Sponsler<span class="partner-tooltip" data-ko="유량계 전문 🔄" data-en="Flow Meters 🔄">유량계 전문 🔄</span></span>
+        <span class="partner-tooltip-wrap text-cryo-500/60 text-lg font-semibold">Turbines, Inc.<span class="partner-tooltip" data-ko="극저온 유량계 · 1975년 설립 🔄" data-en="Cryogenic Flow Meters · Since 1975 🔄">극저온 유량계 · 1975년 설립 🔄</span></span>
       </div>
-
+    </div>
   </div>
 </section>
 
@@ -2761,13 +2707,16 @@ body.loading { overflow: hidden; }
 
 <!-- Quiz Modal -->
 <div id="quiz-modal-overlay">
-  <div id="quiz-modal">
+  <div id="quiz-modal" class="cryo-quiz">
     <div id="quiz-close" style="position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(0,212,255,0.3);background:rgba(0,212,255,0.1);color:#80f0ff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</div>
-    <div class="text-center">
+    <div class="quiz-content text-center">
       <div class="text-3xl mb-3">❄️</div>
       <h3 class="text-xl font-bold mb-1" data-ko="극저온 퀴즈!" data-en="Cryo Quiz!">극저온 퀴즈!</h3>
       <p class="text-cryo-500 text-sm mb-6" data-ko="당신의 극저온 지식은?" data-en="How's your cryo knowledge?">당신의 극저온 지식은?</p>
       <div id="quiz-question" class="text-lg font-bold text-cryo-200 mb-6 min-h-[3rem]"></div>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" style="display:none;"></button>
+      </div>
       <button id="quiz-reveal" class="px-8 py-3 bg-gradient-to-r from-cryo-500 to-ice-500 rounded-full font-bold text-cryo-950 transition hover:scale-105" data-ko="정답 보기 👀" data-en="Reveal Answer 👀">정답 보기 👀</button>
       <div id="quiz-answer" class="mt-6 text-lg font-bold gradient-text hidden min-h-[3rem]"></div>
       <button id="quiz-next" class="mt-4 px-6 py-2 border border-cryo-500/30 rounded-full text-cryo-300 text-sm hover:bg-cryo-500/10 transition hidden" data-ko="다음 문제 →" data-en="Next Question →">다음 문제 →</button>
@@ -3334,5 +3283,7 @@ setInterval(rotateHero, 5000);
   document.querySelectorAll('.bx-reveal').forEach(el => bxObs.observe(el));
 })();
 </script>
+<!-- Interactive Enhancements -->
+<script src="enhancements.js"></script>
 </body>
 </html>
